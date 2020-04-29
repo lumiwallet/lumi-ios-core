@@ -1,0 +1,42 @@
+framework module LumiCore {
+    umbrella header "LumiCore.h"
+    
+    export *
+    module * { export * }
+    
+    explicit module Bignum {
+        header "Bignum.h"
+    }
+    
+    explicit module Utils {
+        header "Hex2DecimalConverter.h"
+    }
+    
+    explicit module EcCurve {
+        header "Curve.h"
+    }
+    
+    explicit module ECDSA {
+        header "ECDSA.h"
+    }
+    
+    explicit module Key {
+        header "Key.h"
+    }
+    
+    explicit module Base58 {
+        header "Base58.h"
+    }
+    
+    explicit module Bech32 {
+        header "Bech32.h"
+    }
+    
+    explicit module HashFunctions {
+        header "HashFunctions.h"
+    }
+    
+    explicit module Keccak {
+        header "keccak-tiny.h"
+    }
+}
