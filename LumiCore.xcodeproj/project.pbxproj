@@ -104,6 +104,7 @@
 		CE77109523DB255B004D1F7C /* BitcoinFeeCalculator.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE77109423DB255B004D1F7C /* BitcoinFeeCalculator.swift */; };
 		CE96B8612417C75800E913E3 /* BitcoinScriptError.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE96B8602417C75800E913E3 /* BitcoinScriptError.swift */; };
 		CE96B864241A47F200E913E3 /* MnemonicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE96B863241A47F200E913E3 /* MnemonicTests.swift */; };
+		CE9847642593B99C00B93C1E /* BitcoinTransactionConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9847632593B99C00B93C1E /* BitcoinTransactionConfiguration.swift */; };
 		CE9AD52D2368550C0043DAAA /* LumiCore.h in Headers */ = {isa = PBXBuildFile; fileRef = CE9AD52B2368550C0043DAAA /* LumiCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE9AD53C236867270043DAAA /* ECDSA.m in Sources */ = {isa = PBXBuildFile; fileRef = CE9AD53B236867270043DAAA /* ECDSA.m */; };
 		CE9AD6BE2368806C0043DAAA /* pem2.h in Headers */ = {isa = PBXBuildFile; fileRef = CE9AD6732368806B0043DAAA /* pem2.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -350,6 +351,7 @@
 		CE77109423DB255B004D1F7C /* BitcoinFeeCalculator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitcoinFeeCalculator.swift; sourceTree = "<group>"; };
 		CE96B8602417C75800E913E3 /* BitcoinScriptError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitcoinScriptError.swift; sourceTree = "<group>"; };
 		CE96B863241A47F200E913E3 /* MnemonicTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MnemonicTests.swift; sourceTree = "<group>"; };
+		CE9847632593B99C00B93C1E /* BitcoinTransactionConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitcoinTransactionConfiguration.swift; sourceTree = "<group>"; };
 		CE9AD5282368550C0043DAAA /* LumiCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = LumiCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE9AD52B2368550C0043DAAA /* LumiCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LumiCore.h; sourceTree = "<group>"; };
 		CE9AD52C2368550C0043DAAA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -704,6 +706,7 @@
 				CE77109023DB23B9004D1F7C /* BitcoinTemplateTransaction.swift */,
 				CE77109423DB255B004D1F7C /* BitcoinFeeCalculator.swift */,
 				CEE88E592404622A00BB5855 /* BitcoinCreateTransactionError.swift */,
+				CE9847632593B99C00B93C1E /* BitcoinTransactionConfiguration.swift */,
 			);
 			path = "Bitcoin+BitcoinCash";
 			sourceTree = "<group>";
@@ -1481,6 +1484,7 @@
 				CE0F616423E4766700633FF0 /* EosKey.swift in Sources */,
 				CE46360423E9B8EF004A9932 /* Curve.m in Sources */,
 				CE77109523DB255B004D1F7C /* BitcoinFeeCalculator.swift in Sources */,
+				CE9847642593B99C00B93C1E /* BitcoinTransactionConfiguration.swift in Sources */,
 				CEFEEBB4239FCD98005AD6D1 /* HashFunctions.m in Sources */,
 				CE0F615B23E2E2FE00633FF0 /* EosUnsignedTransaction.swift in Sources */,
 				CE14C69523A140CA0078AFD8 /* DataExtensions.swift in Sources */,
