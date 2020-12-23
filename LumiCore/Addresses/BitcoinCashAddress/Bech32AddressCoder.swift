@@ -9,6 +9,32 @@ import Foundation
 
 public struct Bech32AddressCoder {
     
+    enum Generator {
+        case bc1
+        case bch
+        
+        var value: [UInt64] {
+            switch self {
+            case .bc1: return [0x3b6a57b2, 0x26508e6d, 0x1ea119fa, 0x3d4233dd, 0x2a1462b3]
+            case .bch: return [0x98f2bc8e61, 0x79b76d99e2, 0xf33e5fb3c4, 0xae2eabe2a8, 0x1e4f43e470]
+            }
+        }
+        
+        var shift: UInt64 {
+            switch self {
+            case .bc1: return 25
+            case .bch: return 35
+            }
+        }
+        
+        var mask: UInt64 {
+            switch self {
+            case .bc1: return 0x1ffffff
+            case .bch: return 0x07ffffffff
+            }
+        }
+    }
+    
     static public func data(from prefix: String) -> Data {
         let bytes = prefix.utf8.map({
             $0 & 0x1f
@@ -16,14 +42,25 @@ public struct Bech32AddressCoder {
         return Data(bytes)
     }
     
-    static func polymod(for data: Data) -> Data {
-        let generator: [UInt64] = [0x98f2bc8e61, 0x79b76d99e2, 0xf33e5fb3c4, 0xae2eabe2a8, 0x1e4f43e470]
+    static public func hrpExpand(prefix: String) -> Data {
+        let bytes = prefix.utf8.map({
+            $0 & 0x1f
+        })
+        
+        let expand = prefix.map({ ($0.asciiValue ?? 0) >> 5 }) + [0x00] + bytes.map({ $0 & 31 })
+        return Data(expand)
+    }
+    
+    static func polymod(data: Data, output: Data, gen: Generator) -> Data {
+        let input = data + output
+        let generator = gen.value
+        
         var checksum: UInt64 = 1
 
-        for i in 0..<data.count {
-            let value = UInt64(data[i])
-            let topBits = checksum >> 35
-            checksum = ((checksum & 0x07ffffffff) << 5) ^ value
+        for i in 0..<input.count {
+            let value = UInt64(input[i])
+            let topBits = checksum >> gen.shift
+            checksum = ((checksum & gen.mask) << 5) ^ value
 
             for j in 0..<generator.count {
                 if (topBits >> j) & 1 == 1 {
@@ -34,36 +71,60 @@ public struct Bech32AddressCoder {
 
         let result = checksum ^ 1
 
-        var bytesArray = Array(repeating: UInt8(0), count: 8)
-        for i in 0..<bytesArray.count {
-            bytesArray[7 - i] = UInt8( (result >> (5*i)) & UInt64(0x1f) )
+        var bytes = output
+        let index = bytes.count - 1
+        for i in 0..<bytes.count {
+            bytes[index - i] = UInt8( (result >> (5*i)) & UInt64(0x1f) )
         }
 
-        return Data(bytesArray)
+        return bytes
     }
     
-    func convertBits(checksum: Data) -> Data {
-        return Bech32.convertBits(checksum, from: 8, to: 5, strict: false)
+    /// Using for encode Bech32 BitcoinCash addresses
+    /// - Parameters:
+    ///   - hrp: Human readable prefix
+    ///   - data: Input data
+    ///   - type: Address hash type
+    /// - Returns: Bech32 encoded BitcoinCash address
+    static func encode(hrp: String, data: Data, type: PublicKeyAddressHashType) -> String {
+        let prefix = Bech32AddressCoder.data(from: hrp) + Data(count: 1)
+        let version = type.typeBits + PublicKeyAddressHashType.sizeBits(from: data)
+        
+        let payload = Bech32.convertBits(version.data + data, from: 8, to: 5, strict: false)
+        let checksum = polymod(data: prefix + payload, output: Data(count: 8), gen: .bch)
+        
+        return Bech32.encode(payload + checksum, converted: true)
     }
     
-    static func encode(prefix: String, data: Data, hashType: BitcoinAddressHashType) -> String {
-        let prefix = Bech32AddressCoder.data(from: prefix) + Data(count: 1)
+    /// Using for encode Bech32 BitcoinSegwit address aka BC1
+    /// - Parameters:
+    ///   - hrp: Human readable prefix
+    ///   - witnessVersion: Version
+    ///   - witnessProgram: Witness program data
+    /// - Returns: Bech32 encoded BitcoinSegwit address
+    static func encode(hrp: String, witnessVersion: UInt8, witnessProgram: Data) -> String {
+        let convert = Bech32.convertBits(witnessProgram, from: 8, to: 5, strict: false)
+        let payload = witnessVersion.data + convert
         
-        let v1 = hashType.typeBits
-        let v2 = BitcoinAddressHashType.sizeBits(from: data)
-        let version =  v1 + v2
-        let payload = Bech32.convertBits(Data([version]) + data, from: 8, to: 5, strict: false)
-        let checksum = prefix + payload + Data(count: 8)
+        let prefix = Bech32AddressCoder.hrpExpand(prefix: hrp)
+        let checksum = Bech32AddressCoder.polymod(data: prefix + payload, output: Data(count: 6), gen: .bc1)
         
-        let result = payload + polymod(for: checksum)
-        
-        return Bech32.encode(result, converted: true)
+        return Bech32.encode(payload + checksum, converted: true)
     }
     
-    static func decode(bech32: String) -> Data {
-        let payloadData = Bech32.decode(bech32)
-        let data = payloadData.dropFirst().dropLast(5)
+    static func decode(bch: String) -> Data {
+        let payload = bch.dropPrefix(prefix: BitcoinCashAddressConstants.prefix + BitcoinCashAddressConstants.separator )
+        let decoded = Bech32.decode(payload, convert: false).dropLast(8)
+        let converted = Bech32.convertBits(decoded, from: 5, to: 8, strict: true)
+        let result = converted.dropFirst()
+        return result
+    }
     
-        return data
+    static func decode(bc1: String) -> Data {
+        let payload = bc1.dropPrefix(prefix: BitcoinAddressConstants.bc1prefix + BitcoinAddressConstants.bc1separator)
+        let decoded = Bech32.decode(payload, convert: false).dropLast(6)
+        let converted = Bech32.convertBits(decoded.dropFirst(), from: 5, to: 8, strict: true)
+        let result = converted
+        return result
     }
 }

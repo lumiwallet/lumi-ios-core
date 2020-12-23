@@ -44,8 +44,8 @@ class AddressesTests: XCTestCase {
                 
                 XCTAssertFalse(privateKeyFromWif.data.hex != extkey.key.data.hex, "Wrong private key data Expected:  \(extkey.key.data.hex) Result: \(privateKeyFromWif.data.hex )")
                 
-                XCTAssertFalse(publicAddressFromKey.legacyAddress != BitcoinDerivationKeyAddressesTestData.data[i].address, "Wrong leagacy public address Expected:  \(BitcoinDerivationKeyAddressesTestData.data[i].address) Result: \(publicAddressFromKey.legacyAddress )")
-                XCTAssertFalse(publicAddressFromData.legacyAddress != BitcoinDerivationKeyAddressesTestData.data[i].address, "Wrong leagacy public address Expected:  \(BitcoinDerivationKeyAddressesTestData.data[i].address) Result: \(publicAddressFromData.legacyAddress)")
+                XCTAssertFalse(publicAddressFromKey.address(for: .bitcoin(.P2PKH)) != BitcoinDerivationKeyAddressesTestData.data[i].address, "Wrong leagacy public address Expected:  \(BitcoinDerivationKeyAddressesTestData.data[i].address) Result: \(publicAddressFromKey.address )")
+                XCTAssertFalse(publicAddressFromData.address(for: .bitcoin(.P2PKH)) != BitcoinDerivationKeyAddressesTestData.data[i].address, "Wrong leagacy public address Expected:  \(BitcoinDerivationKeyAddressesTestData.data[i].address) Result: \(publicAddressFromData.address)")
             })
         }
     }
@@ -54,11 +54,125 @@ class AddressesTests: XCTestCase {
         for element in BitcoinAddressesTestData.data {
             do {
                 let key = Data(hex:element.key)
-                let btcAddress = try BitcoinPublicKeyAddress(publicKey: key, type: .P2PKH)
+                let btcAddress = try BitcoinPublicKeyAddress(publicKey: key, type: .bitcoin(.P2PKH))
                 
-                XCTAssertFalse(btcAddress.legacyAddress != element.address, "Wrong address Expected: \(element.address) Result: \(btcAddress.legacyAddress)")
+                XCTAssertFalse(btcAddress.address(for: .bitcoin(.P2PKH)) != element.address, "Wrong address Expected: \(element.address) Result: \(btcAddress.address(for: .bitcoin(.P2PKH)))")
             } catch {
                 XCTAssertFalse(false, "BitcoinPublicKeyAddress Error, Can't create from key: \(element.key)")
+            }
+        }
+    }
+    
+    func testBitcoinSegwitAddress() {
+        let publicKey = Data(hex: "0279BE667EF9DCBBAC55A06295CE870B07029BFCDB2DCE28D959F2815B16F81798")
+        
+        do {
+            let addressP2WPKH = try BitcoinPublicKeyAddress(publicKey: publicKey, type: .bitcoin(.P2WPKH))
+            let addressP2WSH = try BitcoinPublicKeyAddress(publicKey: publicKey, type: .bitcoin(.P2WSH))
+            
+            XCTAssertFalse(addressP2WPKH.address != "bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4", "Wrong address Expected: bc1qw508d6qejxtdg4y5r3zarvary0c5xw7kv8f3t4 Result: \( addressP2WPKH.address)")
+            
+            XCTAssertFalse(addressP2WSH.address != "bc1qrp33g0q5c5txsp9arysrx4k6zdkfs4nce4xj0gdcccefvpysxf3qccfmv3", "Wrong address Expected: bc1qrp33g0q5c5txsp9arysrx4k6zdkfs4nce4xj0gdcccefvpysxf3qccfmv3 Result: \( addressP2WSH.address)")
+            
+        } catch {
+            XCTAssertNotNil(error, "\(error)")
+        }
+    }
+    
+    func testBitcoinBIP84DerivationAddress() {
+        //m/84'/0'/0'/0
+        let generator = KeyGenerator(xpubORxprv: BitcoinSegwitDerivationTestData.extendedPrivateKeyBIP84)
+        let bip84ValidAddresses = BitcoinSegwitDerivationTestData.validAddressesBIP84
+        
+        for i in 0..<bip84ValidAddresses.count {
+            let key = generator.generateChild(for: UInt(i), hardened: false)
+            do {
+                
+                let pubKeyAddress1 = try BitcoinPublicKeyAddress(key: key.key)
+                XCTAssertTrue(pubKeyAddress1.address(for: .bitcoin(.P2WPKH)) == bip84ValidAddresses[i], "Wrong address Expected: \(bip84ValidAddresses[i]) Result: \( pubKeyAddress1.address(for: .bitcoin(.P2WPKH)))")
+                
+                let pubKeyAddress2 = try BitcoinPublicKeyAddress(key: key.key, type: .bitcoin(.P2PKH))
+                XCTAssertTrue(pubKeyAddress2.address(for: .bitcoin(.P2WPKH)) == bip84ValidAddresses[i], "Wrong address Expected: \(bip84ValidAddresses[i]) Result: \( pubKeyAddress2.address(for: .bitcoin(.P2WPKH)))")
+                
+                let pubKeyAddress3 = try BitcoinPublicKeyAddress(key: key.key, type: .bitcoin(.P2SH))
+                XCTAssertTrue(pubKeyAddress3.address(for: .bitcoin(.P2WPKH)) == nil, "Wrong address Expected: Empty Result: \( pubKeyAddress3.address(for: .bitcoin(.P2WPKH)))")
+                
+                let pubKeyAddress4 = try BitcoinPublicKeyAddress(key: key.key, type: .bitcoin(.P2WPKH))
+                XCTAssertTrue(pubKeyAddress4.address == bip84ValidAddresses[i], "Wrong address Expected: \(bip84ValidAddresses[i]) Result: \( pubKeyAddress4.address)")
+                XCTAssertTrue(pubKeyAddress4.address == bip84ValidAddresses[i], "Wrong address Expected: \(bip84ValidAddresses[i]) Result: \( pubKeyAddress4.address)")
+                
+                let pubKeyAddress5 = try BitcoinPublicKeyAddress(key: key.key, type: .bitcoin(.P2WSH))
+                XCTAssertTrue(pubKeyAddress5.address(for: .bitcoin(.P2WPKH)) == nil, "Wrong address Expected: Empty Result: \( pubKeyAddress5.address(for: .bitcoin(.P2WPKH)))")
+                
+                let pubKeyAddress6 = try BitcoinPublicKeyAddress(publicKey: key.key.publicKeyCompressed(.CompressedConversion))
+                XCTAssertTrue(pubKeyAddress6.address(for: .bitcoin(.P2WPKH)) == bip84ValidAddresses[i], "Wrong address Expected: \(bip84ValidAddresses[i]) Result: \( pubKeyAddress6.address(for: .bitcoin(.P2WPKH)))")
+                
+                let pubKeyAddress7 = try BitcoinPublicKeyAddress(publicKey: key.key.publicKeyCompressed(.CompressedConversion), type: .bitcoin(.P2PKH))
+                XCTAssertTrue(pubKeyAddress7.address(for: .bitcoin(.P2WPKH)) == bip84ValidAddresses[i], "Wrong address Expected: \(bip84ValidAddresses[i]) Result: \( pubKeyAddress7.address(for: .bitcoin(.P2WPKH)))")
+                
+                let pubKeyAddress8 = try BitcoinPublicKeyAddress(publicKey: key.key.publicKeyCompressed(.CompressedConversion), type: .bitcoin(.P2SH))
+                XCTAssertTrue(pubKeyAddress8.address(for: .bitcoin(.P2WPKH)) == nil, "Wrong address Expected: Empty Result: \( pubKeyAddress8.address(for: .bitcoin(.P2WPKH)))")
+                
+                let pubKeyAddress9 = try BitcoinPublicKeyAddress(publicKey: key.key.publicKeyCompressed(.CompressedConversion), type: .bitcoin(.P2WPKH))
+                XCTAssertTrue(pubKeyAddress9.address == bip84ValidAddresses[i], "Wrong address Expected: \(bip84ValidAddresses[i]) Result: \( pubKeyAddress9.address)")
+                XCTAssertTrue(pubKeyAddress9.address(for: .bitcoin(.P2WPKH)) == bip84ValidAddresses[i], "Wrong address Expected: \(bip84ValidAddresses[i]) Result: \( pubKeyAddress9.address(for: .bitcoin(.P2WPKH)))")
+                
+                let pubKeyAddress10 = try BitcoinPublicKeyAddress(publicKey: key.key.publicKeyCompressed(.CompressedConversion), type: .bitcoin(.P2WSH))
+                XCTAssertTrue(pubKeyAddress10.address(for: .bitcoin(.P2WPKH)) == nil, "Wrong address Expected: Empty Result: \( pubKeyAddress10.address(for: .bitcoin(.P2WPKH)))")
+                
+            } catch {
+                XCTAssertNotNil(error, "\(error)")
+            }
+        }
+    }
+    
+    
+    func testBitcoinBIP49DerivationAddress() {
+        //m/49'/0'/0'/0
+        let generator = KeyGenerator(xpubORxprv: BitcoinSegwitDerivationTestData.extendedPrivateKeyBIP49)
+        let bip49ValidAddresses = BitcoinSegwitDerivationTestData.validAddressesBIP49
+        
+        for i in 0..<bip49ValidAddresses.count {
+            let key = generator.generateChild(for: UInt(i), hardened: false)
+            do {
+                
+                let privateKey = key.key
+                let publicKey = key.key.publicKeyCompressed(.CompressedConversion)
+                
+                let pubKeyAddress1 = try BitcoinPublicKeyAddress(key: privateKey)
+                XCTAssertTrue(pubKeyAddress1.address(for: .bitcoin(.P2SH)) == bip49ValidAddresses[i], "Wrong address Expected: \(bip49ValidAddresses[i]) Result: \( pubKeyAddress1.address(for: .bitcoin(.P2SH)))")
+                
+                let pubKeyAddress2 = try BitcoinPublicKeyAddress(key: privateKey, type: .bitcoin(.P2PKH))
+                XCTAssertTrue(pubKeyAddress2.address(for: .bitcoin(.P2SH)) == bip49ValidAddresses[i], "Wrong address Expected: \(bip49ValidAddresses[i]) Result: \( pubKeyAddress2.address(for: .bitcoin(.P2SH)))")
+                
+                let pubKeyAddress3 = try BitcoinPublicKeyAddress(key: privateKey, type: .bitcoin(.P2SH))
+                XCTAssertTrue(pubKeyAddress3.address == bip49ValidAddresses[i], "Wrong address Expected: \(bip49ValidAddresses[i]) Result: \( pubKeyAddress3.address)")
+                XCTAssertTrue(pubKeyAddress3.address(for: .bitcoin(.P2SH)) == bip49ValidAddresses[i], "Wrong address Expected: \(bip49ValidAddresses[i]) Result: \( pubKeyAddress3.address(for: .bitcoin(.P2SH)))")
+                
+                let pubKeyAddress4 = try BitcoinPublicKeyAddress(key: privateKey, type: .bitcoin(.P2WPKH))
+                XCTAssertTrue(pubKeyAddress4.address(for: .bitcoin(.P2SH)) == bip49ValidAddresses[i], "Wrong address Expected: \(bip49ValidAddresses[i]) Result: \( pubKeyAddress4.address(for: .bitcoin(.P2SH)))")
+                
+                let pubKeyAddress5 = try BitcoinPublicKeyAddress(key: privateKey, type: .bitcoin(.P2WSH))
+                XCTAssertTrue(pubKeyAddress5.address(for: .bitcoin(.P2SH)) == nil, "Wrong address Expected: Empty Result: \( pubKeyAddress5.address(for: .bitcoin(.P2SH)))")
+                
+                let pubKeyAddress6 = try BitcoinPublicKeyAddress(publicKey: publicKey)
+                XCTAssertTrue(pubKeyAddress6.address(for: .bitcoin(.P2SH)) == bip49ValidAddresses[i], "Wrong address Expected: \(bip49ValidAddresses[i]) Result: \( pubKeyAddress6.address(for: .bitcoin(.P2SH)))")
+                
+                let pubKeyAddress7 = try BitcoinPublicKeyAddress(publicKey: publicKey, type: .bitcoin(.P2PKH))
+                XCTAssertTrue(pubKeyAddress7.address(for: .bitcoin(.P2SH)) == bip49ValidAddresses[i], "Wrong address Expected: \(bip49ValidAddresses[i]) Result: \( pubKeyAddress7.address(for: .bitcoin(.P2SH)))")
+                
+                let pubKeyAddress8 = try BitcoinPublicKeyAddress(publicKey: publicKey, type: .bitcoin(.P2SH))
+                XCTAssertTrue(pubKeyAddress8.address == bip49ValidAddresses[i], "Wrong address Expected: Empty Result: \( pubKeyAddress8.address)")
+                XCTAssertTrue(pubKeyAddress8.address(for: .bitcoin(.P2SH)) == bip49ValidAddresses[i], "Wrong address Expected: \(bip49ValidAddresses[i]) Result: \( pubKeyAddress8.address(for: .bitcoin(.P2SH)))")
+                
+                let pubKeyAddress9 = try BitcoinPublicKeyAddress(publicKey: publicKey, type: .bitcoin(.P2WPKH))
+                XCTAssertTrue(pubKeyAddress9.address(for: .bitcoin(.P2SH)) == bip49ValidAddresses[i], "Wrong address Expected: \(bip49ValidAddresses[i]) Result: \( pubKeyAddress9.address(for: .bitcoin(.P2SH)))")
+                
+                let pubKeyAddress10 = try BitcoinPublicKeyAddress(publicKey: publicKey, type: .bitcoin(.P2WSH))
+                XCTAssertTrue(pubKeyAddress10.address(for: .bitcoin(.P2SH)) == nil, "Wrong address Expected: Empty Result: \( pubKeyAddress10.address(for: .bitcoin(.P2SH)))")
+                
+            } catch {
+                XCTAssertNotNil(error, "\(error)")
             }
         }
     }
@@ -222,4 +336,56 @@ struct BitcoinDerivationKeyAddressesTestData {
     (address: "1JAXFqeZMwpg5NiUuLvwc6zfzJJEkRXGs8", pubdata: "030b22da2978fc82eb1bdd1ce90215e8c52bbc09716c3f5fa45f9fa8d236149381", wif: "Ky6Fw4gDzCmDVsutqu6vLT4neebKGsDfzLJZumeM7RV4E4pbUXzB")
     ]
     
+}
+
+struct BitcoinSegwitDerivationTestData {
+    
+    static let extendedPrivateKeyBIP84 = "zprvAePkkBiRsqXvM93RNMJPbkxtj9AEBdBEgwztidjMe6ZrpWMtE7oPdEMFxNVSNYkbQksFqDm5hvyJb8h3yXbRPYVZZUVXPvkZjphYCt6oGSV"
+    static let extendedPrivateKeyBIP49 = "yprvAKVhKxbvwfxrVsYEKnfaVJg28hzC4rhXGxYWXFfqkHc9VBYCYT52vHkEuQgZHASEUFfj6tfiBmXNdNcQbsxN7nhAkrox7rYTM3HtooNqg9f"
+    
+    static let validAddressesBIP84 = [
+    "bc1q8838kz7rntuyeepeaf9n6s6sm9nkqyl7r8ss58",
+    "bc1qu2mrjm7m7um0jgyxulcl0v6dx6268hawwzc7g5",
+    "bc1qp0y0mxfm7kgxexqukcuty4dj6ycg2p0mmhfqyq",
+    "bc1qct5vrwsfrx39y8glgg9f2cn3hwz4vd49chgpwn",
+    "bc1qhza66cq748c49krhdwq3f3kue2d0v82ufej8cy",
+    "bc1qmgv0un3v3d3q8c25uz7u46uw9va57xz3t956ac",
+    "bc1qgkns7q6jva8xprumnl4wp2n7ay0q086hms4al0",
+    "bc1qdltae3kpsfrupvg5g620m94r7hty848fkxetuu",
+    "bc1q7j6s76r8mpzjpmx7pldeh8w0d9kxe50zds4t2q",
+    "bc1qa2kxm6z23kjlsfusq9x6l0045pj4g6mfcjf43p",
+    "bc1qjzwyg6kdqqrf67rgrwldlmxwh0ulyvrfyqvu9f",
+    "bc1qlm7zu863eam0nj29pvzcs5a4p9eguja33u57qr",
+    "bc1q8rwe0qzd6r08g5tgvqf5gqhpcls77qwtaeg7q9",
+    "bc1q2qfu9ndhv7ttxvksm8nqkvvsmu2zn6e7vwrtpe",
+    "bc1qnngqrjhcf6xj25tp6ufwmzqep0673rjuqhgn7u",
+    "bc1qmqyfedv40w5glzjmqpecq3kzhys6x5s9r9rs3d",
+    "bc1quym4tl3wwpl3x6wu6625spntz3gnqhgp963mn8",
+    "bc1q32rjwyy9runhyy885h5qqludv76lcv20yxm46x",
+    "bc1q6nl42scjgewnw8pxjffhaer57lp3fa8q6e5lpk",
+    "bc1qeyrrr5ynctvld94m6950fh5a7pz29hgvq9cqhl"
+    ]
+    
+    static let validAddressesBIP49 = [
+    "32bSLz2WRsyGuxR4ZoKCNVMNmzKwY5ZXKD",
+    "3QJtxRQrgaPBv3WuR7sCG8AHgftMxrrs45",
+    "38LAVFi3dtvNHFsJG5auHVcyjPDZNGNEHr",
+    "361WvgicpaGY8ZpM4X6C5tUxVcyBtoQ4hx",
+    "3QYv8u4KniDDx9AX6ikDzQBHBSYSpJjE8V",
+    "3QSh9AKuucVwF8E9etoyf4VrBfRxhTb36n",
+    "33MwMxhQyWX8eby1n57iePfcuhUuKNhEiH",
+    "31tWNaJ311wuZsVkM3aSHBmQBTCUs265Xh",
+    "33KBW77uEZ5pY74hAToCpUtqKYsuBsTDKp",
+    "333ZNHs72MfgQwxLLQCMvb3YXkDSHFFqGg",
+    "3QZQfHKXE8uvppx6FoJgBikYrVSAEaFF3M",
+    "3K3pJ4Dp9hNqTRHCFShxfHYrPpcFYLpiJZ",
+    "35e3SchaFEPH3CDoUvEJ8TBQrYbQoMYJoF",
+    "38uX7fP6xw3fesHD5LgaK9yTWqpruNLh4k",
+    "3NmwyeiuNZy6VsuPEPqNmMzxtTbscq83FJ",
+    "3J3MKTKEJFVijdzM6YnLRwJFLZ55Gih39k",
+    "3Cm5wm7bZr95N513wZZg92iiQZ5EvQ59x5",
+    "3A7Drgjz6jm1pM4PsXPc5pkz6pCeWK6R3P",
+    "34FAP6vkFe6BexErgcSu7BCp3CENFFk3mC",
+    "32bSQdAFAxQW1Sr14mqfMoMzqwoW84bxk7"
+    ]
 }

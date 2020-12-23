@@ -10,11 +10,29 @@ import Foundation
 /// An object for representing and performing operations with scripts for bitcoin
 public class BitcoinScript {
     
+    public enum ScriptType {
+        case P2PKH
+        case P2PK
+        case P2SH
+        case P2WPKH
+        case P2WSH
+        case none
+    }
+    
     public var data: Data
     public var elements: [BitcoinScriptElement]
     
     public var multisigSignaturesRequired: Int = 0
     public var multisigPublicKeysData: [Data] = []
+    
+    public var type: ScriptType {
+        if isPayToPublicKeyHashScript() { return .P2PKH }
+        if isPayToPublicKeyScript() { return .P2PK }
+        if isPayToScripHashScript() { return .P2SH }
+        if isPayToWitnessPublicKeyHash() { return .P2WPKH }
+        if isPayToWitnessScriptHash() { return .P2WSH }
+        return .none
+    }
     
     /// Init
     public init() {
@@ -35,17 +53,23 @@ public class BitcoinScript {
     public convenience init(address: BitcoinPublicKeyAddress) {
         self.init()
         
-        switch address.hashType {
+        switch address.hashType.typeValue {
         case .P2PKH:
             self.add(opcode: OPCode.OP_DUP)
             self.add(opcode: OPCode.OP_HASH160)
-            self.addScript(from: address.publicKeyHash.dropFirst())
+            self.addScript(from: address.publicKeyHash)
             self.add(opcode: OPCode.OP_EQUALVERIFY)
             self.add(opcode: OPCode.OP_CHECKSIG)
         case .P2SH:
             self.add(opcode: OPCode.OP_HASH160)
-            self.addScript(from: address.publicKeyHash.dropFirst())
+            self.addScript(from: address.publicKeyHash)
             self.add(opcode: OPCode.OP_EQUAL)
+        case .P2WPKH:
+            self.add(opcode: OPCode.OP_0)
+            self.addScript(from: address.publicKeyHash)
+        case .P2WSH:
+            self.add(opcode: OPCode.OP_0)
+            self.addScript(from: address.publicKeyHash)
         }
         
 
@@ -56,7 +80,7 @@ public class BitcoinScript {
     public func addScript(from address: BitcoinPublicKeyAddress) {
         let script = BitcoinScript()
         
-        switch address.hashType {
+        switch address.hashType.typeValue {
         case .P2PKH:
             script.add(opcode: OPCode.OP_DUP)
             script.add(opcode: OPCode.OP_HASH160)
@@ -67,6 +91,12 @@ public class BitcoinScript {
             script.add(opcode: OPCode.OP_HASH160)
             script.addScript(from: address.publicKeyHash.dropFirst())
             script.add(opcode: OPCode.OP_EQUAL)
+        case .P2WPKH:
+            self.add(opcode: OPCode.OP_0)
+            self.addScript(from: address.publicKeyHash)
+        case .P2WSH:
+            self.add(opcode: OPCode.OP_0)
+            self.addScript(from: address.publicKeyHash)
         }
         
         self.data.append(script.data)
@@ -124,11 +154,11 @@ public class BitcoinScript {
     public func isStandart() -> Bool {
         return isPayToPublicKeyHashScript() ||
                isPayToScripHashScript() ||
-               isPublicKeyScript() ||
+               isPayToPublicKeyScript() ||
                (isMultisigScript() && multisigSignaturesRequired <= 3)
     }
     
-    public func isPublicKeyScript() -> Bool {
+    public func isPayToPublicKeyScript() -> Bool {
         if elements.count != 2 { return false }
         return elements[0].OpCode == .OP_UNKNOWN
     }
@@ -148,8 +178,31 @@ public class BitcoinScript {
         if elements.count != 3 { return false }
         
         return elements[0].OpCode == .OP_HASH160 &&
+        elements[1].opcodeValue == 0x14 &&
         elements[2].OpCode == .OP_EQUAL &&
-        elements[2].data.count == 20
+        elements[1].data.count == 20
+    }
+    
+    public func isPayToWitnessPublicKeyHash() -> Bool {
+        if !isPayToWitnessScriptHash() { return false }
+        if elements.count != 2 { return false }
+        return elements[0].OpCode == .OP_0 &&
+        elements[1].opcodeValue == 0x14 &&
+        elements[1].data.count == 0x14
+    }
+    
+    public func isPayToWitnessScriptHash() -> Bool {
+        if elements.count != 2 { return false }
+        return elements[0].OpCode == .OP_0 &&
+        (elements[1].data.count == 0x20 || elements[1].opcodeValue == 0x14)
+    }
+    
+    public func isWitnessProgram() -> Bool {
+        if data.count < 4 || data.count > 42 || data.count != (elements[1].opcodeValue + 2) { return false }
+        if elements[0].OpCode != .OP_0 &&
+        (elements[0].opcodeValue < OPCode.OP_1.value || elements[0].opcodeValue > OPCode.OP_16.value) { return false }
+        
+        return true
     }
     
     static func parse(data: Data) throws -> [BitcoinScriptElement] {
@@ -235,11 +288,20 @@ public class BitcoinScript {
     }
     
     public func getPublicKeyHash() throws -> Data {
-        guard isPayToPublicKeyHashScript() else {
+        switch type {
+        case .P2PKH:
+            return elements[2].data
+        case .P2PK:
+            return elements[0].data.ripemd160sha256()
+        case .P2SH:
+            return elements[1].data
+        case .P2WPKH:
+            return elements[1].data
+        case .P2WSH:
+            return elements[1].data
+        case .none:
             throw BitcoinCreateAddressError.invalidHashDataLength
         }
-        let hash = Data( [BitcoinAddressConstants.publicKeyAddressVersionP2PKH] + [UInt8](elements[2].data) )
-        return hash
     }
 }
 

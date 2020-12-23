@@ -7,6 +7,22 @@
 
 import Foundation
 
+// - MARK: Common
+
+public struct CoinVersionBytesConstant {
+    public static let bitcoin_p2pkh: UInt8 = 0x00
+    public static let bitcoin_p2sh: UInt8 = 0x05
+    public static let bitcoin_p2wpkh: UInt8 = 0x06
+    public static let bitcoin_p2wsh: UInt8 = 0x0A
+    
+    public static let bitcoin_prvkey_version = 0x80
+    
+    public static let doge_p2pkh: UInt8 = 0x1E
+    public static let doge_p2sh: UInt8 = 0x16
+    
+    public static let doge_prvkey_version: UInt8 = 0x9E
+}
+
 // - MARK: Bitcoin
 
 /// Contains constants for work with BitcoinPublicKeyAddress, BitcoinPrivateKeyAddress
@@ -17,13 +33,10 @@ import Foundation
 /// - privateKeyAddressVersion: 128
 /// - privateKeyDataLength: 32
 public struct BitcoinAddressConstants {
-    static let publicKeyAddressVersionP2PKH: UInt8 = 0x00
-    static let publicKeyAddressVersionP2SH: UInt8 = 0x05
-    static let publicKeyAddressVersionP2WPKH: UInt8 = 0x06
-    static let publicKeyAddressVersionP2WSH: UInt8 = 0x0A
-    
     //BIP-141 Defined witness program version
     static let witnessProgramVersionByte: UInt8 = 0x00
+    static let witnessProgramWPKHLength = 20
+    static let witnessProgramWSHLength = 32
     
     static let privateKeyAddressVersion: UInt8 = 0x80
     
@@ -33,14 +46,17 @@ public struct BitcoinAddressConstants {
     static let publicKeyHashDataLength = 21
     static let publicKeyScriptHashLength = 21
     
-    static let bitcoinBech32Prefix = "bc"
+    public static let bc1prefix = "bc"
+    public static let bc1separator = "1"
+    public static let bc1hrp = bc1prefix + bc1separator
 }
 
 
 // - MARK: BitcoinCash
 
 public struct BitcoinCashAddressConstants {
-    static let bitcoinCashAddressPrefix = "bitcoincash"
+    static let prefix = "bitcoincash"
+    static let separator = ":"
 }
 
 

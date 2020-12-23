@@ -19,7 +19,7 @@ class KeyGeneratorTests: XCTestCase {
                 let k = generator.generateChild(for: UInt(i), hardened: false)
 
                 do {
-                    let address = try BitcoinPublicKeyAddress(key: k.key).legacyAddress
+                    let address = try BitcoinPublicKeyAddress(key: k.key).address
                     
                     XCTAssertTrue(address == TestExtendedPublicKeyVector.expectedAddresses[i], "Wrong address. Expected: \(TestExtendedPublicKeyVector.expectedAddresses[i]) Result: \(address)")
                     
