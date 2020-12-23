@@ -22,6 +22,12 @@ typedef NS_ENUM(NSUInteger, KeyType) {
     Private = 2
 };
 
+typedef NS_ENUM(NSUInteger, VersionSLIP0132) {
+    P2PKH_P2SH = 1,
+    P2WPKH_NESTED_P2SH = 2,
+    P2WPKH = 3
+};
+
 @interface Key : NSObject <NSCopying>
 
 @property (nonatomic, readonly, assign) KeyType type;
@@ -34,7 +40,19 @@ typedef NS_ENUM(NSUInteger, KeyType) {
 
 @end
 
+@interface ExtendedKeyVersion : NSObject
+
+@property (nonatomic, readonly, assign) VersionSLIP0132 value;
+
+- (const unsigned char *)versionBytes:(KeyType)keyType;
+
++ (KeyType)typeOfVersionBytes:(const unsigned char *)bytes;
+
+@end
+
 @interface ExtendedKey : NSObject
+
+@property (nonatomic, readonly, nonnull) ExtendedKeyVersion* version;
 
 @property (nonatomic, readonly, copy, nonnull) Key *key;
 @property (nonatomic, readonly, copy, nonnull) NSData *chaincode;
@@ -46,6 +64,7 @@ typedef NS_ENUM(NSUInteger, KeyType) {
 - (instancetype)initWithSerializedString:(NSString *)string;
 - (instancetype)initWithSerializedData:(NSData *)data;
 - (instancetype)initWithKey:(Key *)key chaincode:(NSData *)chaincode;
+- (instancetype)initWithKey:(Key *)key chaincode:(NSData *)chaincode version:(VersionSLIP0132)version;
 - (instancetype)initWithExtendedKey:(ExtendedKey *)key;
 
 - (NSString *)serializedPub;

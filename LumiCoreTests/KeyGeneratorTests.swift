@@ -141,6 +141,23 @@ class KeyGeneratorTests: XCTestCase {
             })
         }
     }
+    
+    func testGenerationSLIP0132() {
+        for element in TestExtendedKeySLIP0132Vector.elements {
+            let seed = Data(hex: element.seed)
+            let generator = KeyGenerator(seed: seed, version: .P2WPKH)
+            
+            XCTAssertFalse(generator.extPrv != element.root, "Wrong extended private. Expected: \(element.exprv) Result: \(generator.extPrv)")
+            
+            do {
+                try generator.generate(for: "m/84'/0'/0'/0")
+                XCTAssertFalse(generator.extPrv != element.exprv, "Wrong extended private. Expected: \(element.exprv) Result: \(generator.extPrv)")
+                XCTAssertFalse(generator.extPub != element.expub, "Wrong extended private. Expected: \(element.expub) Result: \(generator.extPub)")
+            } catch {
+                XCTAssertNotNil(error, "\(error)")
+            }
+        }
+    }
 }
 
 // MARK: TEST VECTOR2
@@ -1397,5 +1414,50 @@ struct TestExtendedPublicKeyVector {
         "17FrbefTqkdJk6A63jUngg8m8QaSNXdkNE",
         "19hqSdCknKRjNqC8YU4fP4qEgVZjYNk39G",
         "1JPeYJsPtBWuzaYd4DPivDvaimKxG1eAhZ"
+    ]
+}
+
+struct TestExtendedKeySLIP0132Vector {
+    static let elements: [(seed: String, root: String, exprv: String, expub: String)] = [
+        ( "1d85753fd04ea932e9b759ae7de01e6557a40be2074219272d26994ab4d91a5bca4f6e860d43324b44b5c18a8578b997f4aba1093a4c8c148e658e6c7aa19943",
+         "zprvAWgYBBk7JR8GisMGfrscBG8kiiAqctBTLtf889VkXsgYtrNPenHs6YarqLvEZ4AHMBzRX5pZ6KtTx6iMLzavENWtMmnzuPCcdr7sceHKq8Z",
+         "zprvAftFdECKLcVQb4SDpVt5zDY3ukcMHxSkauzb6Bzg4kb3j8ofTcKCJ6RYcqUadV9C81mw4dKFrYN5Fo4ZehkSxMCCFXPDuYvwjqSwk2xpynG",
+         "zpub6tsc2jjDAz3hoYWgvXR6MMUnTnSqhRAbx8vBtaQHd682bw8p19dSqtk2U85WASHjNq229CgfiRz7JUCAHuDiPPj5ChQWLqoDWr2EyS9hLYt" ),
+        ( "ebe7bc8c6755d258a4b1ee062115700a33ddd02e064f153de7987e047638a7148c3bf9471210b4c5675b43d09e5038b04037faf56ca8cda850b4269acc4b10bb",
+         "zprvAWgYBBk7JR8Gip1hYwtVE1dcTX5msiXpchSeQcvEv3zTDi6DBZj5XAzj3Bgp65vyNahhd5TTG9LCoYGPQb2f1Pvjxn8nH12S46DQ8h13mJo",
+         "zprvAfhhYBQpMkqM5gAxoe5VLuQ3gMc4C5k3yxh5ic8giNfmDvBgfyk3BzNjdGPQSXkDkr3kPPrGzTPt7NnynBdPDrxthyQ6mXwn2zfXjFAJhtH",
+         "zpub6th3wgwiC8PeJAFRufcVi3LnEPSYbYTuMBcgWzYJGiCk6iWqDX4HjnhDUaJaUPcTfC8zG7bXKz5AVLU1xy75YLiMHwxJgyZGMGockT4vgJi" ),
+        ( "b5fa9657ca89a2645f63adf8b81a6aa4f8e36c2247a9723d6c7375ce04ba6f651463956a3e028430538242fed87ac4ca92137fdb98c9f12609eee26088c62bc3",
+         "zprvAWgYBBk7JR8Gj9ruKHZfWK5fUyjsNFNBVByNm32yns2s5TAffNFrSPTXoTe56qnXg1ZRHwiiWRWz8UFzYX2DgXpaBNztnvmiUns11GXLJGa",
+         "zprvAemimYg3BFmoYjdPYCWMHmqyCs7gEUBMMxgjQGc72etH1Z7pL7hnu3NiExbTP2b7jFpPvF5W7ePfD6LKVUsstYwYRPLokmigiKiGMuyrFmG",
+         "zpub6sm5B4Cw1dL6mDhreE3MeunhktxAdvuCjBcLCf1iazRFtMSxsf23SqhC6FLUuZPZMkSaRFJwLv8ZFEGco4ttNNRwNkXxLCeRyTfXJGXsbNh" ),
+        ( "e3c0b8efea2a7d390f06d02aa60d6352ba5e4dd6503f2d23ffd395b989aa9ad38c071fee819699c3f652389a2f5bc4fc21887268273ef70a1755da9f7e6e1fcc",
+         "zprvAWgYBBk7JR8GihMNgiB2qmNsC9Jmy8nwgjm6GrjZqgs7xxXKPTaM2A51CMciHQCiZSLRjK7REeUW8YiY27yrWSdrjxSdnC8FdHx9CbM9Lnq",
+         "zprvAfXBG2EsYDMamKypCH2QSZtkbX7jyYqXoLgVUBiNqdwNBdwi8YV3mDLAi5XJhE9PQ2Do9RJsb5WmsEfENSqqdCwXpYvdn9ZVq71xUnvSUg7",
+         "zpub6tWXfXmmNausyp4HJJZQohqV9YxEP1ZPAZc6Ga7zPyUM4SGrg5oJK1eeZMdddFyjnz1BkRrN1dBMfh84rLktW48ucfoAPc8DYGgmLtDUNFi" ),
+        ( "6c8b44a07df1a369f00e230fcf6358478dcee8aeff865a1111063f8d449ca3923e2dd5f87ba8da4d97c70e923cd4b8bf5962d402639eb47312093da7b0a76a1e",
+         "zprvAWgYBBk7JR8GkHTSs98m1QaGzBaBm52JD69fqcz7hmLM5hwhfVCBrvfN1qeV9yyjQsqYBKQ12H19ErDMN6BoLJjipAVxajdjrbbExAEfP5T",
+         "zprvAedWhgST7NT74bX6whqUv7XGpTzsM1WpQa8hKz8oSkSJLw3taCmCHbcZdifHgvxhNy13a3QhF7bixtNbXgD57dh7iLHTMXhPv5cciHGk5AE",
+         "zpub6scs7ByLwk1QH5ba3jNVHFU1NVqMkUEfmo4J8NYR15yHDjP37k5SqPw3UznZ7nCNm192ddX1Tv7qDHRuEZP9n91sDp2YSf2SwY7sh7Keuhx" ),
+        ( "fc5da3c5978f9b206a33cf7c5045e4fe764124df7685a2e33795c5ac526618d917cc0e5301c6dbd9c5558e83663d00b186f19059c1987090add3df1d0338e6a0",
+         "zprvAWgYBBk7JR8GiqFbSqceGp7SXoKyY2KpM8XpGBquLFwfHzpHxotn259iS8swBjr17RQzwGXPzaUYV7uXxH8wsR79XrzdjyeNMtzA4hNXPH3",
+         "zprvAfrvKbNdPeVcqMQCAYpaibi9rLYLWTZdiQYnepX5TaixKkawhQbtKVNg2cNAH3T6kfVe7QA2rhjvifiybrMhd59nQZBzW8XSNye4iCknjyj",
+         "zpub6trGj6uXE23v3qUfGaMb5jetQNNpuvHV5dUPTCvh1vFwCYv6Ewv8sHh9suEoWzbgiukkxcNBD3vTgqTBLeDNnnD4esP9XMVS7THkJnPGZJn" ),
+        ( "c7b0bff24f4a2fcd83a7267c43aad3181e91fe3e4c29a2ae2f587b76280ff75f7ec1399b885b8d5dd0c936dd876f0287edefeef64d9dcba1e3fdb47caa0d86f3",
+         "zprvAWgYBBk7JR8Gk2uAyXvKiCGKWysT1Q13RCtYr4rwCWqZRfZSeiayMc77VMWmJjbG67wrczNxb8ix1x34KJdiu4howXbuXrh7UttcTXLjeLB",
+         "zprvAf3cuDLHzPSQ1me8dBWL8baVSjTY4qb4A9ZtoDh5V9hb69gYpu14zvYr7LYK5tf8JLmG2kBDpYLdeJzZYZrPSJGnA4uBb24fjtbPGhdRjFq",
+         "zpub6t2yJisBpkzhEFibjD3LVjXDzmJ2UJJuXNVVbc6h3VEZxx1hNSKKYisKxcLQ7eh8NWbiVuE4NxprkxGv27a7PW89XaqtxcGXUEBim2D4PT6" ),
+        ( "83a6b64c6e0fbb96d8c7cd8ac0a2832943e4559cb1491842f66b57377676cb41b976ad91ecba1b8260341899d40925f543bc7c0e850f78454bd8246705ac404c",
+         "zprvAWgYBBk7JR8Gjv4dRDBnmYPf5P8GXLyD4PxUbLPq8iRisaK5NtPmqL7w9eYhdfbLNXZYecjBqnih7hVurY1W68QsHKBHxQHG81SMp48uvDB",
+         "zprvAfwcUKeov7v3Ezv5akArwtzxoxqbJk3bUGHkULGxyoA3REXwC94moDqAV8qHwyA9rvowrRLEfe3QtTmFWrMBzj2zFLA3G7bSyT3sn8KEEus",
+         "zpub6tvxsqBhkVULTUzYgmhsK2whMzg5iCmSqVDMGigaY8h2J2s5jgP2M29eLPr86iaopNuMtGvibMt6gGeg4zWkHuwXzds2DAwiiprozuUiErd" ),
+        ( "2117c551c6496881d17723caaa8ccb756edcd884dd6732216ee6e6ff3c6896257ba39a0a708f7e5c215609efb79da0d7ef92f0352346455405de880c40777256",
+         "zprvAWgYBBk7JR8GkMuz5246zxmnzV2FL2fTowXUkBs5GhEhuWQwAmFB1zfA6DKdj7KzjAYhpyj4fSBChXL2cs5JkJsLxPnrCGYZL8y22nEwXwU",
+         "zprvAehCJJXn3iQSWJJqVH4LXzJPkRmdEzRtY7j4XFSaafhwzF5gMkNckssRUFRKwtcJV1HZ2kPpuePYmMuYPbiaT7NP9xQGHT4dZhXtZAtbzpP",
+         "zpub6sgYhp4ft5xjinPJbJbLu8F8JTc7eT9juLefKdrC91Evs3QpuHgsJgBuKWoi92h2tr2nrrLxgqbpJU2n4Fg9cMoh5Yt81qk4uzS157rK9iq" ),
+        ( "195e300ea383b7887483ea97c6b8cfbb0ba4b4a9a7888dd695efa751d9762f161cec7323e316e1f983b35f1d75758003d7a6ac57a7de004c5acbb3c5227ff353",
+         "zprvAWgYBBk7JR8Gj4B93zQQ3egBi7r5k6LXJ2o9N87A5Cu5WXh648HQGg7xMGwsZ8YfPAi9WdJ8sisD5J4BY1AJiuXicEpmGWzFQnqLq4vwF3r",
+         "zprvAfq1ziDCCxcLGzMo1VxSFuxM4xpAs6qd22MAqVqMDfR8kBjsLYVSgysDcQ5MpwvsjhV7mtUXKQuAfDLWSHGKdUfH6SSiQPhX2uA2e7QfHk3",
+         "zpub6tpNQDk63LAdVUSG7XVSd3u5czefGZZUPFGmdtExmzx7cz51t5ohEnBhTfSyom1wHJMuKDhVPGqjntriSCi1FknxyWQGgyGx19i5epYPvj2" )
     ]
 }

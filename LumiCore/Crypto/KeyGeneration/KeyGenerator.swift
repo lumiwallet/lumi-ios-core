@@ -36,7 +36,7 @@ public final class KeyGenerator {
     
     /// Initialize with seed
     /// - Parameter seed: Seed data
-    public init(seed: Data) {
+    public init(seed: Data, version: VersionSLIP0132 = .P2PKH_P2SH) {
         let pass = KeyGenerator.HMACKey.data(using: .ascii)!
         let uint8seed = [UInt8](seed)
         let uint8pass = [UInt8](pass)
@@ -51,9 +51,9 @@ public final class KeyGenerator {
         let outputData = Data(output)
         
         let key = Key(privateKey: outputData.subdata(in: 0..<32))
-        let extendedKey = ExtendedKey(key: key, chaincode: outputData.subdata(in: 32..<outputData.count))
+        let extendedKey = ExtendedKey(key: key, chaincode: outputData.subdata(in: 32..<outputData.count), version: version)
         master = extendedKey
-        generated = ExtendedKey(key: key, chaincode: outputData.subdata(in: 32..<outputData.count))
+        generated = ExtendedKey(key: key, chaincode: outputData.subdata(in: 32..<outputData.count), version: version)
     }
     
     /// Initialize with serialized extended key string
