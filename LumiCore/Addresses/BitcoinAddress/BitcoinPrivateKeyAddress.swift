@@ -15,26 +15,26 @@ public class BitcoinPrivateKeyAddress {
     /// Initialize with a private key data
     /// - Parameter privateKeyData: Private key data (should be 32 bytes long)
     /// - Throws: BitcoinCreateAddressError.invalidDataLength
-    public init(privateKeyData: Data) throws {
+    public init(privateKeyData: Data, version: UInt8 = CoinVersionBytesConstant.bitcoin_prvkey_version) throws {
         guard privateKeyData.count == BitcoinAddressConstants.privateKeyDataLength else {
             throw BitcoinCreateAddressError.invalidDataLength
         }
         
         data = privateKeyData
-        let s3 = Data([BitcoinAddressConstants.privateKeyAddressVersion] + [UInt8](privateKeyData) + [0x01])
+        let s3 = Data([version] + [UInt8](privateKeyData) + [0x01])
         wif = s3.base58(usingChecksum: true)
     }
     
     /// Initialize with a Key object
     /// - Parameter key: Key of private type
     /// - Throws: BitcoinCreateAddressError.invalidKeyType
-    public init(key: Key) throws {
+    public init(key: Key, version: UInt8 = CoinVersionBytesConstant.bitcoin_prvkey_version) throws {
         guard key.type == .Private else {
             throw BitcoinCreateAddressError.invalidKeyType
         }
 
         data = key.data
-        let s3 = Data([BitcoinAddressConstants.privateKeyAddressVersion] + [UInt8](key.data) + [0x01])
+        let s3 = Data([version] + [UInt8](key.data) + [0x01])
         wif = s3.base58(usingChecksum: true)
     }
     
@@ -57,7 +57,7 @@ public class BitcoinPrivateKeyAddress {
         
         let versionByte = wifDecoded[0]
         
-        guard versionByte == BitcoinAddressConstants.privateKeyAddressVersion else {
+        guard versionByte == CoinVersionBytesConstant.bitcoin_prvkey_version || versionByte == CoinVersionBytesConstant.doge_prvkey_version else {
             throw BitcoinCreateAddressError.invalidWIFAddressVersion
         }
         

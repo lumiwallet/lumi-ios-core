@@ -15,7 +15,7 @@ public struct CoinVersionBytesConstant {
     public static let bitcoin_p2wpkh: UInt8 = 0x06
     public static let bitcoin_p2wsh: UInt8 = 0x0A
     
-    public static let bitcoin_prvkey_version = 0x80
+    public static let bitcoin_prvkey_version: UInt8 = 0x80
     
     public static let doge_p2pkh: UInt8 = 0x1E
     public static let doge_p2sh: UInt8 = 0x16
@@ -37,8 +37,6 @@ public struct BitcoinAddressConstants {
     public static let witnessProgramVersionByte: UInt8 = 0x00
     public static let witnessProgramWPKHLength = 20
     public static let witnessProgramWSHLength = 32
-    
-    public static let privateKeyAddressVersion: UInt8 = 0x80
     
     public static let privateKeyDataLength = 32
     public static let publicKeyDataLength = 33

@@ -50,6 +50,35 @@ class AddressesTests: XCTestCase {
         }
     }
     
+    func testWifDogeAddresses() {
+        //Mnemonic phrase: sure daring couple leisure want swear fluid border quality dwarf lake cat
+        let generator = KeyGenerator(seed: Data(hex: "b5fa9657ca89a2645f63adf8b81a6aa4f8e36c2247a9723d6c7375ce04ba6f651463956a3e028430538242fed87ac4ca92137fdb98c9f12609eee26088c62bc3"))
+        
+        try? generator.generate(for: "m/44'/3'/0'/0")
+        let version = CoinVersionBytesConstant.doge_prvkey_version
+        
+        for i in 0..<30 {
+            autoreleasepool(invoking: {
+                let extkey = generator.generateChild(for: UInt(i), hardened: false)
+                
+                let privateAddressFromKey = try! BitcoinPrivateKeyAddress(key: extkey.key, version: version)
+                let privateAddressFromData = try! BitcoinPrivateKeyAddress(privateKeyData: extkey.key.data, version: version)
+                let publicAddressFromKey = try! BitcoinPublicKeyAddress(key: extkey.key, type: .doge(.P2PKH))
+                let publicAddressFromData = try! BitcoinPublicKeyAddress(publicKey: extkey.key.publicKeyCompressed(.CompressedConversion), type: .doge(.P2PKH))
+                
+                let privateKeyFromWif = try! BitcoinPrivateKeyAddress(wif: DogeDerivationKeyAddressesTestData.data[i].wif)
+
+                XCTAssertFalse(privateAddressFromKey.wif != DogeDerivationKeyAddressesTestData.data[i].wif, "Wrong wif address Expected:  \(DogeDerivationKeyAddressesTestData.data[i].address) Result: \(privateAddressFromKey.wif )")
+                XCTAssertFalse(privateAddressFromData.wif != DogeDerivationKeyAddressesTestData.data[i].wif, "Wrong wif address Expected:  \(DogeDerivationKeyAddressesTestData.data[i].address) Result: \(privateAddressFromKey.wif )")
+                
+                XCTAssertFalse(privateKeyFromWif.data.hex != extkey.key.data.hex, "Wrong private key data Expected:  \(extkey.key.data.hex) Result: \(privateKeyFromWif.data.hex )")
+                
+                XCTAssertFalse(publicAddressFromKey.address(for: .doge(.P2PKH)) != DogeDerivationKeyAddressesTestData.data[i].address, "Wrong legacy public address Expected:  \(DogeDerivationKeyAddressesTestData.data[i].address) Result: \(publicAddressFromKey.address )")
+                XCTAssertFalse(publicAddressFromData.address(for: .doge(.P2PKH)) != DogeDerivationKeyAddressesTestData.data[i].address, "Wrong legacy public address Expected:  \(DogeDerivationKeyAddressesTestData.data[i].address) Result: \(publicAddressFromData.address)")
+            })
+        }
+    }
+    
     func testBitcoinAddresses() {
         for element in BitcoinAddressesTestData.data {
             do {
@@ -387,5 +416,102 @@ struct BitcoinSegwitDerivationTestData {
     "3A7Drgjz6jm1pM4PsXPc5pkz6pCeWK6R3P",
     "34FAP6vkFe6BexErgcSu7BCp3CENFFk3mC",
     "32bSQdAFAxQW1Sr14mqfMoMzqwoW84bxk7"
+    ]
+}
+
+struct DogeDerivationKeyAddressesTestData {
+    
+    static let data: [(address: String, pubdata: String, wif: String)] =
+        [
+        (address: "DQGeSi49H8LXLGstNrHaBBz3ANu8WJR5mc",
+         pubdata:"028d0acae22c090b10764b3579f2b2122c7e5f543a02c07a750d6d7b0b050986f5",
+         wif: "QUWPbZaBp1575iYw35FmpD24qZwQsB1Wbta7WmJdySHqphm9ZPPo"),
+        (address: "D7CJ1HA7VRPjbPBdLDKnGA6eZwewbT4nHn",
+         pubdata: "0278b715fa3783f1b0d07082b20ad92c8b575ec221c5bc4cab919589a96601887a",
+         wif: "QRL5WubGCjzJE6g9dqDqr6YrsCKRQLB3nJRr2vP6sYLhC58DCMy1"),
+        (address: "D8U5vEN3frJAyhUP2n8teK5ihG4eWKj4eQ",
+         pubdata: "0212452f2ec4b37d72a4730fe61c27aa422563b28c0a950f236f8e44f445a6b673",
+         wif: "QUKaFosvEYrLyQuXCBHroLTeqCEoxeGgkdP2J6HDeZ4vbVtGxvNe"),
+        (address: "D9f4R1XZnAJTmd6bb6KmvvnAaF46ELELoS",
+         pubdata: "023e1222a14e4f247c55338556110ed16f3133cc4ac7dd6460fb7ed6e87420c68a",
+         wif: "QWZpEJzq1sDj9EEYa1Ay7apiqDyB34XxQ6XW1NMhNxFA6jPPFKvy"),
+        (address: "DChmRojxEL13aDEmd3NDwmEeYpXLSEWknF",
+         pubdata: "03bf47b6c94588d36689eb679d5aa69480d53ac6358ebadfc986638f572923633b",
+         wif: "QPZKpGdHs3Y6ffyxvH3SDizX4oEzgpKLMPvBkjqD7YLQSjMMUSB2"),
+        (address: "DRzF2LxHYt5u2Zc7wwiRXBieejbPw6vUTK",
+         pubdata: "02bb2b2b14ece3642b4e558fddfa84eed582012e50c72f2997b80edba85e236cac",
+         wif: "QSEnuDTSuYCj9F8N4YtMKFuHSGG1MeFxUxD6RBJmRXPme816rpZu"),
+        (address: "DC255Kf1i4wfCF3rUcH34PEYqVW623LiXo",
+         pubdata: "038e32eb9d08d9ebc870678c5c2ee1629c88a9c13578ef151348a31b2fd995345f",
+         wif: "QRciZor8gDn2CmLbnmoP3SsPyUBjgtFQcUYMF8hx6ZiuXaKaf2MU"),
+        (address: "DJRNoddAVGabvWc9QLWDWkqrBf7vGqdGWk",
+         pubdata: "021f20a8cd816ddeb7ce68214a6fdc9466e596d72038fb6c28fdcf7378235ef7c5",
+         wif: "QQCUodnfGDg5U2ZLD7De9Kaz2mQCwLpbseJVs6eNc5a1AVFgNgN3"),
+        (address: "DSJ8NXcpcZZ13XzywCj9686GCgvXhM4VG1",
+         pubdata: "033f6a575c68f85b51e0b03598d68ec7d5f353992ae74c7d7e1b7e856168b56716",
+         wif: "QT8prLUKukTVCP75XivJXaCztvq2kZvk51cdaQ4TJUpoGv3UDirV"),
+        (address: "DFo5dKgq2pLhELXabyCgUyqAGEh1DweYRq",
+         pubdata: "029ef3521d5092d23e784a96099a28467f518ca84a810768ab15e857b618ea6370",
+         wif: "QVLF1tiu2hgNZi75SCe3Bq1pdmhuyssidqzvspZrjm4jg3HbVo6p"),
+        (address: "DFVUAFyA5gtvG5FTMnUqtHHTL6NaKpNTEr",
+         pubdata: "02f9a2c14af20d0a94e8d5a2dd93081b9fa9d3e93986162e69c7bc843d269ad3d9",
+         wif: "QTsd9ZHuBvTwt3PRPGPrntSu6VQ64R9QHY2cdS5GCLdjhBrb26nS"),
+        (address: "DKG9x7FMDRzBneUa4SHxuesRfUx8qzxWpd",
+         pubdata: "030fd17bfa6eb09d5739c3dec2dc17f8495bf2a579903a902b8b931acaf6c5372f",
+         wif: "QU2CKdHHyERACWH5H8gtZBYTUijQ8KboEp97goqJfKaG1Xa7vrhX"),
+        (address: "D8Tut46tTCmo3QiSQCHkAPHTvBihwKKKAK",
+         pubdata: "02752667f5382c84fffd9ecf17d99bd89e3678cd97db2e06a6869feb35216da973",
+         wif: "QRmTBu2ivEcg4jncCAkk9NGwg7w6Rb61u9VSjFKjbbLa81YpP3H5"),
+        (address: "D8QicZKB3TqCf6UrzKMSURBsu7NvUQTLZC",
+         pubdata: "03fc48bbeea67f822fa12d5ab35070881fca64a7f8c83483a5e467f5b7e0c8c6e0",
+         wif: "QQsE6pDUecNBU87QGWwmM7Wk6jg9HAEDaCYxqgfh4YgJ5vVByDcQ"),
+        (address: "DNKi6X4wpQxHrVnkpAe9Xpz4zto878bg1p",
+         pubdata: "03c63b9f00d7155da0edc5825d143bd50a2fe55a720d16baaa7f6444d83b4c4bbc",
+         wif: "QPZsQw4anhbz5QauVtfVJDVLD7bHsHvUyQ7TFQUQPws5SQGm6B6M"),
+        (address: "DL6UZAaB2dop6o6nXh2dUWkC7tkdBHDNGr",
+         pubdata: "02002c9396ed18fa432c8ffe5d13f46d5d4a98e69b45d941cbb1a3b2fd867e9bc3",
+         wif: "QQBfe5HNNDkASC1MCxMZQ7i1J6cuZeERnA5NvNpZQc8FFGapq9FP"),
+        (address: "DCL4K5qi6Ju6eZzZxZvULiDWTWHtiXT1oo",
+         pubdata: "02ea4e2dd77c59e1fcc252f8789043293d55549c9196932a69cfd60d56a5e5ee3c",
+         wif: "QWfthfjr9vtQv4qz1xHhKGDkhGuTxxQw2WCFQLCqBfphYyFgqBm4"),
+        (address: "DAc2Z393AvUG9AHcA1SrXBbKmbPTxAsncZ",
+         pubdata: "030a5b487895ab5443013d2b5f058248ed8f6c384a68ef94412085c2b7e34d1e85",
+         wif: "QPRCpke4zy2eHvfbUE3RWN9XTzgc2pFxmrE6UYYciHMUbAPaepUg"),
+        (address: "DQzHkz3jgBodv6e2asvJzVd1jatiCQKo9g",
+         pubdata: "03d66b5572b0fa66d18e29c04cc9592aa6513496146eed2997a83f00e832f34f45",
+         wif: "QQR8zYZk5wyp9XT5EuSAVVQeSxY7yHnHw61AD6HXGhckULFnKvHU"),
+        (address: "DDg2SfC2ghouJeoYPzs7wxRVJTFv21RH3s",
+         pubdata: "036aaf0b6d189b24636c1f500af9f61c8ad1eeb2294e1293935b9cee09a434b74e",
+         wif: "QWKq84Pb2ggaiAtMsq9dVvVkQKAwuVP2UTmh6nWmux48XqfaQsR2"),
+        (address: "DGEDnrxp2wSdF1PDf8oBiXofrQcMQD9nKs",
+         pubdata: "0393aec062a9282e86ecf1735bcd94f8c1e9bbd1dd458f13c2cb581d040089a894",
+         wif: "QQXmwfyrFgMMWa2T422PkKXyBqGdXAU7nsX8ET4gjABjNMwgiNxw"),
+        (address: "DKEqfqfAFU8Jjn5MRqA9xXmKfyUoHctZ3k",
+         pubdata: "02bc3113e1cf6724fa41dfd005b6f55434c5c409408803d5489820772aa3903864",
+         wif: "QNrQfYSEHkWC2x1oscrNVjKtQyMvoz6sZdCoaN9XB6xVGSHNj9wp"),
+        (address: "DD75zowqf3VbGanyG5DfVoGUPUZ1V1EFiX",
+         pubdata: "027f6f6e4bb9d1ae7c954b21d65afe1a0757f96cd790cd774b1d49426b87d7a421",
+         wif: "QNwCYQUNsUpJFy2gHf38pLVcAUJb8AYmxLmDpG9bwvWVcUUTqLx1"),
+        (address: "DKNX1txBijQd9kZ6bduLbc4e5aCfC8kE4D",
+         pubdata: "02bd05e927ac5f130837e3b215c48d2e6ed7f5ce6ae4218abbc31a3dacafe16992",
+         wif: "QNqjDipQzyBdE5u7537944S1n39aCAm75PEHLts1VD981iv5unkT"),
+        (address: "D5syTy9VLoZdzqdTsRJeBzkafyWLsHjJ9n",
+         pubdata: "024d4378e883472cca4de9bbe526ddd993d0e6127b38d1625b6b1b24d618439264",
+         wif: "QUi818rAkbCXCjQcSS8hsUHysoBqcsPG4NuDc8YcMes9XyChhemX"),
+        (address: "D8GpRRhKzFPsFLm9bnnTEAuiDtYsKJGv1k",
+         pubdata: "02f876cf136f5b95590b32d4a17569ab2c49e4becc9b18577b2738519ded299462",
+         wif: "QNyeTCpkbu36FFXyvX14h8BVhEp98yMEzNBX37NHFaqXT8FpqXTR"),
+        (address: "DJUvomrqnqfaJJZJh8tRCfGm48BonyHmiN",
+         pubdata: "03c3e221dd78ffa8f8b6ba4d76fef13613571c4880bb09b1a0a23685b13a6a53ce",
+         wif: "QTyRUGBDv8BfzpKGy28Ha4XnREn2o2iA8MGaLcfLfFgTJX4HGSua"),
+        (address: "DJdmHHhQ3n9R1miHkSFMh57i4P7GBXEgWe",
+         pubdata: "02a9ef7b10b861a3e9ccab600b122d1e4d59dd76d784c73dbcc9eef23665533150",
+         wif: "QPszQdru2x4mP1sEqgq1mKZeU4gbt2gNG1qYJjZKcU8Zk8iqBW5v"),
+        (address: "D6B74uwfrWQetf3VqSMFYg8VN4WqDp2NVd",
+         pubdata: "02902f7b5dc287c25b8b539b94380b013442132bd6014ef34ae99ac7287e2109ce",
+         wif: "QRwBycp6fWZjuDU8ChKvtphPFGSPwMUSv52jK5FB2VHoX7cHNHjH"),
+        (address: "DN37bLYkivNpy8B9JbN5ZJnaGWrrDtnjdy",
+         pubdata: "0289bf2d780f3547f4c6f5b2a453001cc0a7b3ba574d51b9bd0039f5e937d40ec5",
+         wif: "QP7NrzhMqPyDhG8QAYExBBU3j6wQBfBkGXQngKBznPJz5EvZ5oyd")
     ]
 }
