@@ -34,17 +34,17 @@ public struct CoinVersionBytesConstant {
 /// - privateKeyDataLength: 32
 public struct BitcoinAddressConstants {
     //BIP-141 Defined witness program version
-    static let witnessProgramVersionByte: UInt8 = 0x00
-    static let witnessProgramWPKHLength = 20
-    static let witnessProgramWSHLength = 32
+    public static let witnessProgramVersionByte: UInt8 = 0x00
+    public static let witnessProgramWPKHLength = 20
+    public static let witnessProgramWSHLength = 32
     
-    static let privateKeyAddressVersion: UInt8 = 0x80
+    public static let privateKeyAddressVersion: UInt8 = 0x80
     
-    static let privateKeyDataLength = 32
-    static let publicKeyDataLength = 33
+    public static let privateKeyDataLength = 32
+    public static let publicKeyDataLength = 33
     
-    static let publicKeyHashDataLength = 21
-    static let publicKeyScriptHashLength = 21
+    public static let publicKeyHashDataLength = 21
+    public static let publicKeyScriptHashLength = 21
     
     public static let bc1prefix = "bc"
     public static let bc1separator = "1"
