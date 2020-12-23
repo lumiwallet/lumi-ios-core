@@ -25,7 +25,8 @@ typedef NS_ENUM(NSUInteger, KeyType) {
 typedef NS_ENUM(NSUInteger, VersionSLIP0132) {
     P2PKH_P2SH = 1,
     P2WPKH_NESTED_P2SH = 2,
-    P2WPKH = 3
+    P2WPKH = 3,
+    DOGE_P2PKH_P2SH = 4
 };
 
 @interface Key : NSObject <NSCopying>

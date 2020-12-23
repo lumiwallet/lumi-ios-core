@@ -158,6 +158,23 @@ class KeyGeneratorTests: XCTestCase {
             }
         }
     }
+    
+    func testDogeGenerationSLIP0132() {
+        for element in TestDogeExtendedKeySLIP0132Vector.elements {
+            let seed = Data(hex: element.seed)
+            let generator = KeyGenerator(seed: seed, version: .DOGE_P2PKH_P2SH)
+            
+            XCTAssertFalse(generator.extPrv != element.root, "Wrong extended private. Expected: \(element.exprv) Result: \(generator.extPrv)")
+            
+            do {
+                try generator.generate(for: "m/44'/3'/0'/0")
+                XCTAssertFalse(generator.extPrv != element.exprv, "Wrong extended private. Expected: \(element.exprv) Result: \(generator.extPrv)")
+                XCTAssertFalse(generator.extPub != element.expub, "Wrong extended private. Expected: \(element.expub) Result: \(generator.extPub)")
+            } catch {
+                XCTAssertNotNil(error, "\(error)")
+            }
+        }
+    }
 }
 
 // MARK: TEST VECTOR2
@@ -1459,5 +1476,50 @@ struct TestExtendedKeySLIP0132Vector {
          "zprvAWgYBBk7JR8Gj4B93zQQ3egBi7r5k6LXJ2o9N87A5Cu5WXh648HQGg7xMGwsZ8YfPAi9WdJ8sisD5J4BY1AJiuXicEpmGWzFQnqLq4vwF3r",
          "zprvAfq1ziDCCxcLGzMo1VxSFuxM4xpAs6qd22MAqVqMDfR8kBjsLYVSgysDcQ5MpwvsjhV7mtUXKQuAfDLWSHGKdUfH6SSiQPhX2uA2e7QfHk3",
          "zpub6tpNQDk63LAdVUSG7XVSd3u5czefGZZUPFGmdtExmzx7cz51t5ohEnBhTfSyom1wHJMuKDhVPGqjntriSCi1FknxyWQGgyGx19i5epYPvj2" )
+    ]
+}
+
+struct TestDogeExtendedKeySLIP0132Vector {
+    static let elements: [(seed: String, root: String, exprv: String, expub: String)] = [
+        ( "1d85753fd04ea932e9b759ae7de01e6557a40be2074219272d26994ab4d91a5bca4f6e860d43324b44b5c18a8578b997f4aba1093a4c8c148e658e6c7aa19943",
+         "dgpv51eADS3spNJh89FiNE2MSTdoiYVJNZ37djxbmwiqrJCVfbMrDuFaRyG7S3budPvvS5SGLvgbiKCLrLcLgunsMXQTnGLNsvhZ62HmPiDakwS",
+         "dgpv5AgzKurEdvRSgYFHrmVZNosCvFVAkGf7DZQUnYpp95QAGgdBw33w7HB9quyPYTjor1mrZykEuqj5vWgexU9VDzwE9A3q2eSE599bPp2jRQL",
+         "dgub8ua1fbn8C55myPuSu17XVfQoNoroaPgpWABgwfDnwCTApjjtLobhkaaoR979EGHPWfb6SUaPsM1EtFc3mH4jrHgh5zcrrZJEzuR9rHdEbhi" ),
+        ( "ebe7bc8c6755d258a4b1ee062115700a33ddd02e064f153de7987e047638a7148c3bf9471210b4c5675b43d09e5038b04037faf56ca8cda850b4269acc4b10bb",
+         "dgpv51eADS3spNJh85v9FK3EVD8fTMQEdPPUuYk84R9LEUWPzT5fkggnrbfydtNVARhcTU9YSvKVt8e5hnANkWEc8YpKPGgAFYXNWGPHujvFrcD",
+         "dgpv5AvEgV235jMFdLWG2UpriRoXwx5j7WMZzE1F5RSmTsG4fCnhTuRaN6MHjERjg46vsSJP6vEvQwvY95bRrWn245biMrSJAkf6QviAxCeWKdP",
+         "dgub8uoG2Awvdt1avCAR4iSpqHM8QWTMwdPHGpnTEXqkFzK5DFuPsfyM1PkwJUHuiYoBdMFFHxfwKZgwZXDK9hg49tLUDw75WE3GuGVBgPzM2Uh" ),
+        ( "b5fa9657ca89a2645f63adf8b81a6aa4f8e36c2247a9723d6c7375ce04ba6f651463956a3e028430538242fed87ac4ca92137fdb98c9f12609eee26088c62bc3",
+         "dgpv51eADS3spNJh8RmM1eiQmWaiUp4L7vDqn3GrQqG57HYorCA8EVDZmp8nQAKkBBZAku1G7nam8Qps2i9ytSEAogi9bsYGmUGevy2tnBZYvyt",
+         "dgpv59nM2xtnzuB9rHySyRckz29i9doYGLb3cL1nFtdcsDkCFisVQc7rVgBkwQif6G7k6c1dVMvX7LZJ3yshrbRCuJup1z2pgpDkutSvPQ49U5W",
+         "dgub8tfNNepgZ3qV99dc1fEj6shJcCBB6TcktvnzR12bfLoComzBpNfd8ybQWfjy2KKJEgTXpeBDaZh5czrcoVUVdeqFPrgxhJvn9yHb1MWXknP" ),
+        ( "e3c0b8efea2a7d390f06d02aa60d6352ba5e4dd6503f2d23ffd395b989aa9ad38c071fee819699c3f652389a2f5bc4fc21887268273ef70a1755da9f7e6e1fcc",
+         "dgpv51eADS3spNJh7yFpP5Kn6xsvBydEioebyb4ZvexfA7P4jhWmxaY4MakFo4JPMjyMeKnGZ9yTrdnP2ncXN3BodbXSASz1kjdC5U82yc3DLSH",
+         "dgpv5A6hEsuj2tqy6dEXhhxr6QAq4W5SKkY1eHCFcuXYr2hWHH5oTu3QNfHsu9nrQ2xfmvon59yEDAG3HSvuj46TQEtrXnM12yzV8zqmsf8JJWF",
+         "dgub8tyiaZqcb3WJPUtgjwapDFiRX4T59sZivsyTn1vXe9kWqLCVsfbB1xhXUQ7dv5RXZKYJHjfoToAfE6wJxyyHagbeXvcwCWx3YWtsMsjn7gg" ),
+        ( "6c8b44a07df1a369f00e230fcf6358478dcee8aeff865a1111063f8d449ca3923e2dd5f87ba8da4d97c70e923cd4b8bf5962d402639eb47312093da7b0a76a1e",
+         "dgpv51eADS3spNJh9ZMtZWHWGc5Kz1teWjsxVwT9VRDD2BrHrSwAEc9uCMLccYLAEKkNVmHP1AG3eGK2967Li1PkTTdJEf3LZH8gJmm8j7eUh9Y",
+         "dgpv5Au3geABzc6fJCTCQLy76TEfrBDzkMQSp76Ewsx2eRD2253P3pEHgnqTta4nxtfPHK8tjJfB6pGMjFMTcJj8NY3cAuyXYKumDb1WZeMC5dE",
+         "dgub8un52L65Ykkzb47MSab5DJnGJjbdaUSA6hsT6zM1SYG2a8A5Tan4L6F7TocftrKbqjv4Bn9HsYGtZFeaos7iVQjLLPEKcxnhpiY8c5A2eTi" ),
+        ( "fc5da3c5978f9b206a33cf7c5045e4fe764124df7685a2e33795c5ac526618d917cc0e5301c6dbd9c5558e83663d00b186f19059c1987090add3df1d0338e6a0",
+         "dgpv51eADS3spNJh87A39CmPY1cVXdeSHhBUdyqHuz4zegTc4jokXvrVMVpy2qZcG5ceCJrqm7PScZnRPMoXJCLtzZzixMY1iX9Jp5A3qnqHkwE",
+         "dgpv59Vi42s2jJY5WgtG1K1KpN8G5P1V6Co9QkoezNgCeJd5ursdqyiukEZn97CbtYms8L3KytFggE8MYeg56WFbucrVP535v6RgKmjAB1R1cxX",
+         "dgub8tNjPinvHTCQoYYR3YdHwDfrXwP7vKprhMas9V5BSRg6TuzLFkGgPXyRiKWQZ1vxbSFzHEPG1C7pXDr1f5pCiHbWWh61oynHkxTb4NTgndk" ),
+        ( "c7b0bff24f4a2fcd83a7267c43aad3181e91fe3e4c29a2ae2f587b76280ff75f7ec1399b885b8d5dd0c936dd876f0287edefeef64d9dcba1e3fdb47caa0d86f3",
+         "dgpv51eADS3spNJh9Jocfu54yPmNWpBum4rhi4C2Vs62WwMWCQYuDqYgh2nN64CSP5MuB1PhSqF1D82pvBw3fDqg2DbPN29HWQC3w54WEW3NyX9",
+         "dgpv59Gnu6ChfUvg29cnrNCA1pcupr24HUkA52ajyyCtNiv7z3zAsP3FrjjMeEJZ8sYVp1ACKuydWN2gE3QJ8SwVsv1PZz3RfLouJ6GirPKyQQg",
+         "dgub8t9pEn8bDdb1K1Gwtbp88gAWHQPh7bmsMdMx95bsAqy8Y76sH9b2W391DSYr32CRYdEVyxwAiwx8CdqpiLcfurzA3rV5jAsEB2Ha69tbATV" ),
+        ( "83a6b64c6e0fbb96d8c7cd8ac0a2832943e4559cb1491842f66b57377676cb41b976ad91ecba1b8260341899d40925f543bc7c0e850f78454bd8246705ac404c",
+         "dgpv51eADS3spNJh9By57aLY2jti5DSjH1psMFFxF8cvT8wfeKJXx1MVAkoBkMENi1MyTR1PUTbETn2a1wPuCTDTDHJShoifvwnCaBcFb1JanN1",
+         "dgpv59goLU3FjuZYM4zXzEUJNbRyPwj2JwyxwUfgFgCD8XurXpYiM7fkad6dG23YHuKvPSZT5vNSpDiE1voBMH8VmLYQ3nW9tKSB7xAMXay1g2v",
+         "dgub8tZpg9y9J4Dsdveh2U6GVSyZrW6f951gE5StQnbBvexs5sfQktDXDvWGqHeT9gVZaUdMThbJTdy9XTaKgVZkqBvSL4GX6467YWE8kYWSoUM" ),
+        ( "2117c551c6496881d17723caaa8ccb756edcd884dd6732216ee6e6ff3c6896257ba39a0a708f7e5c215609efb79da0d7ef92f0352346455405de880c40777256",
+         "dgpv51eADS3spNJh9dpRmPCrGAGqzKLi5hX86npxPz6Ab7kegFQPjtCtMRLQgv1JoT6dp3zYepb7HRV5bmE1xnHFsTkvNtLEAp3VnK8uog1mXqX",
+         "dgpv5AvbZEBodzSxVgy5a6SBT1pijddz8YNA8PSyaMikppgLLoygeszayLZQHg79EanhjJzp9YTa163Zv92XfR41PmKiMndeqEqzmGFZRrHbryN",
+         "dgub8uoctv7hC97HnYdEcL49ZsNKCC1cxfPsQzEBjU7jcwjLts6P4eYMcdy3rvZijPdva3zXQmPmLCU5He1djui2SP1kx2wkake51asyLrzcs72" ),
+        ( "195e300ea383b7887483ea97c6b8cfbb0ba4b4a9a7888dd695efa751d9762f161cec7323e316e1f983b35f1d75758003d7a6ac57a7de004c5acbb3c5227ff353",
+         "dgpv51eADS3spNJh8L5akMZ9JrBEhxAYVmCBat6d1vLFPdR2HGgYdFF7c6oCwydYdUKJU49zLUABViB5yXxAsvNFr4RJ2jN9F4VBry1Ec4ZJDbo",
+         "dgpv5Ay1KWEURGCBaUasJrgUfPyEqbbdD27Q2AWikKLpyWkKQfSQWnadNoBea12H9KgAsrByKqbpKZzGiFs7AsViCHoYyDYNaXsGgjLXZaE6NKk",
+         "dgub8ur2fCAMyQrWsLF2M6JSnFWqJ9yG3997JmHvuRjomdoKxiZ6vZ8Q26bJ9FSyiHGovGJbupCNyXBhFxWzf2jAgEcJai8Bu8KKDckz2ZezJ39" )
     ]
 }
