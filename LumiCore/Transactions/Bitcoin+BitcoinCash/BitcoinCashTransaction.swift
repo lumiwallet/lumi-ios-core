@@ -58,7 +58,7 @@ public class BitcoinCashTransaction: BitcoinTemplateTransaction, BitcoinTransact
             signedInputs.append(signedInput)
         }
         
-        return BitcoinCashTransaction(inputs: signedInputs, outputs: outputs)
+        return BitcoinCashTransaction(inputs: signedInputs, outputs: outputs, settings: settings)
     }
 
 }
