@@ -7,6 +7,7 @@
 
 import Foundation
 
+
 public class BitcoinTransactionSettings {
     var version: UInt32 = 1
     var witness: (marker: UInt8, flag: UInt8)?
@@ -64,6 +65,10 @@ public class BitcoinTransactionSettings {
     public class var bitcoinCashDefaults: BitcoinTransactionSettings {
         BitcoinTransactionSettings()
             .signatureHashType(type: SignatureHashType(bch: .sighashAll))
+    }
+    
+    public class var dogeDefaults: BitcoinTransactionSettings {
+        BitcoinTransactionSettings()
     }
     
     public var isWitness: Bool {

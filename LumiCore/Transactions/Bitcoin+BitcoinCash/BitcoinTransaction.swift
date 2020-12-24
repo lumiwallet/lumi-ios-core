@@ -7,69 +7,137 @@
 
 import Foundation
 
-/// An object for representing and performing operations with Bitcoin transactions
-public class BitcoinTransaction: BitcoinTemplateTransaction {
-    
-    func makeHash(for script: BitcoinScript, index: Int, hashType: SignatureHashType) -> Data {
-        var inputs: [BitcoinTransactionInput] = []
-        var outputs: [BitcoinTransactionOutput] = []
-        
-        if hashType.isAnyOneCanPay {
-            inputs = [_inputs[index].makeBlankInput(includeScript: true, hashType: hashType)]
-        } else {
-            for (inputIndex, input) in _inputs.enumerated() {
-                inputs.append(input.makeBlankInput(includeScript: index == inputIndex, hashType: hashType))
-            }
-        }
-        
-        if hashType.isSingle {
-            let output = _outputs[index]
-            outputs = Array(repeating: BitcoinTransactionOutput(), count: index) + [output]
-        }
-        
-        if !hashType.isNone {
-            outputs = _outputs
-        }
-        
-        let txpayload = BitcoinTransaction(inputs: inputs, outputs: outputs).payload
-        let data = txpayload + UInt32(hashType.outputType).data
-        let hash = data.sha256sha256()
 
-        return hash
+/// An object for representing and performing operations with Bitcoin transactions
+public class BitcoinTransaction: BitcoinTemplateTransaction, BitcoinTransactionProtocol {
+    public var witness: Data?
+    
+    public var id: String {
+        Data(transactionHash.reversed()).hex
+    }
+    
+    public var wtxid: String {
+        Data(payload.sha256sha256().reversed()).hex
+    }
+    
+    override public var payload: Data {
+        BitcoinTransactionSerializer().serialize(self)
+    }
+    
+    public var transactionHash: Data {
+        return super.payload.sha256sha256()
+    }
+    
+    convenience public init(inputs: [BitcoinTransactionInput], outputs: [BitcoinTransactionOutput], witness: Data? = nil, settings: BitcoinTransactionSettings) {
+        self.init(inputs: inputs, outputs: outputs, settings: settings)
+        self.witness = witness
     }
     
     /// Transaction signing
     /// - Parameter keys: A set of Keys whose public addresses correspond to the inputs used to form the transaction
-    public func sign(keys: [Key]) throws -> BitcoinTransaction {
+    public func sign(keys: [Key], signatureHashType: SignatureHashType = SignatureHashType(btc: .sighashAll)) throws -> BitcoinTransaction {
+        let serializer = BitcoinTransactionSerializer()
+        
+        let isWitness = settings.isWitness
+        let witnessScript = BitcoinWitness()
+        
         var signedInputs: [BitcoinTransactionInput] = []
-        for (index, input) in _inputs.enumerated() {
+        
+        for (index, input) in inputs.enumerated() {
             
-            let hash = makeHash(for: input.script, index: index, hashType: SignatureHashType(btc: .sighashAll))
             let pubkeyHash = try input.script.getPublicKeyHash()
+            let scriptType = input.script.type
             
-            guard let key = try keys.first(where: {
-                let pubKeyAddress = try BitcoinPublicKeyAddress(publicKey: $0.publicKeyCompressed(.CompressedConversion))
-                return pubkeyHash == pubKeyAddress.publicKeyHash
+            guard let key = keys.first(where: {
+                var publicKeyHash: Data
+                switch scriptType {
+                case .P2PK, .P2PKH, .P2WPKH:
+                    publicKeyHash = BitcoinPublicKeyAddress.p2pkh(from: $0.publicKeyCompressed(.CompressedConversion))
+                case .P2SH:
+                    publicKeyHash = BitcoinPublicKeyAddress.p2sh(from: $0.publicKeyCompressed(.CompressedConversion))
+                case .P2WSH:
+                    publicKeyHash = BitcoinPublicKeyAddress.p2wsh(from: $0.publicKeyCompressed(.CompressedConversion))
+                case .none:
+                    return false
+                }
+                
+                return pubkeyHash == publicKeyHash
             }) else {
                 throw BitcoinCreateTransactionError.privateKeyNotFound
             }
+
+            let hash = SignatureHashBuilder(transaction: self, serializer: serializer).hash(for: input.script, key: key, index: index, hashType: signatureHashType)
+        
             
             var recid: Int = 0
             let signHashType = SignatureHashType.init(btc: .sighashAll).value
             let signature = ECDSAfunctions.sign(target: .bitcoin, data: hash, key: key.data, recid: &recid)
             
-            let sigWithHashType = signature + signHashType.data
-            let script = BitcoinScript()
-            script.addScript(from: sigWithHashType)
-            script.addScript(from: key.publicKeyCompressed(.CompressedConversion))
             
-            let signedInput = BitcoinTransactionInput(hash: input.previousHash, id: input.previousID, index: input.previousIndex, value: input.value, script: script)
+            let sigWithHashType = signature + signHashType.data
+            
+            let script = BitcoinScript()
+            let publicKeyCompressed = key.publicKeyCompressed(.CompressedConversion)
+            
+            switch input.script.type {
+            case .P2PK:
+                script.addScript(from: sigWithHashType)
+                
+                if isWitness {
+                    witnessScript.add(components: [Data([0x00])])
+                }
+            case .P2PKH:
+                script.addScript(from: sigWithHashType)
+                script.addScript(from: publicKeyCompressed)
+                
+                if isWitness {
+                    witnessScript.add(components: [Data([0x00])])
+                }
+            case .P2WPKH:
+                
+                if isWitness {
+                    witnessScript.add(components: [sigWithHashType, publicKeyCompressed])
+                }
+            case .P2SH:
+                let keyhash = Data(hex: "0x0014") + publicKeyCompressed.ripemd160sha256()
+                script.addScript(from: keyhash)
+                
+                if isWitness {
+                    witnessScript.add(components: [sigWithHashType, publicKeyCompressed])
+                }
+            case .P2WSH:
+                
+                if isWitness {
+                    witnessScript.add(components: [sigWithHashType, publicKeyCompressed])
+                }
+            default:
+                throw BitcoinCreateTransactionError.privateKeyNotFound
+            }
+            
+            let signedInput = BitcoinTransactionInput(hash: input.previousHash, id: input.previousID, index: input.previousIndex, value: input.value, script: script, sequence: input.sequence)
             signedInputs.append(signedInput)
         }
         
-        return BitcoinTransaction(inputs: signedInputs, outputs: _outputs)
+        return BitcoinTransaction(inputs: signedInputs, outputs: outputs, witness: witnessScript.data, settings: settings)
     }
 
 }
 
 
+extension BitcoinTransaction: CustomStringConvertible {
+    public var description: String {
+        """
+        BITCOIN TRANSACTION
+        WITNESS_HASH: \(wtxid)
+        HASH: \(transactionHash.hex)
+        VERSION: \(version)
+        MARKER: \(settings.witness?.marker)
+        FLAG: \(settings.witness?.flag)
+        INPUTS: \(inputs)
+        OUTPUTS: \(outputs)
+        WITNESS: \(witness?.hex)
+        LOCKTIME: \(lockTime)
+        PAYLOAD: \(payload.hex)
+        """
+    }
+}

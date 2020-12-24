@@ -20,11 +20,14 @@ public class BtcBchFeeCalculator {
     let availableAmount: UInt64
     let utxo: [BitcoinUnspentOutput]
     let isSendAll: Bool
+    let isWitness: Bool
     
     public var usedInputs: [BitcoinUnspentOutput] = []
     public var usedInputsCount: Int {
         usedInputs.count
     }
+    
+    let allowedScriptTypes: [BitcoinScript.ScriptType]
     
     /// Init
     /// - Parameter amount: Amount for spent in Satoshis
@@ -35,6 +38,19 @@ public class BtcBchFeeCalculator {
         self.availableAmount = utxo.map({ $0.value }).reduce(0, +)
         self.utxo = utxo
         self.isSendAll = isSendAll
+        
+        self.allowedScriptTypes = [BitcoinScript.ScriptType.P2PKH]
+        self.isWitness = false
+    }
+    
+    public init(amount: UInt64, utxo: [BitcoinUnspentOutput], isSendAll: Bool, settings: BitcoinTransactionSettings = .bitcoinDefaults) {
+        self.amount = amount
+        self.availableAmount = utxo.map({ $0.value }).reduce(0, +)
+        self.utxo = utxo
+        self.isSendAll = isSendAll
+        
+        self.allowedScriptTypes = settings.allowedScriptTypes
+        self.isWitness = settings.isWitness
     }
     
     /// Calculate
@@ -73,6 +89,10 @@ public class BtcBchFeeCalculator {
             }
         }
         
+        if totalValue > usedInputs.map({ $0.value }).reduce(0, +) && !isSendAll {
+            throw BtcBchCalcuateFeeError.availableBalanceTooSmall
+        }
+        
         let result = expectedSize * feePerByte
         
         return result
@@ -87,7 +107,7 @@ public class BtcBchFeeCalculator {
         var countInputs = 0
 
         for input in utxo {
-            if input.script.isPayToPublicKeyHashScript() {
+            if allowedScriptTypes.contains(input.script.type) {
                 usedInputs.append(input)
                 inputsSum += input.value
                 countInputs += 1
@@ -98,8 +118,20 @@ public class BtcBchFeeCalculator {
         }
 
         let countOutputs = isSendAll ? 1 : 2
-        let size = (148 * countInputs) + (34 * countOutputs) + 10
+        
+        var s: Int
+        var result: Int
+        
+        if isWitness {
+            s = (41 * countInputs) + (32 * countOutputs) + 10
+            let w = (149 * countInputs) + (32 * countOutputs) + 12
+            
+            result = ((3 * s) + w) / 4
+        } else {
+            s = (148 * countInputs) + (34 * countOutputs) + 10
+            result = s
+        }
 
-        return UInt64(size)
+        return UInt64(result)
     }
 }

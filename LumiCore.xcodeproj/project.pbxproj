@@ -105,6 +105,9 @@
 		CE96B8612417C75800E913E3 /* BitcoinScriptError.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE96B8602417C75800E913E3 /* BitcoinScriptError.swift */; };
 		CE96B864241A47F200E913E3 /* MnemonicTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE96B863241A47F200E913E3 /* MnemonicTests.swift */; };
 		CE9847642593B99C00B93C1E /* BitcoinTransactionConfiguration.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9847632593B99C00B93C1E /* BitcoinTransactionConfiguration.swift */; };
+		CE9847682594AA9500B93C1E /* BitcoinSignatureHashBuilder.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE9847672594AA9500B93C1E /* BitcoinSignatureHashBuilder.swift */; };
+		CE98476C2594ABA600B93C1E /* BitcoinTransactionSerializer.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE98476B2594ABA600B93C1E /* BitcoinTransactionSerializer.swift */; };
+		CE9847702594B27300B93C1E /* BitcoinWitness.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE98476F2594B27300B93C1E /* BitcoinWitness.swift */; };
 		CE9AD52D2368550C0043DAAA /* LumiCore.h in Headers */ = {isa = PBXBuildFile; fileRef = CE9AD52B2368550C0043DAAA /* LumiCore.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		CE9AD53C236867270043DAAA /* ECDSA.m in Sources */ = {isa = PBXBuildFile; fileRef = CE9AD53B236867270043DAAA /* ECDSA.m */; };
 		CE9AD6BE2368806C0043DAAA /* pem2.h in Headers */ = {isa = PBXBuildFile; fileRef = CE9AD6732368806B0043DAAA /* pem2.h */; settings = {ATTRIBUTES = (Private, ); }; };
@@ -352,6 +355,9 @@
 		CE96B8602417C75800E913E3 /* BitcoinScriptError.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitcoinScriptError.swift; sourceTree = "<group>"; };
 		CE96B863241A47F200E913E3 /* MnemonicTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MnemonicTests.swift; sourceTree = "<group>"; };
 		CE9847632593B99C00B93C1E /* BitcoinTransactionConfiguration.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitcoinTransactionConfiguration.swift; sourceTree = "<group>"; };
+		CE9847672594AA9500B93C1E /* BitcoinSignatureHashBuilder.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitcoinSignatureHashBuilder.swift; sourceTree = "<group>"; };
+		CE98476B2594ABA600B93C1E /* BitcoinTransactionSerializer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitcoinTransactionSerializer.swift; sourceTree = "<group>"; };
+		CE98476F2594B27300B93C1E /* BitcoinWitness.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitcoinWitness.swift; sourceTree = "<group>"; };
 		CE9AD5282368550C0043DAAA /* LumiCore.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = LumiCore.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		CE9AD52B2368550C0043DAAA /* LumiCore.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = LumiCore.h; sourceTree = "<group>"; };
 		CE9AD52C2368550C0043DAAA /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -707,6 +713,9 @@
 				CE77109423DB255B004D1F7C /* BitcoinFeeCalculator.swift */,
 				CEE88E592404622A00BB5855 /* BitcoinCreateTransactionError.swift */,
 				CE9847632593B99C00B93C1E /* BitcoinTransactionConfiguration.swift */,
+				CE9847672594AA9500B93C1E /* BitcoinSignatureHashBuilder.swift */,
+				CE98476B2594ABA600B93C1E /* BitcoinTransactionSerializer.swift */,
+				CE98476F2594B27300B93C1E /* BitcoinWitness.swift */,
 			);
 			path = "Bitcoin+BitcoinCash";
 			sourceTree = "<group>";
@@ -1457,8 +1466,10 @@
 				CE77105323D0957B004D1F7C /* RLPHelpers.swift in Sources */,
 				CE14C6D423B77A410078AFD8 /* BitcoinScriptElement.swift in Sources */,
 				CE77106F23D2176A004D1F7C /* RandomFunctions.swift in Sources */,
+				CE9847702594B27300B93C1E /* BitcoinWitness.swift in Sources */,
 				CE14C6CA23A9424D0078AFD8 /* BitcoinTransactionOutput.swift in Sources */,
 				CE96B8612417C75800E913E3 /* BitcoinScriptError.swift in Sources */,
+				CE9847682594AA9500B93C1E /* BitcoinSignatureHashBuilder.swift in Sources */,
 				CE14C6CC23AA327B0078AFD8 /* BitcoinOpCodes.swift in Sources */,
 				CE63506D241F9934000AAB20 /* AddressesCommon.swift in Sources */,
 				CE9AD737236B31D90043DAAA /* ECDSA.swift in Sources */,
@@ -1502,6 +1513,7 @@
 				CE13316E2420020F0055C11D /* Bech32.m in Sources */,
 				CE14C6C623A941BB0078AFD8 /* BitcoinScript.swift in Sources */,
 				CE14C6AC23A29A250078AFD8 /* DataBase58Extensions.swift in Sources */,
+				CE98476C2594ABA600B93C1E /* BitcoinTransactionSerializer.swift in Sources */,
 				CEE88E5A2404622A00BB5855 /* BitcoinCreateTransactionError.swift in Sources */,
 				CE133170242021620055C11D /* Bech32AddressCoder.swift in Sources */,
 				CE14C6AA23A29A050078AFD8 /* StringBase58Extensions.swift in Sources */,
