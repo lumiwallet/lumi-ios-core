@@ -7,33 +7,35 @@ _BitcoinTransaction_ and _BitcoinCashTransaction_ is an object for creating, sig
 Initializes an object with a sets of [BitcoinTransactionInput](#BitcoinTransactionInput) and [BitcoinTransactionOutput](#BitcoinTransactionOutput)
 
 ```swift
-public required init(inputs: [BitcoinTransactionInput], outputs: [BitcoinTransactionOutput])
+public required init(inputs: [BitcoinTransactionInput], outputs: [BitcoinTransactionOutput], settings: BitcoinTransactionSettings)
 ```
 
 #### Parameters: 
 * **inputs** - Set of inputs
 * **outputs** - Set of outputs
+* **settings** - BitcoinTransactionSettings object
 
 ## Properties
 
-**bitcoinTransactionVersion** - Defaul transaction version number
-
-```swift 
-public static let bitcoinTransactionVersion: UInt32 = 1
-```
-**_inputs** - 
+**inputs** - 
 
 ```swift 
 public let _inputs: [BitcoinTransactionInput]
 ```
 
-**_outputs** - 
+**outputs** - 
 
 ```swift 
 public let _outputs: [BitcoinTransactionOutput]
 ```
 
-**version** - Transaction version number, used 'bitcoinTransactionVersion' value by default
+**settings** - An object containing the settings of the transaction fields, such as version, locktime, witness marker, flag, as well as a set of used script 
+
+```swift 
+var settings: BitcoinTransactionSettings
+```
+
+**version** - Transaction version number
 
 ```swift 
 public var version: UInt32
@@ -66,6 +68,18 @@ public var transactionHash: Data
 public var id: String
 ```
 
+**witness** - Witness data (* available only for BitcoinTransaction object)
+
+```swift
+public var witness: Data?
+```
+
+**wtxid** - Witness transaction id (* available only for BitcoinTransaction object)
+
+```swift
+//Computed property
+public var wtxid: String
+```
 
 ## Methods
 
@@ -91,11 +105,17 @@ public func sign(keys: [Key]) throws -> BitcoinCashTransaction
 let txOutputs: [BitcoinTransactionOutput] = [/*Outputs*/]
 let txInputs: [BitcoinTransactionInput] = [/*Inputs*/]
 
+let settings = BitcoinTransactionSettings.new
+   .version(1)
+   .witness(marker: 0, flag: 1)
+   .allowed(scriptTypes: [.P2PK, .P2PKH, .P2WPKH, .P2WSH])
+   .lockTime(17)
+
 let privateKeys = [/*Private keys for inputs that will be used in the transaction*/]
 
 //Bitcoin
 do {
-    let transaction = BitcoinTransaction(inputs: txInputs, outputs: txOutputs)
+    let transaction = BitcoinTransaction(inputs: txInputs, outputs: txOutputs, settings: settings)
     
     let signedTransaction = try transaction.sign(keys: privateKeys)
     
@@ -268,7 +288,7 @@ public init()
 ```
 
 ```swift
-public init(amount: UInt64, addresss: String, changeAddress: String, utxo: [BitcoinUnspentOutput], isSendAll: Bool)
+public init(amount: UInt64, addresss: String, changeAddress: String, utxo: [BitcoinUnspentOutput], isSendAll: Bool, settings: BitcoinTransactionSettings)
 ```
 
 #### Parameters: 
@@ -277,6 +297,7 @@ public init(amount: UInt64, addresss: String, changeAddress: String, utxo: [Bitc
 * **changeAddress** - String encoded in Base58 bitcoin address for change. The address to which the change will be sent, the difference between the total amount in the transaction and the commission
 * **utxo** - Set of [_BitcoinUnspentOutput_](#BitcoinUnspentOutput) objects
 * **isSendAll** - This flag indicates that the maximum available quantity will be sent
+* **settings** - BitcoinTransactionSettings object
 
 ## Methods
 
@@ -310,8 +331,13 @@ let unspentOutputs: [BitcoinUnspentOutput] = [/*unspent outputs*/]
 
 let privateKeys = [/*Private keys for inputs that will be used in the transaction*/]
 
+let settings = BitcoinTransactionSettings.new
+   .version(1)
+   .allowed(scriptTypes: [.P2PKH])
+   .lockTime(0)
+
 do {
-    let unspentTransaction = BitcoinTemplateUnspentTransaction<BitcoinTransaction>(amount: amount, addresss: address, changeAddress: changeAddress, utxo: unspentOutputs, isSendAll: false)
+    let unspentTransaction = BitcoinTemplateUnspentTransaction<BitcoinTransaction>(amount: amount, addresss: address, changeAddress: changeAddress, utxo: unspentOutputs, isSendAll: false, settings: settings)
     
     let transaction = try unspentTransaction.buildTransaction(feePerByte: feePerByte)
     let signedTransaction = try transaction.sign(keys: privateKeys)
@@ -328,12 +354,12 @@ do {
 
 # BtcBchFeeCalculator
 
-An object for calculating the commission based on the target quantity for sending and receiving UnspentOuputs
+An object for calculating the commission based on the target quantity for sending and receiving UnspentOutputs
 
 ## Initializers
 
 ```swift
-public init(amount: UInt64, utxo: [BitcoinUnspentOutput], isSendAll: Bool)
+public init(amount: UInt64, utxo: [BitcoinUnspentOutput], isSendAll: Bool, settings: BitcoinTransactionSettings = .bitcoinDefaults)
 ```
 #### Parameters: 
 * **amount** - Amount for spending, in Satoshis
