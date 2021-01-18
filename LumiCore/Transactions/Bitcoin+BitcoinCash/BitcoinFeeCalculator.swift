@@ -43,6 +43,11 @@ public class BtcBchFeeCalculator {
         self.isWitness = false
     }
     
+    /// Init
+    /// - Parameter amount: Amount for spent in Satoshis
+    /// - Parameter utxo: Available unspent outputs
+    /// - Parameter isSendAll: This flag indicates that the maximum available quantity will be sent
+    /// - Parameter settings: Transaction build settings
     public init(amount: UInt64, utxo: [BitcoinUnspentOutput], isSendAll: Bool, settings: BitcoinTransactionSettings = .bitcoinDefaults) {
         self.amount = amount
         self.availableAmount = utxo.map({ $0.value }).reduce(0, +)

@@ -28,6 +28,11 @@ public class BitcoinTransaction: BitcoinTemplateTransaction, BitcoinTransactionP
         return super.payload.sha256sha256()
     }
     
+    /// Init
+    /// - Parameter inputs: Set of inputs
+    /// - Parameter outputs: Set of outputs
+    /// - Parameter witness: Transaction witness data
+    /// - Parameter settings: Transaction build settings
     convenience public init(inputs: [BitcoinTransactionInput], outputs: [BitcoinTransactionOutput], witness: Data? = nil, settings: BitcoinTransactionSettings) {
         self.init(inputs: inputs, outputs: outputs, settings: settings)
         self.witness = witness
@@ -35,6 +40,7 @@ public class BitcoinTransaction: BitcoinTemplateTransaction, BitcoinTransactionP
     
     /// Transaction signing
     /// - Parameter keys: A set of Keys whose public addresses correspond to the inputs used to form the transaction
+    /// - Parameter signatureHashType: Hash type for signature
     public func sign(keys: [Key], signatureHashType: SignatureHashType = SignatureHashType(btc: .sighashAll)) throws -> BitcoinTransaction {
         let serializer = BitcoinTransactionSerializer()
         

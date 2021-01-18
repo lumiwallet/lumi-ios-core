@@ -45,6 +45,7 @@ public class BitcoinTemplateUnspentTransaction<T: BitcoinTemplateTransaction> {
     /// - Parameter changeAddress: Base58 encoded bitcoin address for change string
     /// - Parameter utxo: Unspent outputs
     /// - Parameter isSendAll: This flag indicates that the maximum available quantity will be sent
+    /// - Parameter settings: Transaction build settings
     public init(amount: UInt64, addresss: String, changeAddress: String, utxo: [BitcoinUnspentOutput], isSendAll: Bool, settings: BitcoinTransactionSettings) {
         self.amount = amount
         self.address = addresss

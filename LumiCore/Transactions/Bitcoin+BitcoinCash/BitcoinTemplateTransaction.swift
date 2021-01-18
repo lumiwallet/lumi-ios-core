@@ -60,6 +60,10 @@ public class BitcoinTemplateTransaction {
         self.outputs = outputs
     }
     
+    /// Init
+    /// - Parameter inputs: Set of inputs
+    /// - Parameter outputs: Set of outputs
+    /// - Parameter settings: Transaction build settings
     required public init(inputs: [BitcoinTransactionInput], outputs: [BitcoinTransactionOutput], settings: BitcoinTransactionSettings) {
         self.settings = settings
         

@@ -14,6 +14,7 @@ public class BitcoinPrivateKeyAddress {
     
     /// Initialize with a private key data
     /// - Parameter privateKeyData: Private key data (should be 32 bytes long)
+    /// - Parameter version: Version byte
     /// - Throws: BitcoinCreateAddressError.invalidDataLength
     public init(privateKeyData: Data, version: UInt8 = CoinVersionBytesConstant.bitcoin_prvkey_version) throws {
         guard privateKeyData.count == BitcoinAddressConstants.privateKeyDataLength else {
@@ -27,6 +28,7 @@ public class BitcoinPrivateKeyAddress {
     
     /// Initialize with a Key object
     /// - Parameter key: Key of private type
+    /// - Parameter version: Version byte
     /// - Throws: BitcoinCreateAddressError.invalidKeyType
     public init(key: Key, version: UInt8 = CoinVersionBytesConstant.bitcoin_prvkey_version) throws {
         guard key.type == .Private else {

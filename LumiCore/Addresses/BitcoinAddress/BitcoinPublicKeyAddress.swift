@@ -68,6 +68,10 @@ public class BitcoinPublicKeyAddress {
         address = encoded
     }
     
+    /// Initialize with a script
+    /// - Parameter script: Script
+    /// - Parameter type: Address hash type
+    /// - Throws: BitcoinCreateAddressError.invalidAddressVersion, BitcoinCreateAddressError.invalidDataLength
     convenience public init(script: BitcoinScript, type: PublicKeyAddressHashType = .bitcoin(.P2PKH)) throws {
         switch script.type {
         case .P2PKH:
@@ -144,7 +148,7 @@ public class BitcoinPublicKeyAddress {
         address = base58
     }
     
-    /// Initialize with a bech32 representation of legacy or script hash bitcoin address
+    /// Initialize with a bech32  bitcoin address
     /// - Parameter bech32: BC1 bitcoin address string
     /// - Throws: BitcoinCreateAddressError.invalidDataLength
     public init(bech32: String) throws {

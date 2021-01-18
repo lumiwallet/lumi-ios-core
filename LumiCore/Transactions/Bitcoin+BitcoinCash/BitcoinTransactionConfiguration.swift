@@ -7,7 +7,7 @@
 
 import Foundation
 
-
+/// An object containing the settings of the transaction fields, such as version, locktime, witness marker, flag, as well as a set of used script types
 public class BitcoinTransactionSettings {
     var version: UInt32 = 1
     var witness: (marker: UInt8, flag: UInt8)?
