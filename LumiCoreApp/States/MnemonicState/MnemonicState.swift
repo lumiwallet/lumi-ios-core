@@ -81,10 +81,18 @@ public class MnemonicState: ObservableObject {
     }
     
     func generateInfo(range: Range<Int>) {
-        guard let _generator = generator else {
+        var version: VersionSLIP0132 = .P2PKH_P2SH
+        if bip32path.hasPrefix("m/84'/") { version = .P2WPKH }
+        if bip32path.hasPrefix("m/49'/") { version = .P2WPKH_NESTED_P2SH}
+        
+        guard let _mnemonic = mnemonic else {
             return
         }
         
+        let _generator = KeyGenerator(seed: _mnemonic.seed, version: version)
+        generator = _generator
+        
+        rootPrivateExtendedKey = _generator.extPrv
         derivedKeysRange = range
         
         do {
