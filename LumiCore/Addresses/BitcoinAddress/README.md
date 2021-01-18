@@ -5,23 +5,23 @@
 Initializes an object with public key
 
 ```swift
-public init(publicKey: Data, type: BitcoinAddressHashType = .P2PKH)
+public init(publicKey: Data, type: PublicKeyAddressHashType = .bitcoin(.P2PKH))
 ```
 
 #### Parameters:
 * **publicKey** - Public key data. Must be 33 bytes long (compressed public key)
-* **type** - Hash type of the public key address (P2PKH or P2SH)
+* **type** - Hash type of the public key address (P2PKH, P2SH, P2WPKH, P2WSH)
 
 </br>
 
 Initialize with Key object
 
 ```swift
-public init(key: Key, type: BitcoinAddressHashType = .P2PKH)
+public init(key: Key, type: PublicKeyAddressHashType = .bitcoin(.P2PKH))
 ```
 #### Parameters:
 * **key** - Public or private type Key
-* **type** - Hash type of the public key address (P2PKH or P2SH)
+* **type** - Hash type of the public key address (P2PKH, P2SH, P2WPKH, P2WSH)
 
 </br>
 
@@ -36,6 +36,17 @@ public init(data: Data)
 
 </br>
 
+Initializes an object with bitcoin address
+
+```swift
+public init(string: String)
+```
+
+#### Parameters:
+* **string** - BC1 or Base58 bitcoin address string
+
+</br>
+
 Initializes an object with base58 representation of legacy or script hash bitcoin address
 
 ```swift
@@ -45,24 +56,30 @@ public init(base58: String)
 #### Parameters:
 * **base58** - Legacy or script hash bitcoin address
 
+</br>
+
+Initialize an object with a bech32 representation of legacy or script hash bitcoin address
+
+```swift
+public init(bech32: String)
+```
+
+#### Parameters:
+* **bech32** - BC1 bitcoin address string
+
+
 ## **Properties**
 
-**hashType** - Bitcoin address hash type (P2PKH or P2SH)
+**hashType** - Bitcoin address hash type (P2PKH, P2SH, P2WPKH, P2WSH)
 
 ```swift 
-public let hashType: BitcoinAddressHashType
+public let hashType: PublicKeyAddressHashType
 ```
 
 **address** - Bitcoin address
 
 ```swift
 public let address: String
-```
-
-**legacyAddress** - Bitcoin legacy address
-
-```swift
-public var legacyAddress: String
 ```
 
 **publicKeyHash** - Data representation of public key
@@ -79,23 +96,25 @@ public var publicKeyHash: Data
 Initializes an object with private key data
 
 ```swift
-public init(privateKeyData: Data)
+public init(privateKeyData: Data, version: UInt8 = CoinVersionBytesConstant.bitcoin_prvkey_version)
 ```
 
 #### Parameters:
 * **privateKeyData** - Private key data (must be 32 bytes long)
+* **version** - Version
 
 </br>
 
 Initialize with Key object
 
 ```swift
-public init(key: Key)
+public init(key: Key, version: UInt8 = CoinVersionBytesConstant.bitcoin_prvkey_version)
 ```
 
 #### Parameters:
 
 * **key** - Private type Key
+* **version** - Version
 
 ## **Properties**
 
@@ -127,7 +146,7 @@ public let wif: String
 let publicKeyHex: String = "023bb2a1107059704e232d2ce9231d545be591fe0b66f0fddb66fd31f232192f39"
 do {
     let data: Data = Data(hex: publicKeyHex)
-    let btcAddress = try BitcoinPublicKeyAddress(publicKey: data, type: .P2PKH)
+    let btcAddress = try BitcoinPublicKeyAddress(publicKey: data, type: .bitcoin(.P2PKH))
     
     print(btcAddress.address)
 } catch let e as BitcoinCreateAddressError {
