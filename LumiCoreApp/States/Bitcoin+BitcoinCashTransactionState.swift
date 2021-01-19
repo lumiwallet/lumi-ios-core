@@ -114,7 +114,7 @@ public class BitcoinTransactionState {
         }
         
         do {
-            let addr = try BitcoinPublicKeyAddress(base58: info.address)
+            let addr = try BitcoinPublicKeyAddress(string: info.address)
             let out = BitcoinTransactionOutput(amount: value, address: addr)
             
             _outputs.append(out)
@@ -142,7 +142,7 @@ public class BitcoinTransactionState {
                                         script: $0.script)
             })
             
-            let transaction = BitcoinTransaction(inputs: txInputs, outputs: txOutputs)
+            let transaction = BitcoinTransaction(inputs: txInputs, outputs: txOutputs, settings: .bitcoinWitnessDefaults)
             let signedTransaction = try transaction.sign(keys: privateKeys)
             
             self.transactionResultInfo = BitcoinTransactionResult(hash: signedTransaction.transactionHash.hex,

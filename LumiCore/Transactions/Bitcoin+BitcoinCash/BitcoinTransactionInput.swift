@@ -18,19 +18,22 @@ public class BitcoinTransactionInput {
     
     let value: UInt64
     
+    let witness: Data
+    
     /// Init
     /// - Parameter hash: Previous transaction hash
     /// - Parameter id: Previous transaction id
     /// - Parameter index: Previous index in transaction
     /// - Parameter value: Value in Satoshis
     /// - Parameter script: BitcoinScript object
-    public init(hash: Data, id: String, index: Int, value: UInt64, script: BitcoinScript) {
+    public init(hash: Data, id: String, index: Int, value: UInt64, script: BitcoinScript, witness: Data = Data()) {
         previousHash = hash
         previousID = id
         previousIndex = index
         
         self.value = value
         self.script = script
+        self.witness = witness
     }
     
     /// Init
@@ -40,7 +43,7 @@ public class BitcoinTransactionInput {
     /// - Parameter value: Value in Satoshis
     /// - Parameter script: BitcoinScript object
     /// - Parameter sequence: Sequence
-    public init(hash: Data, id: String, index: Int, value: UInt64, script: BitcoinScript, sequence: UInt32) {
+    public init(hash: Data, id: String, index: Int, value: UInt64, script: BitcoinScript, sequence: UInt32, witness: Data = Data()) {
         previousHash = hash
         previousID = id
         previousIndex = index
@@ -48,6 +51,7 @@ public class BitcoinTransactionInput {
         self.value = value
         self.script = script
         self.sequence = sequence
+        self.witness = witness
     }
     
     public func makeBlankInput(includeScript: Bool, hashType: SignatureHashType) -> BitcoinTransactionInput {
@@ -70,25 +74,13 @@ public class BitcoinTransactionInput {
     /// - Parameter index: Previous transaction id
     /// - Parameter value: Value in Satoshis
     /// - Parameter scriptData: Script data
-    public convenience init(hash: Data, id: String, index: Int, value: UInt64, scriptData: Data) throws {
+    public convenience init(hash: Data, id: String, index: Int, value: UInt64, scriptData: Data, witness: Data = Data()) throws {
         let _script = try BitcoinScript(data: scriptData)
-        self.init(hash: hash, id: id, index: index, value: value, script: _script)
+        self.init(hash: hash, id: id, index: index, value: value, script: _script, witness: witness)
     }
     
     public var payload: Data {
-        computePayload()
-    }
-    
-    private func computePayload() -> Data {
-        var data = Data()
-        
-        data += previousHash
-        data += UInt32(previousIndex).data
-        data += VarInt(value: script.data.count).data
-        data += script.data
-        data += sequence.data
-        
-        return data
+        BitcoinTransactionSerializer().serialize(self)
     }
 }
 
@@ -106,6 +98,7 @@ extension BitcoinTransactionInput: CustomStringConvertible {
         SEQUENCE: \(sequence)
         SCRIPT_DATA: \(script.data.hex)
         SCRIPT: \(script)
+        WITNESS: \(witness.hex)
         PAYLOAD: \(payload.hex)
         """
     }

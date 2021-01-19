@@ -13,40 +13,31 @@ public class BitcoinPublicKeyAddress {
     /// Public key hash or script hash data
     let _data: Data
     
-    public let hashType: BitcoinAddressHashType
+    public let hashType: PublicKeyAddressHashType
     public let address: String
     
     /// Initialize with a public key data
     /// - Parameter publicKey: Public key data (should  be 33 bytes long (compressed public key))
     /// - Parameter type: Hash type of a public key address P2PKH, P2SH
     /// - Throws: BitcoinCreateAddressError.invalidDataLength
-    public init(publicKey: Data, type: BitcoinAddressHashType = .P2PKH) throws {
+    public init(publicKey: Data, type: PublicKeyAddressHashType = .bitcoin(.P2PKH)) throws {
         guard publicKey.count == BitcoinAddressConstants.publicKeyDataLength else {
             throw BitcoinCreateAddressError.invalidDataLength
         }
         
-        let s1 = publicKey.sha256().ripemd160()
-        var s2: Data
-        switch type {
-        case .P2PKH:
-            s2 = s1
-        case .P2SH:
-            s2 = Data(hex: "0x0014") + s1
-            s2 = s2.sha256().ripemd160()
-        }
-        
-        let s3 = type.versionByte.data + s2
-        
-        _data = s3
-        
+        let payload = BitcoinPublicKeyAddress.payload(for: publicKey, type: type)
+        let encoded = BitcoinPublicKeyAddress.encode(payload, for: type)
+
+        _data = payload
         hashType = type
-        address = s3.base58(usingChecksum: true)
+        
+        address = encoded
     }
     
     /// Initialize with a Key object
     /// - Parameter key: Key of public or private type
     /// - Throws: BitcoinCreateAddressError.invalidKeyType, BitcoinCreateAddressError.invalidDataLength,
-    public init(key: Key, type: BitcoinAddressHashType = .P2PKH) throws {
+    public init(key: Key, type: PublicKeyAddressHashType = .bitcoin(.P2PKH)) throws {
         var publicKey: Data?
         
         switch key.type {
@@ -68,45 +59,72 @@ public class BitcoinPublicKeyAddress {
             throw BitcoinCreateAddressError.invalidDataLength
         }
         
-        let s1 = data.sha256().ripemd160()
-        var s2: Data
-        switch type {
-        case .P2PKH:
-            s2 = s1
-        case .P2SH:
-            s2 = Data([0x00, 0x14]) + s1
-            s2 = s2.sha256().ripemd160()
-        }
+        let payload = BitcoinPublicKeyAddress.payload(for: data, type: type)
+        let encoded = BitcoinPublicKeyAddress.encode(payload, for: type)
         
-        let s3 = type.versionByte.data + s2
-        
-        _data = s3
-        
+        _data = payload
         hashType = type
-        address = s3.base58(usingChecksum: true)
+        
+        address = encoded
+    }
+    
+    /// Initialize with a script
+    /// - Parameter script: Script
+    /// - Parameter type: Address hash type
+    /// - Throws: BitcoinCreateAddressError.invalidAddressVersion, BitcoinCreateAddressError.invalidDataLength
+    convenience public init(script: BitcoinScript, type: PublicKeyAddressHashType = .bitcoin(.P2PKH)) throws {
+        switch script.type {
+        case .P2PKH:
+            try self.init(data: type.version.data + script.getPublicKeyHash())
+        case .P2SH:
+            try self.init(data: type.version.data + script.getPublicKeyHash())
+        case .P2WPKH:
+            try self.init(data: script.getPublicKeyHash())
+        case .P2WSH:
+            try self.init(data: script.getPublicKeyHash())
+        default:
+            throw BitcoinCreateAddressError.invalidAddressVersion
+        }
     }
     
     /// Initialize with a public key hash or a script hash data (with version byte in prefix)
     /// - Parameter data: Public key hash or script hash data (with version byte in prefix)
     /// - Throws: BitcoinCreateAddressError.invalidDataLength, BitcoinCreateAddressError.invalidAddressVersion
     public init(data: Data) throws {
-        guard data.count == BitcoinAddressConstants.publicKeyHashDataLength else {
-            throw BitcoinCreateAddressError.invalidDataLength
-        }
-        
-        guard let type = BitcoinAddressHashType(versionByte: data[0]) else {
-            throw BitcoinCreateAddressError.invalidAddressVersion
-        }
-        
-        let versionByte = data[0]
-        guard BitcoinAddressHashType.allCases.contains(where: { $0.versionByte == versionByte }) else {
-            throw BitcoinCreateAddressError.invalidAddressVersion
-        }
-        
         _data = data
         
-        hashType = type
-        address = _data.base58(usingChecksum: true)
+        if PublicKeyAddressHashType.validate(version: data[0]) {
+            if let type = PublicKeyAddressHashType.generate(version: data[0]) {
+                hashType = type
+            } else {
+                throw BitcoinCreateAddressError.invalidDataLength
+            }
+            
+        }  else {
+            switch data.count {
+            case BitcoinAddressConstants.witnessProgramWPKHLength:
+                hashType = .bitcoin(.P2WPKH)
+                
+            case BitcoinAddressConstants.witnessProgramWSHLength:
+                hashType = .bitcoin(.P2SH)
+                
+            default:
+                throw BitcoinCreateAddressError.invalidDataLength
+            }
+        }
+        
+        address = BitcoinPublicKeyAddress.encode(data, for: hashType)
+    }
+    
+    /// Initialize with a string
+    /// - Parameter string: BC1 or Base58 bitcoin address string
+    /// - Throws: BitcoinCreateAddressError.invalidDataLength, BitcoinCreateAddressError.invalidAddressVersion
+    convenience public init(string: String) throws {
+        if string.hasPrefix(BitcoinAddressConstants.bc1hrp) {
+            try self.init(bech32: string)
+        } else {
+            try self.init(base58: string)
+        }
     }
     
     /// Initialize with a base58 representation of legacy or script hash bitcoin address
@@ -122,7 +140,7 @@ public class BitcoinPublicKeyAddress {
         
         let versionByte = _data[0]
         
-        guard let type = BitcoinAddressHashType(versionByte: versionByte) else {
+        guard let type = PublicKeyAddressHashType.generate(version: versionByte) else {
             throw BitcoinCreateAddressError.invalidAddressVersion
         }
 
@@ -130,12 +148,98 @@ public class BitcoinPublicKeyAddress {
         address = base58
     }
     
-    public var legacyAddress: String {
-        return address
+    /// Initialize with a bech32  bitcoin address
+    /// - Parameter bech32: BC1 bitcoin address string
+    /// - Throws: BitcoinCreateAddressError.invalidDataLength
+    public init(bech32: String) throws {
+        _data = Bech32AddressCoder.decode(bc1: bech32)
+        let dataLength = _data.count
+
+        switch dataLength {
+        case BitcoinAddressConstants.witnessProgramWPKHLength:
+            hashType = .bitcoin(.P2WPKH)
+        case BitcoinAddressConstants.witnessProgramWSHLength:
+            hashType = .bitcoin(.P2WSH)
+        default:
+            throw BitcoinCreateAddressError.invalidHashDataLength
+        }
+        
+        address = bech32
+    }
+    
+    public static func p2pkh(from publicKey: Data) -> Data {
+        publicKey.ripemd160sha256()
+    }
+    
+    public static func p2sh(from publicKey: Data) -> Data {
+        (Data([0x00, 0x14]) + publicKey.ripemd160sha256()).ripemd160sha256()
+    }
+    
+    public static func p2wpkh(from publicKey: Data) -> Data {
+        publicKey.ripemd160sha256()
+    }
+    
+    public static func p2wsh(from publicKey: Data) -> Data {
+        (Data([0x21]) + publicKey + OPCode.OP_CHECKSIG.value.data).sha256()
+    }
+    
+    private static func payload(for publicKey: Data, type: PublicKeyAddressHashType) -> Data {
+        switch type.typeValue {
+        case .P2PKH:
+            return type.version.data + p2pkh(from: publicKey)
+        case .P2SH:
+            return type.version.data + p2sh(from: publicKey)
+        case .P2WPKH:
+            return p2pkh(from: publicKey)
+        case .P2WSH:
+            return p2wsh(from: publicKey)
+        }
+    }
+    
+    private static func encode(_ payload: Data, for type: PublicKeyAddressHashType) -> String {
+        switch type.typeValue {
+        case .P2PKH, .P2SH:
+            return payload.base58(usingChecksum: true)
+        case .P2WPKH, .P2WSH:
+            return BitcoinAddressConstants.bc1hrp + Bech32AddressCoder.encode(hrp: BitcoinAddressConstants.bc1prefix,
+                                             witnessVersion: BitcoinAddressConstants.witnessProgramVersionByte,
+                                             witnessProgram: payload)
+        }
+    }
+    
+    public func address(for type: PublicKeyAddressHashType) -> String? {
+        guard type.version != hashType.version else {
+            return address
+        }
+        
+        switch (hashType.typeValue, type.typeValue) {
+        case (.P2PKH, .P2SH):
+            return BitcoinPublicKeyAddress.encode(type.version.data + (Data([0x00, 0x14]) + _data.dropFirst()).ripemd160sha256(), for: type)
+            
+        case (.P2PKH, .P2WPKH):
+            return BitcoinPublicKeyAddress.encode(_data.dropFirst(), for: type)
+            
+        case (.P2WPKH, .P2PKH):
+            return BitcoinPublicKeyAddress.encode(type.version.data + _data, for: type)
+            
+        case (.P2WPKH, .P2SH):
+            return BitcoinPublicKeyAddress.encode(type.version.data + (Data([0x00, 0x14]) + _data).ripemd160sha256(), for: type)
+            
+        case (.P2SH, .P2PKH), (.P2SH, .P2WPKH), (.P2SH, .P2WSH), (.P2WSH, .P2PKH), (.P2WSH, .P2WPKH), (.P2WSH, .P2SH):
+            return nil
+            
+        default:
+            return nil
+        }
     }
     
     public var publicKeyHash: Data {
-        _data
+        switch hashType.typeValue {
+        case .P2PKH, .P2SH:
+            return _data.dropFirst()
+        case .P2WPKH, .P2WSH:
+            return _data
+        }
     }
 }
 

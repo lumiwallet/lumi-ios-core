@@ -26,18 +26,13 @@ public class BitcoinTransactionOutput {
         script = BitcoinScript(address: address)
     }
     
-    var payload: Data {
-        computePayload()
+    public init(amount: UInt64, script: BitcoinScript?) {
+        self.value = amount
+        self.script = script ?? BitcoinScript()
     }
     
-    private func computePayload() -> Data {
-        var data = Data()
-
-        data += value.data
-        data += VarInt(value: script.data.count).data
-        data += script.data
-        
-        return data
+    var payload: Data {
+        BitcoinTransactionSerializer().serialize(self)
     }
 }
 

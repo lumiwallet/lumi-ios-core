@@ -54,5 +54,24 @@ public struct VarInt: ExpressibleByIntegerLiteral {
         }
         self.data = data
     }
+    
+    public static func value(from input: Data) -> (value: UInt64, length: Int)? {
+        let length = input.count
+        if length == 0 { return (0,0) }
+        
+        let size = input[0]
+        let _data = input.dropFirst()
+        
+        switch size {
+        case 0..<0xfd:
+            return (UInt64(size), 1)
+        case 0xfd:
+            return length < 3 ? nil : (UInt64(_data.to(type: UInt16.self)), 3)
+        case 0xfe:
+            return length < 5 ? nil : (UInt64(_data.to(type: UInt32.self)), 5)
+        default:
+            return length < 9 ? nil : (UInt64(_data.to(type: UInt64.self)), 9)
+        }
+    }
 }
 

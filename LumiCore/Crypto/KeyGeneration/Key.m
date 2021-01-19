@@ -95,6 +95,116 @@
 
 @end
 
+@interface ExtendedKeyVersion ()
+
+@property (nonatomic, readonly, assign, nonnull) unsigned char *bytes;
+
+@end
+
+@implementation ExtendedKeyVersion
+
+unsigned char slip0132public_p2pkh_p2sh[] = {0x04, 0x88, 0xB2, 0x1E};
+unsigned char slip0132private_p2pkh_p2sh[] = {0x04, 0x88, 0xAD, 0xE4};
+
+unsigned char slip0132public_p2wpkh_nested_p2sh[] = {0x04, 0x9D, 0x7C, 0xB2};
+unsigned char slip0132private_p2wpkh_nested_p2sh[] = {0x04, 0x9D, 0x78, 0x78};
+
+unsigned char slip0132public_p2wpkh[] = {0x04, 0xB2, 0x47, 0x46};
+unsigned char slip0132private_p2wpkh[] = {0x04, 0xB2, 0x43, 0x0C};
+
+unsigned char slip0132public_doge_p2pkh_p2sh[] = {0x02, 0xFA, 0xCA, 0xFD};
+unsigned char slip0132private_doge_p2pkh_p2sh[] = {0x02, 0xFA, 0xC3, 0x98};
+
+
+const int versionHeaderSize = 4;
+
+- (instancetype)init:(VersionSLIP0132)value {
+    if (self = [super init]) {
+        _value = value;
+    }
+    return self;
+}
+
+- (const unsigned char *)versionBytes:(KeyType)keyType {
+    switch (keyType) {
+        case Public:
+            switch (_value) {
+                case P2PKH_P2SH:
+                    return slip0132public_p2pkh_p2sh;
+                case P2WPKH_NESTED_P2SH:
+                    return slip0132public_p2wpkh_nested_p2sh;
+                case P2WPKH:
+                    return slip0132public_p2wpkh;
+                case DOGE_P2PKH_P2SH:
+                    return slip0132public_doge_p2pkh_p2sh;
+            }
+            break;
+            
+        case Private: {
+            switch (_value) {
+                case P2PKH_P2SH:
+                    return slip0132private_p2pkh_p2sh;
+                case P2WPKH_NESTED_P2SH:
+                    return slip0132private_p2wpkh_nested_p2sh;
+                case P2WPKH:
+                    return slip0132private_p2wpkh;
+                case DOGE_P2PKH_P2SH:
+                    return slip0132private_doge_p2pkh_p2sh;
+            }
+            break;
+        }
+    }
+}
+
++ (KeyType)typeOfVersionBytes:(const unsigned char *)bytes {
+    
+    NSData *data = [NSData dataWithBytes:bytes length:versionHeaderSize];
+    
+    if ([data isEqualToData:[NSData dataWithBytes:slip0132private_p2pkh_p2sh length:versionHeaderSize]] ||
+        [data isEqualToData:[NSData dataWithBytes:slip0132private_p2wpkh_nested_p2sh length:versionHeaderSize]] ||
+        [data isEqualToData:[NSData dataWithBytes:slip0132private_p2wpkh length:versionHeaderSize]] ||
+        [data isEqualToData:[NSData dataWithBytes:slip0132private_doge_p2pkh_p2sh length:versionHeaderSize]]) {
+        return Private;
+    }
+    
+    if ([data isEqualToData:[NSData dataWithBytes:slip0132public_p2pkh_p2sh length:versionHeaderSize]] ||
+        [data isEqualToData:[NSData dataWithBytes:slip0132public_p2wpkh_nested_p2sh length:versionHeaderSize]] ||
+        [data isEqualToData:[NSData dataWithBytes:slip0132public_p2wpkh length:versionHeaderSize]] ||
+        [data isEqualToData:[NSData dataWithBytes:slip0132public_doge_p2pkh_p2sh length:versionHeaderSize]]) {
+        return Public;
+    }
+    
+    return 0;
+}
+
++ (ExtendedKeyVersion *)version:(const unsigned char *)bytes {
+    NSData *data = [NSData dataWithBytes:bytes length:versionHeaderSize];
+    
+    if ([data isEqualToData:[NSData dataWithBytes:slip0132public_p2pkh_p2sh length:versionHeaderSize]] ||
+        [data isEqualToData:[NSData dataWithBytes:slip0132private_p2pkh_p2sh length:versionHeaderSize]]) {
+        return [[ExtendedKeyVersion alloc] init:P2PKH_P2SH];
+    }
+    
+    if ([data isEqualToData:[NSData dataWithBytes:slip0132public_p2wpkh_nested_p2sh length:versionHeaderSize]] ||
+        [data isEqualToData:[NSData dataWithBytes:slip0132private_p2wpkh_nested_p2sh length:versionHeaderSize]]) {
+        return [[ExtendedKeyVersion alloc] init:P2WPKH_NESTED_P2SH];
+    }
+    
+    if ([data isEqualToData:[NSData dataWithBytes:slip0132public_p2wpkh length:versionHeaderSize]] ||
+        [data isEqualToData:[NSData dataWithBytes:slip0132private_p2wpkh length:versionHeaderSize]]) {
+        return [[ExtendedKeyVersion alloc] init:P2WPKH];
+    }
+    
+    if ([data isEqualToData:[NSData dataWithBytes:slip0132public_doge_p2pkh_p2sh length:versionHeaderSize]] ||
+        [data isEqualToData:[NSData dataWithBytes:slip0132private_doge_p2pkh_p2sh length:versionHeaderSize]]) {
+        return [[ExtendedKeyVersion alloc] init:DOGE_P2PKH_P2SH];
+    }
+    
+    return 0;
+}
+
+@end
+
 @implementation ExtendedKey
 
 
@@ -106,6 +216,21 @@
         _sequence = 0;
         
         _chaincode = [chaincode copy];
+        _version = [[ExtendedKeyVersion alloc] init:P2PKH_P2SH];
+    }
+    
+    return self;
+}
+
+- (instancetype)initWithKey:(Key *)key chaincode:(NSData *)chaincode version:(VersionSLIP0132)value {
+    if (self = [super init]) {
+        _key = [key copy];
+        _depth = 0;
+        _parent = 0;
+        _sequence = 0;
+    
+        _chaincode = [chaincode copy];
+        _version = [[ExtendedKeyVersion alloc] init:value];
     }
     
     return self;
@@ -119,6 +244,21 @@
         _sequence = sequence;
         
         _chaincode = [chaincode copy];
+        _version = [[ExtendedKeyVersion alloc] init:P2PKH_P2SH];
+    }
+    
+    return self;
+}
+
+- (instancetype)initWithKey:(Key *)key chaincode:(NSData *)chaincode depth:(int)depth parent:(int)parent sequence:(int)sequence version:(VersionSLIP0132)value {
+    if (self = [super init]) {
+        _key = [key copy];
+        _depth = depth;
+        _parent = parent;
+        _sequence = sequence;
+        
+        _chaincode = [chaincode copy];
+        _version = [[ExtendedKeyVersion alloc] init:value];
     }
     
     return self;
@@ -132,6 +272,7 @@
         _sequence = key.sequence;
         
         _chaincode = key.chaincode;
+        _version = key.version;
     }
     
     return self;
@@ -150,15 +291,19 @@
         unsigned char *bytes = (unsigned char *)[data bytes];
         
         BOOL hasPrivate;
-        // xprv { 0x04, 0x88, 0xAD, 0xE4 }
-        // xpub { 0x04, 0x88, 0xB2, 0x1E }
-        if ( bytes[0] == 0x04 && bytes[1] == 0x88 && bytes[2] == 0xAD && bytes[3] == 0xE4 ) {
-            hasPrivate = YES;
-        } else if ( bytes[0] == 0x04 && bytes[1] == 0x88 && bytes[2] == 0xB2 && bytes[3] == 0x1E ) {
-            hasPrivate = NO;
-        } else {
-            return nil;
+        
+        switch ([ExtendedKeyVersion typeOfVersionBytes:bytes]) {
+            case Private:
+                hasPrivate = YES;
+                break;
+            case Public:
+                hasPrivate = NO;
+                break;
+            default:
+                return nil;
         }
+                
+        _version = [ExtendedKeyVersion version:bytes];
         
         int depth = bytes[4] & 0xff;
         
@@ -184,7 +329,7 @@
 
 - (NSData *)serializedPubData {
     Key *pkey = [[Key alloc] initWithPublicKey:[_key publicKey]];
-    ExtendedKey *pubk = [[ExtendedKey alloc] initWithKey:pkey chaincode:_chaincode depth:_depth parent:_parent sequence:_sequence];
+    ExtendedKey *pubk = [[ExtendedKey alloc] initWithKey:pkey chaincode:_chaincode depth:_depth parent:_parent sequence:_sequence version:_version.value];
     return [pubk serializedData];
 }
 
@@ -232,20 +377,18 @@
     
     memcpy(bytes + 13, [_chaincode bytes], 32);
     
+    const unsigned char *bytesVersion = [_version versionBytes:_key.type];
+    bytes[0] = bytesVersion[0];
+    bytes[1] = bytesVersion[1];
+    bytes[2] = bytesVersion[2];
+    bytes[3] = bytesVersion[3];
+    
     switch (_key.type) {
         case Public:
-            bytes[0] = 0x04;
-            bytes[1] = 0x88;
-            bytes[2] = 0xB2;
-            bytes[3] = 0x1E;
             memcpy(bytes + 45, [_key bytes], _key.key.length);
             break;
             
         case Private:
-            bytes[0] = 0x04;
-            bytes[1] = 0x88;
-            bytes[2] = 0xAD;
-            bytes[3] = 0xE4;
             memcpy(bytes + 46, [_key bytes], _key.key.length);
             break;
     }

@@ -22,6 +22,7 @@ public class BitcoinTemplateUnspentTransaction<T: BitcoinTemplateTransaction> {
     public let changeAddress: String
     let utxo: [BitcoinUnspentOutput]
     let isSendAll: Bool
+    let settings: BitcoinTransactionSettings
     
     public var feeCalculator: BtcBchFeeCalculator
     
@@ -33,6 +34,7 @@ public class BitcoinTemplateUnspentTransaction<T: BitcoinTemplateTransaction> {
         changeAddress = ""
         utxo = []
         isSendAll = true
+        settings = .bitcoinDefaults
         
         feeCalculator = BtcBchFeeCalculator(amount: amount, utxo: utxo, isSendAll: isSendAll)
     }
@@ -43,14 +45,16 @@ public class BitcoinTemplateUnspentTransaction<T: BitcoinTemplateTransaction> {
     /// - Parameter changeAddress: Base58 encoded bitcoin address for change string
     /// - Parameter utxo: Unspent outputs
     /// - Parameter isSendAll: This flag indicates that the maximum available quantity will be sent
-    public init(amount: UInt64, addresss: String, changeAddress: String, utxo: [BitcoinUnspentOutput], isSendAll: Bool) {
+    /// - Parameter settings: Transaction build settings
+    public init(amount: UInt64, addresss: String, changeAddress: String, utxo: [BitcoinUnspentOutput], isSendAll: Bool, settings: BitcoinTransactionSettings) {
         self.amount = amount
         self.address = addresss
         self.changeAddress = changeAddress
         self.utxo = utxo
         self.isSendAll = isSendAll
+        self.settings = settings
         
-        feeCalculator = BtcBchFeeCalculator(amount: amount, utxo: utxo, isSendAll: isSendAll)
+        feeCalculator = BtcBchFeeCalculator(amount: amount, utxo: utxo, isSendAll: isSendAll, settings: settings)
     }
     
     /// Transaction creation
@@ -70,19 +74,19 @@ public class BitcoinTemplateUnspentTransaction<T: BitcoinTemplateTransaction> {
         
         var usedOutputs: [BitcoinTransactionOutput] = []
         
-        let outputAddress = try BitcoinPublicKeyAddress(base58: address)
+        let outputAddress = try BitcoinPublicKeyAddress(string: address)
         let output = BitcoinTransactionOutput(amount: amount, address: outputAddress)
         
         usedOutputs.append(output)
         
         if !isSendAll && !changeAddress.isEmpty {
-            let outputChangeAddress = try BitcoinPublicKeyAddress(base58: changeAddress)
+            let outputChangeAddress = try BitcoinPublicKeyAddress(string: changeAddress)
             let changeOutput = BitcoinTransactionOutput(amount: inputsAmount - (amount + expectedFeeValue), address: outputChangeAddress)
             
             usedOutputs.append(changeOutput)
         }
         
-        return T(inputs: usedInputs, outputs: usedOutputs)
+        return T(inputs: usedInputs, outputs: usedOutputs, settings: settings)
     }
     
     /// Transaction creation
@@ -96,7 +100,7 @@ public class BitcoinTemplateUnspentTransaction<T: BitcoinTemplateTransaction> {
         var total: UInt64 = 0
          
         for txinput in unspentSorted {
-            if txinput.script.isPayToPublicKeyHashScript() {
+            if settings.allowedScriptTypes.contains(txinput.script.type) {
                 let input = BitcoinTransactionInput(hash: txinput.transactionHash,
                                                     id: Data(txinput.transactionHash.reversed()).hex,
                                                     index: Int(txinput.outputN),
@@ -110,19 +114,19 @@ public class BitcoinTemplateUnspentTransaction<T: BitcoinTemplateTransaction> {
          
         var usedOutputs: [BitcoinTransactionOutput] = []
          
-        let outputAddress = try BitcoinPublicKeyAddress(base58: address)
+        let outputAddress = try BitcoinPublicKeyAddress(string: address)
         let output = BitcoinTransactionOutput(amount: amount, address: outputAddress)
         
         usedOutputs.append(output)
         
         if !isSendAll && !changeAddress.isEmpty {
-            let outputChangeAddress = try BitcoinPublicKeyAddress(base58: changeAddress)
+            let outputChangeAddress = try BitcoinPublicKeyAddress(string: changeAddress)
             let changeOutput = BitcoinTransactionOutput(amount: UInt64(total) - (amount + feeAmount), address: outputChangeAddress)
             
             usedOutputs.append(changeOutput)
         }
          
-        return T(inputs: usedInputs, outputs: usedOutputs)
+        return T(inputs: usedInputs, outputs: usedOutputs, settings: settings)
     }
 }
 

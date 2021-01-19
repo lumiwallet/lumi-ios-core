@@ -13,7 +13,6 @@ public enum SignatureHashTypesCoins {
     case bitcoincash
 }
 
-
 public struct SignatureHashType {
     private static let _sighashAll: UInt8 = 0x01
     private static let _sighashNone: UInt8 = 0x02

@@ -97,14 +97,14 @@ public struct BitcoinTransactionText {
     static var inputsTitle = "Inputs"
     static var ouputsTitle = "Outputs"
     
-    static var legacyBitcoinAddressChangeTitle = "Legacy bitcoin address for change"
+    static var legacyBitcoinAddressChangeTitle = "Bitcoin address for change"
     static var bitcoinAddressPlaceholder = "BTC address"
     static var feePerByteTitle = "Fee per byte"
     
     static var buttonBuild = "Build"
     
     public struct Input {
-        static var bitcoinAddressTitle = "Legacy bitcoin address"
+        static var bitcoinAddressTitle = "Bitcoin address"
         static var bitcoinAddressPlaceholder = "Enter bitcoin address"
         static var amountTitle = "Amount in satoshi"
         static var outputTitle = "Output N"
@@ -125,7 +125,7 @@ public struct BitcoinTransactionText {
     }
     
     public struct Output {
-        static var addressTitle = "Legacy bitcoin address"
+        static var addressTitle = "Bitcoin address"
         static var amountTitle = "Amount in satoshi"
     }
     

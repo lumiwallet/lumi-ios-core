@@ -38,7 +38,7 @@ class BitcoinCashTransactionTests: XCTestCase {
                 try? BitcoinUnspentOutput(address: $0.address, value: $0.value, outputN: $0.txOutputN, scriptData: Data(hex: $0.script), hashData: Data(Data(hex: $0.transactionHash).reversed()))
             })
             
-            let unspentTransaction = BitcoinTemplateUnspentTransaction<BitcoinCashTransaction>(amount: UInt64(testItem.amount), addresss: testItem.address, changeAddress: testItem.changeAddress, utxo: unspentOutputs, isSendAll: false)
+            let unspentTransaction = BitcoinTemplateUnspentTransaction<BitcoinCashTransaction>(amount: UInt64(testItem.amount), addresss: testItem.address, changeAddress: testItem.changeAddress, utxo: unspentOutputs, isSendAll: false, settings: .bitcoinCashDefaults)
             
             guard let tx = try? unspentTransaction.buildTransaction(feeAmount: UInt64(testItem.fee)) else {
                 XCTAssert(false, "Can't build transaction")
