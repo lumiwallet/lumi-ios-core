@@ -9,7 +9,7 @@
 Pod::Spec.new do |s|
 
   s.name         = "LumiCore"
-  s.version      = "1.0.0"
+  s.version      = "1.0.1"
   s.summary      = "The LumiCore library is an implementation of tools for working with cryptocurrencies"
   s.homepage	 = "https://github.com/lumiwallet/lumi-ios-core"
 
