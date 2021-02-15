@@ -14,10 +14,39 @@ public enum BitcoinAddressHashType: String, CaseIterable {
     case P2WSH = "P2WSH"
 }
 
-public enum PublicKeyAddressHashType {
+public struct AddressHRP: CustomStringConvertible {
+    public var prefix: String
+    public var separator: String
+    public var description: String { prefix + separator }
+    
+    public init(prefix: String, separator: String) {
+        self.prefix = prefix
+        self.separator = separator
+    }
+}
+
+public enum PublicKeyAddressHashType: CaseIterable {
+    public typealias AllCases = [PublicKeyAddressHashType]
+    
+    public static var allCases: [PublicKeyAddressHashType] {
+        BitcoinAddressHashType.allCases.map({
+            PublicKeyAddressHashType.bitcoin($0)
+        }) +
+        BitcoinAddressHashType.allCases.map({
+            PublicKeyAddressHashType.bitcoincash($0)
+        }) +
+        BitcoinAddressHashType.allCases.map({
+            PublicKeyAddressHashType.doge($0)
+        }) +
+        BitcoinAddressHashType.allCases.map({
+            PublicKeyAddressHashType.bitcoinvault($0)
+        })
+    }
+    
     case bitcoin(_ type: BitcoinAddressHashType)
     case bitcoincash(_ type: BitcoinAddressHashType)
     case doge(_ type: BitcoinAddressHashType)
+    case bitcoinvault(_ type: BitcoinAddressHashType)
     
     var version: UInt8 {
         switch self {
@@ -42,6 +71,26 @@ public enum PublicKeyAddressHashType {
             case .P2WPKH: return CoinVersionBytesConstant.bitcoin_p2wpkh
             case .P2WSH: return CoinVersionBytesConstant.bitcoin_p2wsh
             }
+        case let .bitcoinvault(type):
+            switch type {
+            case .P2PKH: return CoinVersionBytesConstant.bitcoinvault_p2pkh
+            case .P2SH: return CoinVersionBytesConstant.bitcoinvault_p2sh
+            case .P2WPKH: return CoinVersionBytesConstant.bitcoin_p2wpkh
+            case .P2WSH: return CoinVersionBytesConstant.bitcoin_p2wsh
+            }
+        }
+    }
+    
+    public var hrp: AddressHRP {
+        switch self {
+        case .bitcoin(.P2WPKH), .bitcoin(.P2WSH):
+            return AddressHRP(prefix: "bc", separator: "1")
+        case .bitcoincash(.P2PKH), .bitcoincash(.P2SH):
+            return AddressHRP(prefix: "bitcoincash", separator: ":")
+        case .bitcoinvault(.P2WPKH), .bitcoinvault(.P2WSH):
+            return AddressHRP(prefix: "royale", separator: "1")
+        default:
+            return AddressHRP(prefix: "", separator: "")
         }
     }
     
@@ -50,6 +99,7 @@ public enum PublicKeyAddressHashType {
         case let .bitcoin(type): return type
         case let .bitcoincash(type): return type
         case let .doge(type): return type
+        case let .bitcoinvault(type): return type
         }
     }
     
@@ -59,6 +109,8 @@ public enum PublicKeyAddressHashType {
         case CoinVersionBytesConstant.bitcoin_p2sh: return .bitcoin(.P2SH)
         case CoinVersionBytesConstant.doge_p2pkh: return .doge(.P2PKH)
         case CoinVersionBytesConstant.doge_p2sh: return .doge(.P2SH)
+        case CoinVersionBytesConstant.bitcoinvault_p2pkh: return .bitcoinvault(.P2PKH)
+        case CoinVersionBytesConstant.bitcoinvault_p2sh: return .bitcoinvault(.P2SH)
         default:
             return nil
         }
@@ -71,7 +123,9 @@ public enum PublicKeyAddressHashType {
             CoinVersionBytesConstant.bitcoin_p2wpkh,
             CoinVersionBytesConstant.bitcoin_p2wsh,
             CoinVersionBytesConstant.doge_p2pkh,
-            CoinVersionBytesConstant.doge_p2sh]
+            CoinVersionBytesConstant.doge_p2sh,
+            CoinVersionBytesConstant.bitcoinvault_p2pkh,
+            CoinVersionBytesConstant.bitcoinvault_p2sh]
         ).contains(version)
     }
     

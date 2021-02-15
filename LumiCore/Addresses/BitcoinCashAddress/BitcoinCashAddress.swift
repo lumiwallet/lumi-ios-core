@@ -25,12 +25,12 @@ public struct BitcoinCashAddress {
         }
         
         let s1 = data.sha256().ripemd160()
-        let s2 = PublicKeyAddressHashType.bitcoin(.P2PKH).version.data + s1
+        let s2 = PublicKeyAddressHashType.bitcoincash(.P2PKH).version.data + s1
         
         _publicKeyHash = s2
         
         legacyAddress = s2.base58(usingChecksum: true)
-        cashAddress = Bech32AddressCoder.encode(hrp: BitcoinCashAddressConstants.prefix, data: s2.dropFirst(), type: .bitcoin(.P2PKH))
+        cashAddress = Bech32AddressCoder.encode(hrp: PublicKeyAddressHashType.bitcoincash(.P2PKH).hrp.prefix, data: s2.dropFirst(), type: .bitcoincash(.P2PKH))
     }
     
     /// Initialize with a bitcoin legacy address string
@@ -44,7 +44,7 @@ public struct BitcoinCashAddress {
         }
         
         legacyAddress = _publicKeyHash.base58(usingChecksum: true)
-        cashAddress = Bech32AddressCoder.encode(hrp: BitcoinCashAddressConstants.prefix, data: _publicKeyHash.dropFirst(), type: .bitcoin(.P2PKH))
+        cashAddress = Bech32AddressCoder.encode(hrp: PublicKeyAddressHashType.bitcoincash(.P2PKH).hrp.prefix, data: _publicKeyHash.dropFirst(), type: .bitcoincash(.P2PKH))
     }
     
     /// Initialize with a CashAddr string
@@ -56,7 +56,7 @@ public struct BitcoinCashAddress {
         
         let data = Bech32AddressCoder.decode(bch: payload)
         
-        _publicKeyHash = PublicKeyAddressHashType.bitcoin(.P2PKH).version.data + data
+        _publicKeyHash = PublicKeyAddressHashType.bitcoincash(.P2PKH).version.data + data
         
         guard _publicKeyHash.count == BitcoinAddressConstants.publicKeyHashDataLength else {
             throw BitcoinCreateAddressError.invalidHashDataLength
@@ -64,7 +64,7 @@ public struct BitcoinCashAddress {
         
         legacyAddress = _publicKeyHash.base58(usingChecksum: true)
         
-        cashAddress = cashaddress.dropPrefix(prefix: BitcoinCashAddressConstants.prefix)
+        cashAddress = cashaddress.dropPrefix(prefix: PublicKeyAddressHashType.bitcoincash(.P2PKH).hrp.prefix)
     }
     
     /// CashAddr formatted string without 'bitcoincash' prefix
@@ -74,6 +74,6 @@ public struct BitcoinCashAddress {
     
     /// CashAddr formatted string with 'bitcoincash' prefix
     public var formattedAddress: String {
-        BitcoinCashAddressConstants.prefix + BitcoinCashAddressConstants.separator + cashAddress
+        PublicKeyAddressHashType.bitcoincash(.P2PKH).hrp.description + cashAddress
     }
 }

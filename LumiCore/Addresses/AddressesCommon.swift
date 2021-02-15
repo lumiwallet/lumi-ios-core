@@ -21,6 +21,11 @@ public struct CoinVersionBytesConstant {
     public static let doge_p2sh: UInt8 = 0x16
     
     public static let doge_prvkey_version: UInt8 = 0x9E
+    
+    public static let bitcoinvault_p2pkh: UInt8 = 0x4e
+    public static let bitcoinvault_p2sh: UInt8 = 0x3c
+    
+    public static let bitcoinvault_prvkey_version: UInt8 = 0x80
 }
 
 // - MARK: Bitcoin
@@ -43,10 +48,6 @@ public struct BitcoinAddressConstants {
     
     public static let publicKeyHashDataLength = 21
     public static let publicKeyScriptHashLength = 21
-    
-    public static let bc1prefix = "bc"
-    public static let bc1separator = "1"
-    public static let bc1hrp = bc1prefix + bc1separator
 }
 
 
