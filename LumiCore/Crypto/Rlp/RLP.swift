@@ -10,7 +10,7 @@ import Foundation
 
 struct RLP {
 
-    static func encode<T>(_ input: T) throws -> Data {
+    public static func encode<T>(_ input: T) throws -> Data {
         switch input {
         case is [Any]:
             return try encode(input as! [Any])
@@ -21,7 +21,7 @@ struct RLP {
         }
     }
 
-    static func decode<T>(_ input: Data) throws -> T {
+    public static func decode<T>(_ input: Data) throws -> T {
         guard !input.isEmpty else { throw RLPErrors.emptyDecodeInput }
         let decodedData = try decode(input)
         if decodedData[0] is T {

@@ -9,16 +9,16 @@ import Foundation
 
 /// An object for representing and working with transaction inputs
 public class BitcoinTransactionInput {
-    let previousHash: Data
-    let previousID: String
-    let previousIndex: Int
+    public let previousHash: Data
+    public let previousID: String
+    public let previousIndex: Int
     
-    let script: BitcoinScript
-    var sequence: UInt32 = 0xffffffff
+    public let script: BitcoinScript
+    public var sequence: UInt32 = 0xffffffff
     
-    let value: UInt64
+    public let value: UInt64
     
-    let witness: Data
+    public let witness: Data
     
     /// Init
     /// - Parameter hash: Previous transaction hash

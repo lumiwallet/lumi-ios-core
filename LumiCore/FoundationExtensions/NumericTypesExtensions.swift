@@ -23,7 +23,7 @@ extension UInt32: DataConvertibleProtocol {}
 extension UInt64: DataConvertibleProtocol {}
 
 extension DataConvertibleProtocol {
-    var data: Data {
+    public var data: Data {
         var value = self
 
         let pointer = withUnsafePointer(to: &value) {

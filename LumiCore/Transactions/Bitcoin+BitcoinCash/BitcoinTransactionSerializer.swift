@@ -10,6 +10,8 @@ import Foundation
 
 public class BitcoinTransactionSerializer {
     
+    public init() {}
+    
     public func serialize(_ transaction: BitcoinTransactionProtocol) -> Data {
         var data = Data()
         data += serialize(transaction.version)

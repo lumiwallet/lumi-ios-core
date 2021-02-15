@@ -9,7 +9,7 @@ import Foundation
 import LumiCore.Base58
 
 
-extension Data {
+public extension Data {
     
     func base58(usingChecksum: Bool) -> String {
         if usingChecksum {

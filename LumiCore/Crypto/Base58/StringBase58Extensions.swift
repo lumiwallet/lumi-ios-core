@@ -9,7 +9,7 @@ import Foundation
 import LumiCore.Base58
 
 
-extension String {
+public extension String {
     
     func base58(usingChecksum: Bool) -> String {
         guard let data = self.data(using: .utf8) else { return "" }
