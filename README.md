@@ -3,7 +3,7 @@
 [![License](https://img.shields.io/badge/license-MIT-black.svg?style=flat)](https://mit-license.org)
 [![Platform](https://img.shields.io/badge/platform-ios-blue.svg?style=flat)](https://developer.apple.com/resources/)
 [![Swift](https://img.shields.io/badge/swift-5.0-brightgreen.svg)](https://developer.apple.com/resources/)
-[![Version](https://img.shields.io/badge/Version-1.0.1-orange.svg)]()
+[![Version](https://img.shields.io/badge/Version-1.0.2-orange.svg)]()
 
 ![lumicore](https://user-images.githubusercontent.com/46525159/78136697-beff3200-742c-11ea-853a-d598444f50f8.png)
 
