@@ -120,10 +120,17 @@ public struct Bech32AddressCoder {
         return result
     }
     
-    static func decode(bc1: String) -> Data {
-        let payload = bc1.dropPrefix(prefix: BitcoinAddressConstants.bc1prefix + BitcoinAddressConstants.bc1separator)
-        let decoded = Bech32.decode(payload, convert: false).dropLast(6)
-        let converted = Bech32.convertBits(decoded.dropFirst(), from: 5, to: 8, strict: true)
+    static func decode(witness address: String, hrp: AddressHRP) -> Data {
+        let payload = address.dropPrefix(prefix: hrp.description)
+        let decoded = Bech32.decode(payload, convert: false)
+        
+        let checksum = polymod(data: Bech32AddressCoder.hrpExpand(prefix: hrp.prefix) + decoded.dropLast(6), output: Data(count: 6), gen: .bc1)
+        
+        guard checksum == decoded.suffix(6) else {
+            return Data()
+        }
+        
+        let converted = Bech32.convertBits(decoded.dropFirst().dropLast(6), from: 5, to: 8, strict: true)
         let result = converted
         return result
     }

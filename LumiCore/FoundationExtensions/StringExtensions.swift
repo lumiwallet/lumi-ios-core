@@ -14,7 +14,7 @@ extension String {
 }
 
 
-extension String {
+public extension String {
     
     func dropPrefix(prefix: String) -> String {
         guard self.hasPrefix(prefix) else { return self }

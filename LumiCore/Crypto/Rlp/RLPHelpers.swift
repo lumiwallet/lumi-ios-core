@@ -10,9 +10,9 @@ import Foundation
 
 extension RLP {
     
-    typealias LengthDecodingInfo = (length: Int, offset: Int, type: RLPTypes)
+    public typealias LengthDecodingInfo = (length: Int, offset: Int, type: RLPTypes)
 
-    enum RLPErrors: Error {
+    public enum RLPErrors: Error {
         case wrongEncodeInputType
         case encodeInputIsTooLong
         case emptyDecodeInput
@@ -24,12 +24,12 @@ extension RLP {
         case decodingUndefined
     }
 
-    enum RLPTypes {
+    public enum RLPTypes {
         case element
         case list
     }
     
-    static var emptyByte: Data {
+    public static var emptyByte: Data {
         return Data(repeating: 0x80, count: 1)
     }
 }

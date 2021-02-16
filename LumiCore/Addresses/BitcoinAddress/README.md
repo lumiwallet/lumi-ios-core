@@ -28,11 +28,12 @@ public init(key: Key, type: PublicKeyAddressHashType = .bitcoin(.P2PKH))
 Initializes an object with the public key hash or script hash data
 
 ```swift
-public init(data: Data)
+public init(data: Data, type: PublicKeyAddressHashType? = nil)
 ```
 
 #### Parameters:
 * **data** - The public key hash or script hash data (with version byte in prefix)
+* **type** - Required and used only to define the representation of the witness address
 
 </br>
 
@@ -43,7 +44,7 @@ public init(string: String)
 ```
 
 #### Parameters:
-* **string** - BC1 or Base58 bitcoin address string
+* **string** - Bech32 or Base58  address string
 
 </br>
 
@@ -65,7 +66,7 @@ public init(bech32: String)
 ```
 
 #### Parameters:
-* **bech32** - BC1 bitcoin address string
+* **bech32** - Bech32 (witness representation) address string
 
 
 ## **Properties**

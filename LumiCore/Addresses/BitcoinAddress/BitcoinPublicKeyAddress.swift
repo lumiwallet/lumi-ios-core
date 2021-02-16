@@ -79,9 +79,9 @@ public class BitcoinPublicKeyAddress {
         case .P2SH:
             try self.init(data: type.version.data + script.getPublicKeyHash())
         case .P2WPKH:
-            try self.init(data: script.getPublicKeyHash())
+            try self.init(data: script.getPublicKeyHash(), type: type)
         case .P2WSH:
-            try self.init(data: script.getPublicKeyHash())
+            try self.init(data: script.getPublicKeyHash(), type: type)
         default:
             throw BitcoinCreateAddressError.invalidAddressVersion
         }
@@ -89,8 +89,9 @@ public class BitcoinPublicKeyAddress {
     
     /// Initialize with a public key hash or a script hash data (with version byte in prefix)
     /// - Parameter data: Public key hash or script hash data (with version byte in prefix)
+    /// - Parameter type: Required and used only to define the representation of the witness address
     /// - Throws: BitcoinCreateAddressError.invalidDataLength, BitcoinCreateAddressError.invalidAddressVersion
-    public init(data: Data) throws {
+    public init(data: Data, type: PublicKeyAddressHashType? = nil) throws {
         _data = data
         
         if PublicKeyAddressHashType.validate(version: data[0]) {
@@ -101,12 +102,22 @@ public class BitcoinPublicKeyAddress {
             }
             
         }  else {
+            guard let targetType = type else {
+                throw BitcoinCreateAddressError.invalidAddressVersion
+            }
+            
             switch data.count {
             case BitcoinAddressConstants.witnessProgramWPKHLength:
-                hashType = .bitcoin(.P2WPKH)
+                guard targetType.typeValue == .P2WPKH else {
+                    throw BitcoinCreateAddressError.invalidAddressVersion
+                }
+                hashType = targetType
                 
             case BitcoinAddressConstants.witnessProgramWSHLength:
-                hashType = .bitcoin(.P2SH)
+                guard targetType.typeValue == .P2WSH else {
+                    throw BitcoinCreateAddressError.invalidAddressVersion
+                }
+                hashType = targetType
                 
             default:
                 throw BitcoinCreateAddressError.invalidDataLength
@@ -117,11 +128,11 @@ public class BitcoinPublicKeyAddress {
     }
     
     /// Initialize with a string
-    /// - Parameter string: BC1 or Base58 bitcoin address string
+    /// - Parameter string: Bech32 or Base58  address string
     /// - Throws: BitcoinCreateAddressError.invalidDataLength, BitcoinCreateAddressError.invalidAddressVersion
     convenience public init(string: String) throws {
-        if string.hasPrefix(BitcoinAddressConstants.bc1hrp) {
-            try self.init(bech32: string)
+        if let type = PublicKeyAddressHashType.allCases.first(where: { !$0.hrp.description.isEmpty && string.hasPrefix($0.hrp.description) }) {
+            try self.init(bech32: string, type: type)
         } else {
             try self.init(base58: string)
         }
@@ -149,17 +160,17 @@ public class BitcoinPublicKeyAddress {
     }
     
     /// Initialize with a bech32  bitcoin address
-    /// - Parameter bech32: BC1 bitcoin address string
+    /// - Parameter bech32: Bech32 (witness representation) address string
+    /// - Parameter type: Address hash type
     /// - Throws: BitcoinCreateAddressError.invalidDataLength
-    public init(bech32: String) throws {
-        _data = Bech32AddressCoder.decode(bc1: bech32)
-        let dataLength = _data.count
+    public init(bech32: String, type: PublicKeyAddressHashType) throws {
+        _data = Bech32AddressCoder.decode(witness: bech32, hrp: type.hrp)
 
-        switch dataLength {
+        switch _data.count {
         case BitcoinAddressConstants.witnessProgramWPKHLength:
-            hashType = .bitcoin(.P2WPKH)
+            hashType = type
         case BitcoinAddressConstants.witnessProgramWSHLength:
-            hashType = .bitcoin(.P2WSH)
+            hashType = type
         default:
             throw BitcoinCreateAddressError.invalidHashDataLength
         }
@@ -201,9 +212,9 @@ public class BitcoinPublicKeyAddress {
         case .P2PKH, .P2SH:
             return payload.base58(usingChecksum: true)
         case .P2WPKH, .P2WSH:
-            return BitcoinAddressConstants.bc1hrp + Bech32AddressCoder.encode(hrp: BitcoinAddressConstants.bc1prefix,
-                                             witnessVersion: BitcoinAddressConstants.witnessProgramVersionByte,
-                                             witnessProgram: payload)
+            return type.hrp.description + Bech32AddressCoder.encode(hrp: type.hrp.prefix,
+                                                                    witnessVersion: BitcoinAddressConstants.witnessProgramVersionByte,
+                                                                    witnessProgram: payload)
         }
     }
     
