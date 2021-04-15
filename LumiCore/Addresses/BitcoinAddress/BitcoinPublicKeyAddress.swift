@@ -94,7 +94,7 @@ public class BitcoinPublicKeyAddress {
     public init(data: Data, type: PublicKeyAddressHashType? = nil) throws {
         _data = data
         
-        if PublicKeyAddressHashType.validate(version: data[0]) {
+        if data.count == 21 && PublicKeyAddressHashType.validate(version: data[0]) {
             if let type = PublicKeyAddressHashType.generate(version: data[0]) {
                 hashType = type
             } else {
