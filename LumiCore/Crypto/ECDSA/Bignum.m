@@ -154,7 +154,10 @@
 }
 
 + (int)mod:(Bignum *)value mod:(Bignum *)m {
-    return BN_div(NULL, value.bn, value.bn, m.bn, NULL);
+    BN_CTX *ctx = BN_CTX_new();
+    int result = BN_div(NULL, value.bn, value.bn, m.bn, ctx);
+    BN_CTX_free(ctx);
+    return result;
 }
 
 + (int)modInverse:(Bignum *)value mod:(Bignum *)m result:(Bignum *)r {
@@ -209,7 +212,9 @@
 }
 
 -(void)dealloc {
-    BN_free(_bn);
+    if(_bn != NULL) {
+        BN_free(_bn);
+    }
 }
 
 @end

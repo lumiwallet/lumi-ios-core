@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		755A0DA726C140A6005A43BD /* openssl_config.patch in Resources */ = {isa = PBXBuildFile; fileRef = 755A0DA626C140A6005A43BD /* openssl_config.patch */; };
 		CE0F615823E1E0CB00633FF0 /* BitcoinPrivateKeyAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0F615723E1E0CB00633FF0 /* BitcoinPrivateKeyAddress.swift */; };
 		CE0F615B23E2E2FE00633FF0 /* EosUnsignedTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0F615A23E2E2FE00633FF0 /* EosUnsignedTransaction.swift */; };
 		CE0F615D23E4360300633FF0 /* EosSerialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0F615C23E4360300633FF0 /* EosSerialization.swift */; };
@@ -255,6 +256,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		755A0DA626C140A6005A43BD /* openssl_config.patch */ = {isa = PBXFileReference; lastKnownFileType = text; path = openssl_config.patch; sourceTree = "<group>"; };
 		CE0F615723E1E0CB00633FF0 /* BitcoinPrivateKeyAddress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitcoinPrivateKeyAddress.swift; sourceTree = "<group>"; };
 		CE0F615A23E2E2FE00633FF0 /* EosUnsignedTransaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EosUnsignedTransaction.swift; sourceTree = "<group>"; };
 		CE0F615C23E4360300633FF0 /* EosSerialization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EosSerialization.swift; sourceTree = "<group>"; };
@@ -1132,6 +1134,7 @@
 			isa = PBXGroup;
 			children = (
 				CEE88E882404B2C800BB5855 /* openssl_update.sh */,
+				755A0DA626C140A6005A43BD /* openssl_config.patch */,
 			);
 			path = Scripts;
 			sourceTree = "<group>";
@@ -1401,6 +1404,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				755A0DA726C140A6005A43BD /* openssl_config.patch in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
