@@ -79,6 +79,34 @@ typedef NS_ENUM(NSUInteger, VersionSLIP0132) {
 
 @end
 
+@interface CardanoKey : NSObject <NSCopying>
+
+@property (nonatomic, readonly, assign) KeyType type;
+@property (nonatomic, readonly, nonnull) NSData *data;
+
+- (instancetype)initWithPublicKey:(NSData *)key;
+- (instancetype)initWithPrivateKey:(NSData *)key;
+
+- (NSData *)publicKey;
+
+@end
+
+@interface CardanoDerivationKey : NSObject
+
+@property (nonatomic, readonly, copy, nonnull) CardanoKey *key;
+@property (nonatomic, readonly, copy, nonnull) NSData *chaincode;
+
+@property (nonatomic, readonly, assign) int depth;
+@property (nonatomic, readonly, assign) int parent;
+@property (nonatomic, readonly, assign) int sequence;
+
+- (instancetype)initWithKey:(CardanoKey *)key chaincode:(NSData *)chaincode;
+- (instancetype)initWithCardanoKey:(CardanoDerivationKey *)key;
+
+- (void)derive:(uint32_t)sequence hardened:(BOOL)hardened;
+
+@end
+
 NS_ASSUME_NONNULL_END
 
 #endif /* Key_h */
