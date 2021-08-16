@@ -26,6 +26,16 @@ public extension String {
         return HashFunction.sha256Double(from: data)
     }
     
+    func blake2b256() -> Data {
+        guard let data = self.data(using: .utf8) else { return Data() }
+        return HashFunction.blake2b256(from: data)
+    }
+    
+    func blake2b224() -> Data {
+        guard let data = self.data(using: .utf8) else { return Data() }
+        return HashFunction.blake2b224(from: data)
+    }
+    
     func ripemd160() -> Data {
         guard let data = self.data(using: .utf8) else { return Data() }
         return HashFunction.ripemd160(from: data)

@@ -23,6 +23,14 @@ public extension Data {
         return HashFunction.sha256Double(from: self)
     }
     
+    func blake2b256() -> Data {
+        return HashFunction.blake2b256(from: self)
+    }
+    
+    func blake2b224() -> Data {
+        return HashFunction.blake2b224(from: self)
+    }
+    
     func ripemd160() -> Data {
         return HashFunction.ripemd160(from: self)
     }

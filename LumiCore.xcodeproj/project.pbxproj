@@ -7,6 +7,8 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		753985E426CAB1FD0004C651 /* blake2b.h in Headers */ = {isa = PBXBuildFile; fileRef = 753985E326CAB1FD0004C651 /* blake2b.h */; };
+		753985E726CAB2B40004C651 /* blake2b.c in Sources */ = {isa = PBXBuildFile; fileRef = 753985E626CAB2B40004C651 /* blake2b.c */; };
 		755A0DA726C140A6005A43BD /* openssl_config.patch in Resources */ = {isa = PBXBuildFile; fileRef = 755A0DA626C140A6005A43BD /* openssl_config.patch */; };
 		CE0F615823E1E0CB00633FF0 /* BitcoinPrivateKeyAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0F615723E1E0CB00633FF0 /* BitcoinPrivateKeyAddress.swift */; };
 		CE0F615B23E2E2FE00633FF0 /* EosUnsignedTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0F615A23E2E2FE00633FF0 /* EosUnsignedTransaction.swift */; };
@@ -256,6 +258,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		753985E326CAB1FD0004C651 /* blake2b.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = blake2b.h; sourceTree = "<group>"; };
+		753985E626CAB2B40004C651 /* blake2b.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = blake2b.c; sourceTree = "<group>"; };
 		755A0DA626C140A6005A43BD /* openssl_config.patch */ = {isa = PBXFileReference; lastKnownFileType = text; path = openssl_config.patch; sourceTree = "<group>"; };
 		CE0F615723E1E0CB00633FF0 /* BitcoinPrivateKeyAddress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitcoinPrivateKeyAddress.swift; sourceTree = "<group>"; };
 		CE0F615A23E2E2FE00633FF0 /* EosUnsignedTransaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EosUnsignedTransaction.swift; sourceTree = "<group>"; };
@@ -508,6 +512,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		753985E526CAB28C0004C651 /* Blake2b */ = {
+			isa = PBXGroup;
+			children = (
+				753985E626CAB2B40004C651 /* blake2b.c */,
+			);
+			path = Blake2b;
+			sourceTree = "<group>";
+		};
 		CE0F615923E2E2E400633FF0 /* Eos */ = {
 			isa = PBXGroup;
 			children = (
@@ -853,6 +865,7 @@
 				CE9AD53A236867020043DAAA /* ECDSA.h */,
 				CE46360123E9B8EF004A9932 /* Curve.h */,
 				CE133169242000E30055C11D /* Bech32.h */,
+				753985E326CAB1FD0004C651 /* blake2b.h */,
 			);
 			path = PrivateHeaders;
 			sourceTree = "<group>";
@@ -901,6 +914,7 @@
 		CE9AD535236855930043DAAA /* Crypto */ = {
 			isa = PBXGroup;
 			children = (
+				753985E526CAB28C0004C651 /* Blake2b */,
 				CE13316A2420013F0055C11D /* Bech32 */,
 				CE0F616223E4765A00633FF0 /* Eos */,
 				CE14C69223A122D70078AFD8 /* Keccak */,
@@ -1242,6 +1256,7 @@
 				CE9AD7042368806C0043DAAA /* asn1t.h in Headers */,
 				CE9AD6F22368806C0043DAAA /* ec.h in Headers */,
 				CE9AD6CB2368806C0043DAAA /* ui.h in Headers */,
+				753985E426CAB1FD0004C651 /* blake2b.h in Headers */,
 				CE9AD7032368806C0043DAAA /* srtp.h in Headers */,
 				CE9AD6C52368806C0043DAAA /* blowfish.h in Headers */,
 				CE9AD6C22368806C0043DAAA /* dtls1.h in Headers */,
@@ -1486,6 +1501,7 @@
 				CE14C69923A247B40078AFD8 /* StringExtensions.swift in Sources */,
 				CE77109323DB23DD004D1F7C /* BitcoinCashTransaction.swift in Sources */,
 				CE14C69D23A25D780078AFD8 /* keccak-tiny.c in Sources */,
+				753985E726CAB2B40004C651 /* blake2b.c in Sources */,
 				CE77106B23D215E6004D1F7C /* MnemonicErrors.swift in Sources */,
 				CE63506B241F8997000AAB20 /* BitcoinCreateAddressError.swift in Sources */,
 				CE14C6C423A9419F0078AFD8 /* BitcoinTransaction.swift in Sources */,
