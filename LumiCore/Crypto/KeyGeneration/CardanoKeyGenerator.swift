@@ -77,4 +77,13 @@ public class CardanoKeyGenerator {
     public func reset() {
         generated = CardanoDerivationKey(cardanoKey: master);
     }
+    
+    /// Generates a child key using the last generated key
+    /// - Parameter sequence: Sequence value
+    /// - Parameter hardened: Flag that indicates whether the child key is a strong key
+    public func generateChild(for sequence: UInt, hardened: Bool) -> CardanoDerivationKey {
+        let key = CardanoDerivationKey(cardanoKey: generated)
+        key.derive(UInt32(sequence), hardened: hardened)
+        return key
+    }
 }
