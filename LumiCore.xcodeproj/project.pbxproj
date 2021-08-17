@@ -9,24 +9,24 @@
 /* Begin PBXBuildFile section */
 		753985E426CAB1FD0004C651 /* blake2b.h in Headers */ = {isa = PBXBuildFile; fileRef = 753985E326CAB1FD0004C651 /* blake2b.h */; };
 		753985E726CAB2B40004C651 /* blake2b.c in Sources */ = {isa = PBXBuildFile; fileRef = 753985E626CAB2B40004C651 /* blake2b.c */; };
-		753985F626CAC0590004C651 /* ed25519-hash.h in Headers */ = {isa = PBXBuildFile; fileRef = 753985E926CAC0590004C651 /* ed25519-hash.h */; };
-		753985F726CAC0590004C651 /* ed25519-donna-portable-identify.h in Headers */ = {isa = PBXBuildFile; fileRef = 753985EA26CAC0590004C651 /* ed25519-donna-portable-identify.h */; };
-		753985F826CAC0590004C651 /* curve25519-donna-helpers.h in Headers */ = {isa = PBXBuildFile; fileRef = 753985EB26CAC0590004C651 /* curve25519-donna-helpers.h */; };
-		753985F926CAC0590004C651 /* curve25519-donna-32bit.h in Headers */ = {isa = PBXBuildFile; fileRef = 753985EC26CAC0590004C651 /* curve25519-donna-32bit.h */; };
-		753985FA26CAC0590004C651 /* ed25519-donna-impl-base.h in Headers */ = {isa = PBXBuildFile; fileRef = 753985ED26CAC0590004C651 /* ed25519-donna-impl-base.h */; };
-		753985FB26CAC0590004C651 /* ed25519-donna-32bit-tables.h in Headers */ = {isa = PBXBuildFile; fileRef = 753985EE26CAC0590004C651 /* ed25519-donna-32bit-tables.h */; };
-		753985FC26CAC0590004C651 /* ed25519.h in Headers */ = {isa = PBXBuildFile; fileRef = 753985EF26CAC0590004C651 /* ed25519.h */; };
-		753985FD26CAC0590004C651 /* ed25519-donna-basepoint-table.h in Headers */ = {isa = PBXBuildFile; fileRef = 753985F026CAC0590004C651 /* ed25519-donna-basepoint-table.h */; };
-		753985FE26CAC0590004C651 /* ed25519-donna.h in Headers */ = {isa = PBXBuildFile; fileRef = 753985F126CAC0590004C651 /* ed25519-donna.h */; };
-		753985FF26CAC0590004C651 /* ed25519-donna-batchverify.h in Headers */ = {isa = PBXBuildFile; fileRef = 753985F226CAC0590004C651 /* ed25519-donna-batchverify.h */; };
-		7539860026CAC0590004C651 /* ed25519-donna-portable.h in Headers */ = {isa = PBXBuildFile; fileRef = 753985F326CAC0590004C651 /* ed25519-donna-portable.h */; };
-		7539860126CAC0590004C651 /* modm-donna-32bit.h in Headers */ = {isa = PBXBuildFile; fileRef = 753985F426CAC0590004C651 /* modm-donna-32bit.h */; };
+		753985F626CAC0590004C651 /* ed25519-hash.h in Headers */ = {isa = PBXBuildFile; fileRef = 753985E926CAC0590004C651 /* ed25519-hash.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		753985F726CAC0590004C651 /* ed25519-donna-portable-identify.h in Headers */ = {isa = PBXBuildFile; fileRef = 753985EA26CAC0590004C651 /* ed25519-donna-portable-identify.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		753985F826CAC0590004C651 /* curve25519-donna-helpers.h in Headers */ = {isa = PBXBuildFile; fileRef = 753985EB26CAC0590004C651 /* curve25519-donna-helpers.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		753985F926CAC0590004C651 /* curve25519-donna-32bit.h in Headers */ = {isa = PBXBuildFile; fileRef = 753985EC26CAC0590004C651 /* curve25519-donna-32bit.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		753985FA26CAC0590004C651 /* ed25519-donna-impl-base.h in Headers */ = {isa = PBXBuildFile; fileRef = 753985ED26CAC0590004C651 /* ed25519-donna-impl-base.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		753985FB26CAC0590004C651 /* ed25519-donna-32bit-tables.h in Headers */ = {isa = PBXBuildFile; fileRef = 753985EE26CAC0590004C651 /* ed25519-donna-32bit-tables.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		753985FC26CAC0590004C651 /* ed25519.h in Headers */ = {isa = PBXBuildFile; fileRef = 753985EF26CAC0590004C651 /* ed25519.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		753985FD26CAC0590004C651 /* ed25519-donna-basepoint-table.h in Headers */ = {isa = PBXBuildFile; fileRef = 753985F026CAC0590004C651 /* ed25519-donna-basepoint-table.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		753985FE26CAC0590004C651 /* ed25519-donna.h in Headers */ = {isa = PBXBuildFile; fileRef = 753985F126CAC0590004C651 /* ed25519-donna.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		753985FF26CAC0590004C651 /* ed25519-donna-batchverify.h in Headers */ = {isa = PBXBuildFile; fileRef = 753985F226CAC0590004C651 /* ed25519-donna-batchverify.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		7539860026CAC0590004C651 /* ed25519-donna-portable.h in Headers */ = {isa = PBXBuildFile; fileRef = 753985F326CAC0590004C651 /* ed25519-donna-portable.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		7539860126CAC0590004C651 /* modm-donna-32bit.h in Headers */ = {isa = PBXBuildFile; fileRef = 753985F426CAC0590004C651 /* modm-donna-32bit.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		7539860226CAC0590004C651 /* ed25519.c in Sources */ = {isa = PBXBuildFile; fileRef = 753985F526CAC0590004C651 /* ed25519.c */; };
-		7539860426CAC3C40004C651 /* curve25519-donna-64bit.h in Headers */ = {isa = PBXBuildFile; fileRef = 7539860326CAC3C40004C651 /* curve25519-donna-64bit.h */; };
-		7539860626CAC3F10004C651 /* modm-donna-64bit.h in Headers */ = {isa = PBXBuildFile; fileRef = 7539860526CAC3F10004C651 /* modm-donna-64bit.h */; };
-		7539860826CAC4120004C651 /* ed25519-donna-64bit-tables.h in Headers */ = {isa = PBXBuildFile; fileRef = 7539860726CAC4120004C651 /* ed25519-donna-64bit-tables.h */; };
-		7539860A26CAC4370004C651 /* ed25519-donna-64bit-x86.h in Headers */ = {isa = PBXBuildFile; fileRef = 7539860926CAC4370004C651 /* ed25519-donna-64bit-x86.h */; };
-		7539860C26CAC51D0004C651 /* sign.h in Headers */ = {isa = PBXBuildFile; fileRef = 7539860B26CAC51D0004C651 /* sign.h */; };
+		7539860426CAC3C40004C651 /* curve25519-donna-64bit.h in Headers */ = {isa = PBXBuildFile; fileRef = 7539860326CAC3C40004C651 /* curve25519-donna-64bit.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		7539860626CAC3F10004C651 /* modm-donna-64bit.h in Headers */ = {isa = PBXBuildFile; fileRef = 7539860526CAC3F10004C651 /* modm-donna-64bit.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		7539860826CAC4120004C651 /* ed25519-donna-64bit-tables.h in Headers */ = {isa = PBXBuildFile; fileRef = 7539860726CAC4120004C651 /* ed25519-donna-64bit-tables.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		7539860A26CAC4370004C651 /* ed25519-donna-64bit-x86.h in Headers */ = {isa = PBXBuildFile; fileRef = 7539860926CAC4370004C651 /* ed25519-donna-64bit-x86.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		7539860C26CAC51D0004C651 /* sign.h in Headers */ = {isa = PBXBuildFile; fileRef = 7539860B26CAC51D0004C651 /* sign.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		7539860E26CAC70E0004C651 /* CardanoKeyGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7539860D26CAC70E0004C651 /* CardanoKeyGenerator.swift */; };
 		7539861026CBC5CC0004C651 /* EdDSA.h in Headers */ = {isa = PBXBuildFile; fileRef = 7539860F26CBC5CC0004C651 /* EdDSA.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		7539861226CBC67F0004C651 /* EdDSA.m in Sources */ = {isa = PBXBuildFile; fileRef = 7539861126CBC67F0004C651 /* EdDSA.m */; };
@@ -567,24 +567,7 @@
 		753985E826CABF870004C651 /* Cardano */ = {
 			isa = PBXGroup;
 			children = (
-				7539860B26CAC51D0004C651 /* sign.h */,
-				7539860926CAC4370004C651 /* ed25519-donna-64bit-x86.h */,
-				7539860726CAC4120004C651 /* ed25519-donna-64bit-tables.h */,
-				7539860526CAC3F10004C651 /* modm-donna-64bit.h */,
-				7539860326CAC3C40004C651 /* curve25519-donna-64bit.h */,
-				753985EC26CAC0590004C651 /* curve25519-donna-32bit.h */,
-				753985EB26CAC0590004C651 /* curve25519-donna-helpers.h */,
-				753985EE26CAC0590004C651 /* ed25519-donna-32bit-tables.h */,
-				753985F026CAC0590004C651 /* ed25519-donna-basepoint-table.h */,
-				753985F226CAC0590004C651 /* ed25519-donna-batchverify.h */,
-				753985ED26CAC0590004C651 /* ed25519-donna-impl-base.h */,
-				753985EA26CAC0590004C651 /* ed25519-donna-portable-identify.h */,
-				753985F326CAC0590004C651 /* ed25519-donna-portable.h */,
-				753985F126CAC0590004C651 /* ed25519-donna.h */,
-				753985E926CAC0590004C651 /* ed25519-hash.h */,
 				753985F526CAC0590004C651 /* ed25519.c */,
-				753985EF26CAC0590004C651 /* ed25519.h */,
-				753985F426CAC0590004C651 /* modm-donna-32bit.h */,
 			);
 			path = Cardano;
 			sourceTree = "<group>";
@@ -936,6 +919,23 @@
 				CE133169242000E30055C11D /* Bech32.h */,
 				753985E326CAB1FD0004C651 /* blake2b.h */,
 				7539860F26CBC5CC0004C651 /* EdDSA.h */,
+				7539860B26CAC51D0004C651 /* sign.h */,
+				7539860926CAC4370004C651 /* ed25519-donna-64bit-x86.h */,
+				7539860726CAC4120004C651 /* ed25519-donna-64bit-tables.h */,
+				7539860526CAC3F10004C651 /* modm-donna-64bit.h */,
+				7539860326CAC3C40004C651 /* curve25519-donna-64bit.h */,
+				753985EC26CAC0590004C651 /* curve25519-donna-32bit.h */,
+				753985EB26CAC0590004C651 /* curve25519-donna-helpers.h */,
+				753985EE26CAC0590004C651 /* ed25519-donna-32bit-tables.h */,
+				753985F026CAC0590004C651 /* ed25519-donna-basepoint-table.h */,
+				753985F226CAC0590004C651 /* ed25519-donna-batchverify.h */,
+				753985ED26CAC0590004C651 /* ed25519-donna-impl-base.h */,
+				753985EA26CAC0590004C651 /* ed25519-donna-portable-identify.h */,
+				753985F326CAC0590004C651 /* ed25519-donna-portable.h */,
+				753985F126CAC0590004C651 /* ed25519-donna.h */,
+				753985E926CAC0590004C651 /* ed25519-hash.h */,
+				753985EF26CAC0590004C651 /* ed25519.h */,
+				753985F426CAC0590004C651 /* modm-donna-32bit.h */,
 			);
 			path = PrivateHeaders;
 			sourceTree = "<group>";
