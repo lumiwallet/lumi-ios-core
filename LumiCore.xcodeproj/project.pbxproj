@@ -28,6 +28,9 @@
 		7539860A26CAC4370004C651 /* ed25519-donna-64bit-x86.h in Headers */ = {isa = PBXBuildFile; fileRef = 7539860926CAC4370004C651 /* ed25519-donna-64bit-x86.h */; };
 		7539860C26CAC51D0004C651 /* sign.h in Headers */ = {isa = PBXBuildFile; fileRef = 7539860B26CAC51D0004C651 /* sign.h */; };
 		7539860E26CAC70E0004C651 /* CardanoKeyGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7539860D26CAC70E0004C651 /* CardanoKeyGenerator.swift */; };
+		7539861026CBC5CC0004C651 /* EdDSA.h in Headers */ = {isa = PBXBuildFile; fileRef = 7539860F26CBC5CC0004C651 /* EdDSA.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		7539861226CBC67F0004C651 /* EdDSA.m in Sources */ = {isa = PBXBuildFile; fileRef = 7539861126CBC67F0004C651 /* EdDSA.m */; };
+		7539861426CBCA110004C651 /* EdDSATests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7539861326CBCA110004C651 /* EdDSATests.swift */; };
 		755A0DA726C140A6005A43BD /* openssl_config.patch in Resources */ = {isa = PBXBuildFile; fileRef = 755A0DA626C140A6005A43BD /* openssl_config.patch */; };
 		CE0F615823E1E0CB00633FF0 /* BitcoinPrivateKeyAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0F615723E1E0CB00633FF0 /* BitcoinPrivateKeyAddress.swift */; };
 		CE0F615B23E2E2FE00633FF0 /* EosUnsignedTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0F615A23E2E2FE00633FF0 /* EosUnsignedTransaction.swift */; };
@@ -298,6 +301,9 @@
 		7539860926CAC4370004C651 /* ed25519-donna-64bit-x86.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ed25519-donna-64bit-x86.h"; sourceTree = "<group>"; };
 		7539860B26CAC51D0004C651 /* sign.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sign.h; sourceTree = "<group>"; };
 		7539860D26CAC70E0004C651 /* CardanoKeyGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardanoKeyGenerator.swift; sourceTree = "<group>"; };
+		7539860F26CBC5CC0004C651 /* EdDSA.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EdDSA.h; sourceTree = "<group>"; };
+		7539861126CBC67F0004C651 /* EdDSA.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EdDSA.m; sourceTree = "<group>"; };
+		7539861326CBCA110004C651 /* EdDSATests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EdDSATests.swift; sourceTree = "<group>"; };
 		755A0DA626C140A6005A43BD /* openssl_config.patch */ = {isa = PBXFileReference; lastKnownFileType = text; path = openssl_config.patch; sourceTree = "<group>"; };
 		CE0F615723E1E0CB00633FF0 /* BitcoinPrivateKeyAddress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitcoinPrivateKeyAddress.swift; sourceTree = "<group>"; };
 		CE0F615A23E2E2FE00633FF0 /* EosUnsignedTransaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EosUnsignedTransaction.swift; sourceTree = "<group>"; };
@@ -929,6 +935,7 @@
 				CE46360123E9B8EF004A9932 /* Curve.h */,
 				CE133169242000E30055C11D /* Bech32.h */,
 				753985E326CAB1FD0004C651 /* blake2b.h */,
+				7539860F26CBC5CC0004C651 /* EdDSA.h */,
 			);
 			path = PrivateHeaders;
 			sourceTree = "<group>";
@@ -999,6 +1006,7 @@
 				CE9AD53B236867270043DAAA /* ECDSA.m */,
 				CE4635FE23E9A987004A9932 /* Bignum.m */,
 				CE46360223E9B8EF004A9932 /* Curve.m */,
+				7539861126CBC67F0004C651 /* EdDSA.m */,
 			);
 			path = ECDSA;
 			sourceTree = "<group>";
@@ -1116,6 +1124,7 @@
 				CE9AD727236AE6160043DAAA /* Info.plist */,
 				CEFEEBAA23994138005AD6D1 /* Base58Tests.swift */,
 				CEFEEBAE239EA7F9005AD6D1 /* KeyGeneratorTests.swift */,
+				7539861326CBCA110004C651 /* EdDSATests.swift */,
 				CE14C6A023A2633F0078AFD8 /* HashFunctionsTests.swift */,
 				CE14C6B023A7AFA90078AFD8 /* AddressesTests.swift */,
 				CE14C6CF23AA46770078AFD8 /* BitcoinTests.swift */,
@@ -1355,6 +1364,7 @@
 				CE9AD6F52368806C0043DAAA /* ts.h in Headers */,
 				CE9AD6F92368806C0043DAAA /* modes.h in Headers */,
 				CE9AD7012368806C0043DAAA /* mdc2.h in Headers */,
+				7539861026CBC5CC0004C651 /* EdDSA.h in Headers */,
 				CE9AD6F82368806C0043DAAA /* seed.h in Headers */,
 				753985FC26CAC0590004C651 /* ed25519.h in Headers */,
 				753985F626CAC0590004C651 /* ed25519-hash.h in Headers */,
@@ -1585,6 +1595,7 @@
 				CE77109323DB23DD004D1F7C /* BitcoinCashTransaction.swift in Sources */,
 				CE14C69D23A25D780078AFD8 /* keccak-tiny.c in Sources */,
 				753985E726CAB2B40004C651 /* blake2b.c in Sources */,
+				7539861226CBC67F0004C651 /* EdDSA.m in Sources */,
 				CE77106B23D215E6004D1F7C /* MnemonicErrors.swift in Sources */,
 				CE63506B241F8997000AAB20 /* BitcoinCreateAddressError.swift in Sources */,
 				CE14C6C423A9419F0078AFD8 /* BitcoinTransaction.swift in Sources */,
@@ -1646,6 +1657,7 @@
 				CE9AD726236AE6160043DAAA /* LumiCoreTests.swift in Sources */,
 				CE0F616123E4425300633FF0 /* EosTransactionsTests.swift in Sources */,
 				CE14C6B123A7AFA90078AFD8 /* AddressesTests.swift in Sources */,
+				7539861426CBCA110004C651 /* EdDSATests.swift in Sources */,
 				CEFEEBAB23994138005AD6D1 /* Base58Tests.swift in Sources */,
 				CEFEEBAF239EA7F9005AD6D1 /* KeyGeneratorTests.swift in Sources */,
 				CEE2EBBE24055B590099206A /* EthereumTransactionData.swift in Sources */,

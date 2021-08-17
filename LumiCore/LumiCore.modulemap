@@ -20,6 +20,10 @@ framework module LumiCore {
         header "ECDSA.h"
     }
     
+    explicit module EdDSA {
+        header "EdDSA.h"
+    }
+    
     explicit module Key {
         header "Key.h"
     }
