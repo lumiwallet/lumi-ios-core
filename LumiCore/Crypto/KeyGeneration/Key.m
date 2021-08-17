@@ -510,7 +510,7 @@ const int versionHeaderSize = 4;
 }
 
 - (id)copyWithZone:(NSZone *)zone {
-    Key *cpy = [Key allocWithZone:zone];
+    CardanoKey *cpy = [CardanoKey allocWithZone:zone];
     switch (_type) {
         case Public:
             return [cpy initWithPublicKey:_key];
@@ -542,7 +542,7 @@ const int versionHeaderSize = 4;
 
 @implementation CardanoDerivationKey
 
-- (instancetype)initWithKey:(Key *)key chaincode:(NSData *)chaincode {
+- (instancetype)initWithKey:(CardanoKey *)key chaincode:(NSData *)chaincode {
     if (self = [super init]) {
         _key = [key copy];
         _depth = 0;
@@ -555,7 +555,7 @@ const int versionHeaderSize = 4;
     return self;
 }
 
-- (instancetype)initWithKey:(Key *)key chaincode:(NSData *)chaincode depth:(int)depth parent:(int)parent sequence:(int)sequence {
+- (instancetype)initWithKey:(CardanoKey *)key chaincode:(NSData *)chaincode depth:(int)depth parent:(int)parent sequence:(int)sequence {
     if (self = [super init]) {
         _key = [key copy];
         _depth = depth;

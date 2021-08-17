@@ -179,10 +179,10 @@ class KeyGeneratorTests: XCTestCase {
     func testCardanoGenerationShelley() {
         for element in TestCardanoGenerationShelleyVector.vectorCardanoShelley.data {
             autoreleasepool(invoking: {
-                let mnemonic = try!  Mnemonic(mnemonic: TestCardanoGenerationShelleyVector.vectorCardanoShelley.mnemonic, pass: "TREZOR", listType: .english)
+                let mnemonic = try!  Mnemonic(mnemonic: TestCardanoGenerationShelleyVector.vectorCardanoShelley.mnemonic, listType: .english)
                 
                 let generator = CardanoKeyGenerator(entropy: mnemonic.entropy)
-                
+
                 do {
                     try generator.generate(for: element.path)
 
