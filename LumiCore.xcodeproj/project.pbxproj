@@ -31,6 +31,7 @@
 		7539861026CBC5CC0004C651 /* EdDSA.h in Headers */ = {isa = PBXBuildFile; fileRef = 7539860F26CBC5CC0004C651 /* EdDSA.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		7539861226CBC67F0004C651 /* EdDSA.m in Sources */ = {isa = PBXBuildFile; fileRef = 7539861126CBC67F0004C651 /* EdDSA.m */; };
 		7539861426CBCA110004C651 /* EdDSATests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7539861326CBCA110004C651 /* EdDSATests.swift */; };
+		7539863226CE67F70004C651 /* ed25519-donna-64bit-x86-32bit.h in Headers */ = {isa = PBXBuildFile; fileRef = 7539863126CE67F70004C651 /* ed25519-donna-64bit-x86-32bit.h */; settings = {ATTRIBUTES = (Private, ); }; };
 		755A0DA726C140A6005A43BD /* openssl_config.patch in Resources */ = {isa = PBXBuildFile; fileRef = 755A0DA626C140A6005A43BD /* openssl_config.patch */; };
 		CE0F615823E1E0CB00633FF0 /* BitcoinPrivateKeyAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0F615723E1E0CB00633FF0 /* BitcoinPrivateKeyAddress.swift */; };
 		CE0F615B23E2E2FE00633FF0 /* EosUnsignedTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0F615A23E2E2FE00633FF0 /* EosUnsignedTransaction.swift */; };
@@ -304,6 +305,7 @@
 		7539860F26CBC5CC0004C651 /* EdDSA.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EdDSA.h; sourceTree = "<group>"; };
 		7539861126CBC67F0004C651 /* EdDSA.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EdDSA.m; sourceTree = "<group>"; };
 		7539861326CBCA110004C651 /* EdDSATests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EdDSATests.swift; sourceTree = "<group>"; };
+		7539863126CE67F70004C651 /* ed25519-donna-64bit-x86-32bit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ed25519-donna-64bit-x86-32bit.h"; sourceTree = "<group>"; };
 		755A0DA626C140A6005A43BD /* openssl_config.patch */ = {isa = PBXFileReference; lastKnownFileType = text; path = openssl_config.patch; sourceTree = "<group>"; };
 		CE0F615723E1E0CB00633FF0 /* BitcoinPrivateKeyAddress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitcoinPrivateKeyAddress.swift; sourceTree = "<group>"; };
 		CE0F615A23E2E2FE00633FF0 /* EosUnsignedTransaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EosUnsignedTransaction.swift; sourceTree = "<group>"; };
@@ -908,6 +910,7 @@
 		CE93B2B923CF38560080822F /* PrivateHeaders */ = {
 			isa = PBXGroup;
 			children = (
+				7539863126CE67F70004C651 /* ed25519-donna-64bit-x86-32bit.h */,
 				CE13317624222A1D0055C11D /* Hex2DecimalConverter.h */,
 				CE14C69A23A25D780078AFD8 /* keccak-tiny.h */,
 				CEFEEBB1239FCD98005AD6D1 /* HashFunctions.h */,
@@ -1323,6 +1326,7 @@
 				7539860C26CAC51D0004C651 /* sign.h in Headers */,
 				CE9AD6CC2368806C0043DAAA /* kssl.h in Headers */,
 				CE4635FF23E9A987004A9932 /* Bignum.h in Headers */,
+				7539863226CE67F70004C651 /* ed25519-donna-64bit-x86-32bit.h in Headers */,
 				CE9AD6C82368806C0043DAAA /* conf_api.h in Headers */,
 				7539860626CAC3F10004C651 /* modm-donna-64bit.h in Headers */,
 				CE9AD6E72368806C0043DAAA /* evp.h in Headers */,
