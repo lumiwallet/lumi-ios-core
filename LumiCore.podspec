@@ -23,6 +23,9 @@ Pod::Spec.new do |s|
   s.ios.vendored_libraries = 'LumiCore/Crypto/OpenSSLBinaries/libcrypto-ios.a'
   s.osx.vendored_libraries = 'LumiCore/Crypto/OpenSSLBinaries/libcrypto-osx.a'
 
+  s.ios.deployment_target = "11.0"
+  s.osx.deployment_target = "11.0"
+
   s.source_files  = 'LumiCore/LumiCore.h', 'LumiCore/PrivateHeaders/*{h}', 'LumiCore/**/*{m,c,swift}'
 
   s.module_map    = 'LumiCore/LumiCore.modulemap'
