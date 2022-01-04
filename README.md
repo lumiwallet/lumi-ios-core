@@ -76,7 +76,7 @@ To run the test application, you need:
 2. Select a scheme called LumiCoreApp and a run destination, and click the Run button
 
 ## Created using
-* [_OpenSSL 1.0.1e_](https://github.com/openssl/openssl)
+* [_OpenSSL 1.1.1j_](https://github.com/openssl/openssl)
 * [_keccak-tiny_](https://github.com/coruus/keccak-tiny)
 
 ## License

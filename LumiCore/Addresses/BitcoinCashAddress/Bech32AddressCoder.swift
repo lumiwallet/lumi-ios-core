@@ -86,7 +86,7 @@ public struct Bech32AddressCoder {
     ///   - data: Input data
     ///   - type: Address hash type
     /// - Returns: Bech32 encoded BitcoinCash address
-    static func encode(hrp: String, data: Data, type: PublicKeyAddressHashType) -> String {
+    public static func encode(hrp: String, data: Data, type: PublicKeyAddressHashType) -> String {
         let prefix = Bech32AddressCoder.data(from: hrp) + Data(count: 1)
         let version = type.typeBits + PublicKeyAddressHashType.sizeBits(from: data)
         
@@ -102,7 +102,7 @@ public struct Bech32AddressCoder {
     ///   - witnessVersion: Version
     ///   - witnessProgram: Witness program data
     /// - Returns: Bech32 encoded BitcoinSegwit address
-    static func encode(hrp: String, witnessVersion: UInt8, witnessProgram: Data) -> String {
+    public static func encode(hrp: String, witnessVersion: UInt8, witnessProgram: Data) -> String {
         let convert = Bech32.convertBits(witnessProgram, from: 8, to: 5, strict: false)
         let payload = witnessVersion.data + convert
         
@@ -112,7 +112,17 @@ public struct Bech32AddressCoder {
         return Bech32.encode(payload + checksum, converted: true)
     }
     
-    static func decode(bch: String) -> Data {
+    public static func encode(hrp: String, data: Data) -> String {
+        let convert = Bech32.convertBits(data, from: 8, to: 5, strict: false)
+        let payload = convert
+        
+        let prefix = Bech32AddressCoder.hrpExpand(prefix: hrp)
+        let checksum = Bech32AddressCoder.polymod(data: prefix + payload, output: Data(count: 6), gen: .bc1)
+        
+        return Bech32.encode(payload + checksum, converted: true)
+    }
+    
+    public static func decode(bch: String) -> Data {
         let payload = bch.dropPrefix(prefix: BitcoinCashAddressConstants.prefix + BitcoinCashAddressConstants.separator )
         let decoded = Bech32.decode(payload, convert: false).dropLast(8)
         let converted = Bech32.convertBits(decoded, from: 5, to: 8, strict: true)
@@ -120,7 +130,7 @@ public struct Bech32AddressCoder {
         return result
     }
     
-    static func decode(witness address: String, hrp: AddressHRP) -> Data {
+    public static func decode(witness address: String, hrp: AddressHRP) -> Data {
         let payload = address.dropPrefix(prefix: hrp.description)
         let decoded = Bech32.decode(payload, convert: false)
         
@@ -131,6 +141,15 @@ public struct Bech32AddressCoder {
         }
         
         let converted = Bech32.convertBits(decoded.dropFirst().dropLast(6), from: 5, to: 8, strict: true)
+        let result = converted
+        return result
+    }
+    
+    public static func decode(string: String, hrp: String) -> Data {
+        let payload = string.dropPrefix(prefix: hrp)
+        
+        let decoded = Bech32.decode(payload, convert: false)
+        let converted = Bech32.convertBits(decoded.dropLast(6), from: 5, to: 8, strict: true)
         let result = converted
         return result
     }

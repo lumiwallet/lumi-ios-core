@@ -10,6 +10,8 @@
 #import <keccak-tiny.h>
 #include <CommonCrypto/CommonCrypto.h>
 
+#include "blake2b.h"
+
 @implementation HashFunction
 
 + (nonnull NSData *)keccak256From:(nonnull NSData *)data {
@@ -49,6 +51,36 @@
 
 + (nonnull NSData *)sha256DoubleFrom:(nonnull NSData *)data {
     return [HashFunction sha256From:[HashFunction sha256From:data]];
+}
+
++ (nonnull NSData *)blake2b256From:(nonnull NSData *)data {
+    static const size_t outputLen = 32;
+
+    uint8_t output[outputLen];
+    memset(output, 0, outputLen);
+    
+    uint8_t *udata = (uint8_t *)[data bytes];
+    size_t len = (size_t)[data length];
+    
+    blake2b(output, outputLen, NULL, 0, udata, len);
+
+    NSData *hash = [NSData dataWithBytes:output length:outputLen];
+    return hash;
+}
+
++ (nonnull NSData *)blake2b224From:(nonnull NSData *)data {
+    static const size_t outputLen = 28;
+
+    uint8_t output[outputLen];
+    memset(output, 0, outputLen);
+    
+    uint8_t *udata = (uint8_t *)[data bytes];
+    size_t len = (size_t)[data length];
+    
+    blake2b(output, outputLen, NULL, 0, udata, len);
+
+    NSData *hash = [NSData dataWithBytes:output length:outputLen];
+    return hash;
 }
 
 + (nonnull NSData *)ripemd160Sha256From:(nonnull NSData *)data {

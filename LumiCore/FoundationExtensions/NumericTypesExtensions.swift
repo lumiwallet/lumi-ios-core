@@ -8,7 +8,7 @@
 import Foundation
 
 
-protocol DataConvertibleProtocol {
+public protocol DataConvertibleProtocol {
     var data: Data { get }
 }
 

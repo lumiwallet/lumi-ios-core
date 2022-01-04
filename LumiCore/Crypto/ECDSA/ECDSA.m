@@ -253,19 +253,24 @@
             unsigned char *r = calloc(32, sizeof(char));
             unsigned char *s = calloc(32, sizeof(char));
 
-            int roffset = 32 - BN_num_bytes(signature->r);
-            int soffset = 32 - BN_num_bytes(signature->s);
+            BIGNUM *bnr;
+            BIGNUM *bns;
 
-            BN_bn2bin(signature->r, r + roffset);
-            BN_bn2bin(signature->s, s + soffset);
+            ECDSA_SIG_get0(signature, (const BIGNUM **)&bnr, (const BIGNUM **)&bns);
+
+            int roffset = 32 - BN_num_bytes(bnr);
+            int soffset = 32 - BN_num_bytes(bns);
+            
+            BN_bn2bin(bnr, r + roffset);
+            BN_bn2bin(bns, s + soffset);
 
             unsigned char v = 0x1b + recid + 4; /* PublicKey compressed */
             [result replaceBytesInRange:NSMakeRange(0, 32) withBytes:r length:32];
             [result replaceBytesInRange:NSMakeRange(32, 32) withBytes:s length:32];
             [result replaceBytesInRange:NSMakeRange(64, 1) withBytes:&v length: 1];
 
-            BN_free(signature->r);
-            BN_free(signature->s);
+            BN_free(bnr);
+            BN_free(bns);
             OPENSSL_free(r);
             OPENSSL_free(s);
             
@@ -276,9 +281,6 @@
             
             unsigned char *p = (unsigned char*)result.mutableBytes;
             int size = i2d_ECDSA_SIG(signature, &p);
-            
-            BN_free(signature->r);
-            BN_free(signature->s);
             
             [result setLength:size];
             return result;
@@ -331,12 +333,11 @@
         *recid = rec_id;
     }
 
-    ECDSA_SIG sig;
     ECDSA_SIG *ecdsaSig;
-    ecdsaSig = &sig;
+    ecdsaSig = ECDSA_SIG_new();
 
-    BIGNUM r; BN_init(&r);
-    BIGNUM s; BN_init(&s);
+    BIGNUM *r = BN_new();
+    BIGNUM *s = BN_new();
 
     unsigned char *kxBin = KX.bin;
     unsigned char *sBin = S.bin;
@@ -347,11 +348,10 @@
     OPENSSL_free(kxBin);
     OPENSSL_free(sBin);
 
-    BN_copy(&r, bnKX);
-    BN_copy(&s, bnS);
+    BN_copy(r, bnKX);
+    BN_copy(s, bnS);
 
-    ecdsaSig->r = &r;
-    ecdsaSig->s = &s;
+    ECDSA_SIG_set0(ecdsaSig, r, s);
 
     BN_free(bnKX);
     BN_free(bnS);

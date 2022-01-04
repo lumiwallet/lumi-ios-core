@@ -175,6 +175,29 @@ class KeyGeneratorTests: XCTestCase {
             }
         }
     }
+    
+    func testCardanoGenerationShelley() {
+        for element in TestCardanoGenerationShelleyVector.vectorCardanoShelley.data {
+            autoreleasepool(invoking: {
+                let mnemonic = try!  Mnemonic(mnemonic: TestCardanoGenerationShelleyVector.vectorCardanoShelley.mnemonic, listType: .english)
+                
+                let generator = CardanoKeyGenerator(entropy: mnemonic.entropy)
+
+                do {
+                    try generator.generate(for: element.path)
+
+                    XCTAssertTrue(generator.generated.key.data.hex == element.private, "Wrong private. Expected: \(element.private) Result: \(generator.generated.key.data.hex)")
+                    
+                    XCTAssertTrue(generator.generated.key.publicKey().hex == element.public, "Wrong public. Expected: \(element.public) Result: \(generator.generated.key.publicKey().hex)")
+
+                    XCTAssertTrue(generator.generated.chaincode.hex == element.chaincode, "Wrong chaincode. Expected: \(element.chaincode) Result: \(generator.generated.chaincode.hex)")
+                    
+                } catch {
+                    XCTAssertNotNil(error, "\(error)")
+                }
+            })
+        }
+    }
 }
 
 // MARK: TEST VECTOR2
@@ -1523,3 +1546,25 @@ struct TestDogeExtendedKeySLIP0132Vector {
          "dgub8ur2fCAMyQrWsLF2M6JSnFWqJ9yG3997JmHvuRjomdoKxiZ6vZ8Q26bJ9FSyiHGovGJbupCNyXBhFxWzf2jAgEcJai8Bu8KKDckz2ZezJ39" )
     ]
 }
+
+struct TestCardanoGenerationShelleyVector {
+    static let vectorCardanoShelley: (mnemonic: String,
+                                      data: [(path:      String,
+                                              chaincode: String,
+                                              private:   String,
+                                              public:    String)]) =
+        ("abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon abandon about",
+         [("m/44'/1815'/1'",
+           "1798cb2009ef1f8bdc8598209f2951df973e15ce327e7a696dd019fb32d3dde4",
+           "b84b88f233d7f0d503d7359286a64ad5195de8a0c263c7511eee3eda720e6f539937e84f678ad5265b27431fe1b7c0bae0bc530dd20bdadd109aa7cfe7f02f1d",
+           "d94f5735ddadf892395625d9680ebbbb12f31836691df62765c325136dde6919"),
+          ("m/1852'/1815'/0'/0/0",
+            "88848e8af62a27a57e982215741c9eac17e6e45cbfd6ea65a0e0dcc03bb777b2",
+            "105d2ef2192150655a926bca9cccf5e2f6e496efa9580508192e1f4a790e6f53de06529129511d1cacb0664bcf04853fdc0055a47cc6d2c6d205127020760652",
+            "7ea09a34aebb13c9841c71397b1cabfec5ddf950405293dee496cac2f437480a"),
+          
+          
+          
+         ])
+}
+

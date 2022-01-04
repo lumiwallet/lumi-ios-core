@@ -17,6 +17,8 @@ NS_ASSUME_NONNULL_BEGIN
 + (nonnull NSData *)keccak256From:(nonnull NSData *)data;
 + (nonnull NSData *)sha256From:(nonnull NSData *)data;
 + (nonnull NSData *)sha256DoubleFrom:(nonnull NSData *)data;
++ (nonnull NSData *)blake2b256From:(nonnull NSData *)data;
++ (nonnull NSData *)blake2b224From:(nonnull NSData *)data;
 + (nonnull NSData *)ripemd160From:(nonnull NSData *)data;
 + (nonnull NSData *)ripemd160Sha256From:(nonnull NSData *)data;
 

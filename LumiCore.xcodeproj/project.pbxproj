@@ -7,6 +7,32 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		753985E426CAB1FD0004C651 /* blake2b.h in Headers */ = {isa = PBXBuildFile; fileRef = 753985E326CAB1FD0004C651 /* blake2b.h */; };
+		753985E726CAB2B40004C651 /* blake2b.c in Sources */ = {isa = PBXBuildFile; fileRef = 753985E626CAB2B40004C651 /* blake2b.c */; };
+		753985F626CAC0590004C651 /* ed25519-hash.h in Headers */ = {isa = PBXBuildFile; fileRef = 753985E926CAC0590004C651 /* ed25519-hash.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		753985F726CAC0590004C651 /* ed25519-donna-portable-identify.h in Headers */ = {isa = PBXBuildFile; fileRef = 753985EA26CAC0590004C651 /* ed25519-donna-portable-identify.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		753985F826CAC0590004C651 /* curve25519-donna-helpers.h in Headers */ = {isa = PBXBuildFile; fileRef = 753985EB26CAC0590004C651 /* curve25519-donna-helpers.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		753985F926CAC0590004C651 /* curve25519-donna-32bit.h in Headers */ = {isa = PBXBuildFile; fileRef = 753985EC26CAC0590004C651 /* curve25519-donna-32bit.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		753985FA26CAC0590004C651 /* ed25519-donna-impl-base.h in Headers */ = {isa = PBXBuildFile; fileRef = 753985ED26CAC0590004C651 /* ed25519-donna-impl-base.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		753985FB26CAC0590004C651 /* ed25519-donna-32bit-tables.h in Headers */ = {isa = PBXBuildFile; fileRef = 753985EE26CAC0590004C651 /* ed25519-donna-32bit-tables.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		753985FC26CAC0590004C651 /* ed25519.h in Headers */ = {isa = PBXBuildFile; fileRef = 753985EF26CAC0590004C651 /* ed25519.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		753985FD26CAC0590004C651 /* ed25519-donna-basepoint-table.h in Headers */ = {isa = PBXBuildFile; fileRef = 753985F026CAC0590004C651 /* ed25519-donna-basepoint-table.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		753985FE26CAC0590004C651 /* ed25519-donna.h in Headers */ = {isa = PBXBuildFile; fileRef = 753985F126CAC0590004C651 /* ed25519-donna.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		753985FF26CAC0590004C651 /* ed25519-donna-batchverify.h in Headers */ = {isa = PBXBuildFile; fileRef = 753985F226CAC0590004C651 /* ed25519-donna-batchverify.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		7539860026CAC0590004C651 /* ed25519-donna-portable.h in Headers */ = {isa = PBXBuildFile; fileRef = 753985F326CAC0590004C651 /* ed25519-donna-portable.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		7539860126CAC0590004C651 /* modm-donna-32bit.h in Headers */ = {isa = PBXBuildFile; fileRef = 753985F426CAC0590004C651 /* modm-donna-32bit.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		7539860226CAC0590004C651 /* ed25519.c in Sources */ = {isa = PBXBuildFile; fileRef = 753985F526CAC0590004C651 /* ed25519.c */; };
+		7539860426CAC3C40004C651 /* curve25519-donna-64bit.h in Headers */ = {isa = PBXBuildFile; fileRef = 7539860326CAC3C40004C651 /* curve25519-donna-64bit.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		7539860626CAC3F10004C651 /* modm-donna-64bit.h in Headers */ = {isa = PBXBuildFile; fileRef = 7539860526CAC3F10004C651 /* modm-donna-64bit.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		7539860826CAC4120004C651 /* ed25519-donna-64bit-tables.h in Headers */ = {isa = PBXBuildFile; fileRef = 7539860726CAC4120004C651 /* ed25519-donna-64bit-tables.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		7539860A26CAC4370004C651 /* ed25519-donna-64bit-x86.h in Headers */ = {isa = PBXBuildFile; fileRef = 7539860926CAC4370004C651 /* ed25519-donna-64bit-x86.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		7539860C26CAC51D0004C651 /* sign.h in Headers */ = {isa = PBXBuildFile; fileRef = 7539860B26CAC51D0004C651 /* sign.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		7539860E26CAC70E0004C651 /* CardanoKeyGenerator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7539860D26CAC70E0004C651 /* CardanoKeyGenerator.swift */; };
+		7539861026CBC5CC0004C651 /* EdDSA.h in Headers */ = {isa = PBXBuildFile; fileRef = 7539860F26CBC5CC0004C651 /* EdDSA.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		7539861226CBC67F0004C651 /* EdDSA.m in Sources */ = {isa = PBXBuildFile; fileRef = 7539861126CBC67F0004C651 /* EdDSA.m */; };
+		7539861426CBCA110004C651 /* EdDSATests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7539861326CBCA110004C651 /* EdDSATests.swift */; };
+		7539863226CE67F70004C651 /* ed25519-donna-64bit-x86-32bit.h in Headers */ = {isa = PBXBuildFile; fileRef = 7539863126CE67F70004C651 /* ed25519-donna-64bit-x86-32bit.h */; settings = {ATTRIBUTES = (Private, ); }; };
+		755A0DA726C140A6005A43BD /* openssl_config.patch in Resources */ = {isa = PBXBuildFile; fileRef = 755A0DA626C140A6005A43BD /* openssl_config.patch */; };
 		CE0F615823E1E0CB00633FF0 /* BitcoinPrivateKeyAddress.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0F615723E1E0CB00633FF0 /* BitcoinPrivateKeyAddress.swift */; };
 		CE0F615B23E2E2FE00633FF0 /* EosUnsignedTransaction.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0F615A23E2E2FE00633FF0 /* EosUnsignedTransaction.swift */; };
 		CE0F615D23E4360300633FF0 /* EosSerialization.swift in Sources */ = {isa = PBXBuildFile; fileRef = CE0F615C23E4360300633FF0 /* EosSerialization.swift */; };
@@ -255,6 +281,32 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		753985E326CAB1FD0004C651 /* blake2b.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = blake2b.h; sourceTree = "<group>"; };
+		753985E626CAB2B40004C651 /* blake2b.c */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.c; path = blake2b.c; sourceTree = "<group>"; };
+		753985E926CAC0590004C651 /* ed25519-hash.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ed25519-hash.h"; sourceTree = "<group>"; };
+		753985EA26CAC0590004C651 /* ed25519-donna-portable-identify.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ed25519-donna-portable-identify.h"; sourceTree = "<group>"; };
+		753985EB26CAC0590004C651 /* curve25519-donna-helpers.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "curve25519-donna-helpers.h"; sourceTree = "<group>"; };
+		753985EC26CAC0590004C651 /* curve25519-donna-32bit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "curve25519-donna-32bit.h"; sourceTree = "<group>"; };
+		753985ED26CAC0590004C651 /* ed25519-donna-impl-base.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ed25519-donna-impl-base.h"; sourceTree = "<group>"; };
+		753985EE26CAC0590004C651 /* ed25519-donna-32bit-tables.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ed25519-donna-32bit-tables.h"; sourceTree = "<group>"; };
+		753985EF26CAC0590004C651 /* ed25519.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = ed25519.h; sourceTree = "<group>"; };
+		753985F026CAC0590004C651 /* ed25519-donna-basepoint-table.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ed25519-donna-basepoint-table.h"; sourceTree = "<group>"; };
+		753985F126CAC0590004C651 /* ed25519-donna.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ed25519-donna.h"; sourceTree = "<group>"; };
+		753985F226CAC0590004C651 /* ed25519-donna-batchverify.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ed25519-donna-batchverify.h"; sourceTree = "<group>"; };
+		753985F326CAC0590004C651 /* ed25519-donna-portable.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ed25519-donna-portable.h"; sourceTree = "<group>"; };
+		753985F426CAC0590004C651 /* modm-donna-32bit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "modm-donna-32bit.h"; sourceTree = "<group>"; };
+		753985F526CAC0590004C651 /* ed25519.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = ed25519.c; sourceTree = "<group>"; };
+		7539860326CAC3C40004C651 /* curve25519-donna-64bit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "curve25519-donna-64bit.h"; sourceTree = "<group>"; };
+		7539860526CAC3F10004C651 /* modm-donna-64bit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "modm-donna-64bit.h"; sourceTree = "<group>"; };
+		7539860726CAC4120004C651 /* ed25519-donna-64bit-tables.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ed25519-donna-64bit-tables.h"; sourceTree = "<group>"; };
+		7539860926CAC4370004C651 /* ed25519-donna-64bit-x86.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ed25519-donna-64bit-x86.h"; sourceTree = "<group>"; };
+		7539860B26CAC51D0004C651 /* sign.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = sign.h; sourceTree = "<group>"; };
+		7539860D26CAC70E0004C651 /* CardanoKeyGenerator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CardanoKeyGenerator.swift; sourceTree = "<group>"; };
+		7539860F26CBC5CC0004C651 /* EdDSA.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = EdDSA.h; sourceTree = "<group>"; };
+		7539861126CBC67F0004C651 /* EdDSA.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = EdDSA.m; sourceTree = "<group>"; };
+		7539861326CBCA110004C651 /* EdDSATests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EdDSATests.swift; sourceTree = "<group>"; };
+		7539863126CE67F70004C651 /* ed25519-donna-64bit-x86-32bit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = "ed25519-donna-64bit-x86-32bit.h"; sourceTree = "<group>"; };
+		755A0DA626C140A6005A43BD /* openssl_config.patch */ = {isa = PBXFileReference; lastKnownFileType = text; path = openssl_config.patch; sourceTree = "<group>"; };
 		CE0F615723E1E0CB00633FF0 /* BitcoinPrivateKeyAddress.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = BitcoinPrivateKeyAddress.swift; sourceTree = "<group>"; };
 		CE0F615A23E2E2FE00633FF0 /* EosUnsignedTransaction.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EosUnsignedTransaction.swift; sourceTree = "<group>"; };
 		CE0F615C23E4360300633FF0 /* EosSerialization.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = EosSerialization.swift; sourceTree = "<group>"; };
@@ -506,6 +558,22 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		753985E526CAB28C0004C651 /* Blake2b */ = {
+			isa = PBXGroup;
+			children = (
+				753985E626CAB2B40004C651 /* blake2b.c */,
+			);
+			path = Blake2b;
+			sourceTree = "<group>";
+		};
+		753985E826CABF870004C651 /* Cardano */ = {
+			isa = PBXGroup;
+			children = (
+				753985F526CAC0590004C651 /* ed25519.c */,
+			);
+			path = Cardano;
+			sourceTree = "<group>";
+		};
 		CE0F615923E2E2E400633FF0 /* Eos */ = {
 			isa = PBXGroup;
 			children = (
@@ -842,6 +910,7 @@
 		CE93B2B923CF38560080822F /* PrivateHeaders */ = {
 			isa = PBXGroup;
 			children = (
+				7539863126CE67F70004C651 /* ed25519-donna-64bit-x86-32bit.h */,
 				CE13317624222A1D0055C11D /* Hex2DecimalConverter.h */,
 				CE14C69A23A25D780078AFD8 /* keccak-tiny.h */,
 				CEFEEBB1239FCD98005AD6D1 /* HashFunctions.h */,
@@ -851,6 +920,25 @@
 				CE9AD53A236867020043DAAA /* ECDSA.h */,
 				CE46360123E9B8EF004A9932 /* Curve.h */,
 				CE133169242000E30055C11D /* Bech32.h */,
+				753985E326CAB1FD0004C651 /* blake2b.h */,
+				7539860F26CBC5CC0004C651 /* EdDSA.h */,
+				7539860B26CAC51D0004C651 /* sign.h */,
+				7539860926CAC4370004C651 /* ed25519-donna-64bit-x86.h */,
+				7539860726CAC4120004C651 /* ed25519-donna-64bit-tables.h */,
+				7539860526CAC3F10004C651 /* modm-donna-64bit.h */,
+				7539860326CAC3C40004C651 /* curve25519-donna-64bit.h */,
+				753985EC26CAC0590004C651 /* curve25519-donna-32bit.h */,
+				753985EB26CAC0590004C651 /* curve25519-donna-helpers.h */,
+				753985EE26CAC0590004C651 /* ed25519-donna-32bit-tables.h */,
+				753985F026CAC0590004C651 /* ed25519-donna-basepoint-table.h */,
+				753985F226CAC0590004C651 /* ed25519-donna-batchverify.h */,
+				753985ED26CAC0590004C651 /* ed25519-donna-impl-base.h */,
+				753985EA26CAC0590004C651 /* ed25519-donna-portable-identify.h */,
+				753985F326CAC0590004C651 /* ed25519-donna-portable.h */,
+				753985F126CAC0590004C651 /* ed25519-donna.h */,
+				753985E926CAC0590004C651 /* ed25519-hash.h */,
+				753985EF26CAC0590004C651 /* ed25519.h */,
+				753985F426CAC0590004C651 /* modm-donna-32bit.h */,
 			);
 			path = PrivateHeaders;
 			sourceTree = "<group>";
@@ -899,6 +987,8 @@
 		CE9AD535236855930043DAAA /* Crypto */ = {
 			isa = PBXGroup;
 			children = (
+				753985E826CABF870004C651 /* Cardano */,
+				753985E526CAB28C0004C651 /* Blake2b */,
 				CE13316A2420013F0055C11D /* Bech32 */,
 				CE0F616223E4765A00633FF0 /* Eos */,
 				CE14C69223A122D70078AFD8 /* Keccak */,
@@ -919,6 +1009,7 @@
 				CE9AD53B236867270043DAAA /* ECDSA.m */,
 				CE4635FE23E9A987004A9932 /* Bignum.m */,
 				CE46360223E9B8EF004A9932 /* Curve.m */,
+				7539861126CBC67F0004C651 /* EdDSA.m */,
 			);
 			path = ECDSA;
 			sourceTree = "<group>";
@@ -1036,6 +1127,7 @@
 				CE9AD727236AE6160043DAAA /* Info.plist */,
 				CEFEEBAA23994138005AD6D1 /* Base58Tests.swift */,
 				CEFEEBAE239EA7F9005AD6D1 /* KeyGeneratorTests.swift */,
+				7539861326CBCA110004C651 /* EdDSATests.swift */,
 				CE14C6A023A2633F0078AFD8 /* HashFunctionsTests.swift */,
 				CE14C6B023A7AFA90078AFD8 /* AddressesTests.swift */,
 				CE14C6CF23AA46770078AFD8 /* BitcoinTests.swift */,
@@ -1132,6 +1224,7 @@
 			isa = PBXGroup;
 			children = (
 				CEE88E882404B2C800BB5855 /* openssl_update.sh */,
+				755A0DA626C140A6005A43BD /* openssl_config.patch */,
 			);
 			path = Scripts;
 			sourceTree = "<group>";
@@ -1164,6 +1257,7 @@
 			children = (
 				CEFEEB9E23969B51005AD6D1 /* Key.m */,
 				CEFEEBAC239E951C005AD6D1 /* KeyGenerator.swift */,
+				7539860D26CAC70E0004C651 /* CardanoKeyGenerator.swift */,
 			);
 			path = KeyGeneration;
 			sourceTree = "<group>";
@@ -1196,6 +1290,8 @@
 			buildActionMask = 2147483647;
 			files = (
 				CE46360323E9B8EF004A9932 /* Curve.h in Headers */,
+				7539860126CAC0590004C651 /* modm-donna-32bit.h in Headers */,
+				753985FF26CAC0590004C651 /* ed25519-donna-batchverify.h in Headers */,
 				CE9AD6C72368806C0043DAAA /* engine.h in Headers */,
 				CEFEEB9F23969B51005AD6D1 /* Key.h in Headers */,
 				CE9AD6FB2368806C0043DAAA /* rsa.h in Headers */,
@@ -1215,6 +1311,7 @@
 				CE9AD709236881230043DAAA /* ECDSA.h in Headers */,
 				CE9AD6E62368806C0043DAAA /* camellia.h in Headers */,
 				CE9AD6DA2368806C0043DAAA /* txt_db.h in Headers */,
+				7539860826CAC4120004C651 /* ed25519-donna-64bit-tables.h in Headers */,
 				CE9AD6E52368806C0043DAAA /* srp.h in Headers */,
 				CE9AD6EA2368806C0043DAAA /* hmac.h in Headers */,
 				CE9AD6C12368806C0043DAAA /* ossl_typ.h in Headers */,
@@ -1225,20 +1322,28 @@
 				CE14C69C23A25D780078AFD8 /* keccak-tiny.h in Headers */,
 				CE9AD6C42368806C0043DAAA /* bn.h in Headers */,
 				CE9AD6DC2368806C0043DAAA /* ecdsa.h in Headers */,
+				753985FA26CAC0590004C651 /* ed25519-donna-impl-base.h in Headers */,
+				7539860C26CAC51D0004C651 /* sign.h in Headers */,
 				CE9AD6CC2368806C0043DAAA /* kssl.h in Headers */,
 				CE4635FF23E9A987004A9932 /* Bignum.h in Headers */,
+				7539863226CE67F70004C651 /* ed25519-donna-64bit-x86-32bit.h in Headers */,
 				CE9AD6C82368806C0043DAAA /* conf_api.h in Headers */,
+				7539860626CAC3F10004C651 /* modm-donna-64bit.h in Headers */,
 				CE9AD6E72368806C0043DAAA /* evp.h in Headers */,
 				CE9AD6BE2368806C0043DAAA /* pem2.h in Headers */,
 				CEFEEBA623992A9D005AD6D1 /* Base58.h in Headers */,
 				CE9AD6ED2368806C0043DAAA /* cast.h in Headers */,
 				CE9AD6E82368806C0043DAAA /* e_os2.h in Headers */,
+				753985F726CAC0590004C651 /* ed25519-donna-portable-identify.h in Headers */,
 				CE9AD6FA2368806C0043DAAA /* ssl2.h in Headers */,
+				753985F826CAC0590004C651 /* curve25519-donna-helpers.h in Headers */,
 				CE9AD6F62368806C0043DAAA /* pqueue.h in Headers */,
 				CE9AD6D12368806C0043DAAA /* bio.h in Headers */,
 				CE9AD7042368806C0043DAAA /* asn1t.h in Headers */,
 				CE9AD6F22368806C0043DAAA /* ec.h in Headers */,
 				CE9AD6CB2368806C0043DAAA /* ui.h in Headers */,
+				753985E426CAB1FD0004C651 /* blake2b.h in Headers */,
+				753985FD26CAC0590004C651 /* ed25519-donna-basepoint-table.h in Headers */,
 				CE9AD7032368806C0043DAAA /* srtp.h in Headers */,
 				CE9AD6C52368806C0043DAAA /* blowfish.h in Headers */,
 				CE9AD6C22368806C0043DAAA /* dtls1.h in Headers */,
@@ -1248,26 +1353,34 @@
 				CE9AD7082368806C0043DAAA /* lhash.h in Headers */,
 				CE9AD6C32368806C0043DAAA /* err.h in Headers */,
 				CE9AD7022368806C0043DAAA /* dsa.h in Headers */,
+				7539860A26CAC4370004C651 /* ed25519-donna-64bit-x86.h in Headers */,
 				CEFEEBB3239FCD98005AD6D1 /* HashFunctions.h in Headers */,
 				CE9AD6BF2368806C0043DAAA /* pem.h in Headers */,
 				CE9AD6F02368806C0043DAAA /* des.h in Headers */,
+				753985F926CAC0590004C651 /* curve25519-donna-32bit.h in Headers */,
 				CE9AD6CF2368806C0043DAAA /* asn1.h in Headers */,
 				CE9AD6FD2368806C0043DAAA /* des_old.h in Headers */,
 				CE9AD6DB2368806C0043DAAA /* safestack.h in Headers */,
 				CE9AD52D2368550C0043DAAA /* LumiCore.h in Headers */,
 				CE9AD7052368806C0043DAAA /* cmac.h in Headers */,
+				7539860026CAC0590004C651 /* ed25519-donna-portable.h in Headers */,
 				CE9AD6E92368806C0043DAAA /* md4.h in Headers */,
 				CE9AD6F52368806C0043DAAA /* ts.h in Headers */,
 				CE9AD6F92368806C0043DAAA /* modes.h in Headers */,
 				CE9AD7012368806C0043DAAA /* mdc2.h in Headers */,
+				7539861026CBC5CC0004C651 /* EdDSA.h in Headers */,
 				CE9AD6F82368806C0043DAAA /* seed.h in Headers */,
+				753985FC26CAC0590004C651 /* ed25519.h in Headers */,
+				753985F626CAC0590004C651 /* ed25519-hash.h in Headers */,
 				CE9AD6F72368806C0043DAAA /* dso.h in Headers */,
 				CE9AD6EB2368806C0043DAAA /* aes.h in Headers */,
+				753985FE26CAC0590004C651 /* ed25519-donna.h in Headers */,
 				CE9AD6EF2368806C0043DAAA /* stack.h in Headers */,
 				CE9AD6D92368806C0043DAAA /* x509_vfy.h in Headers */,
 				CE9AD7002368806C0043DAAA /* tls1.h in Headers */,
 				CE9AD6D72368806C0043DAAA /* conf.h in Headers */,
 				CE9AD6FC2368806C0043DAAA /* krb5_asn.h in Headers */,
+				7539860426CAC3C40004C651 /* curve25519-donna-64bit.h in Headers */,
 				CE9AD6CD2368806C0043DAAA /* sha.h in Headers */,
 				CE9AD6FF2368806C0043DAAA /* whrlpool.h in Headers */,
 				CE9AD6D62368806C0043DAAA /* ssl23.h in Headers */,
@@ -1276,6 +1389,7 @@
 				CE9AD6E22368806C0043DAAA /* obj_mac.h in Headers */,
 				CE9AD6D82368806C0043DAAA /* md5.h in Headers */,
 				CE9AD6E12368806C0043DAAA /* pkcs7.h in Headers */,
+				753985FB26CAC0590004C651 /* ed25519-donna-32bit-tables.h in Headers */,
 				CE9AD6CA2368806C0043DAAA /* asn1_mac.h in Headers */,
 				CE9AD6DE2368806C0043DAAA /* pkcs12.h in Headers */,
 				CE13317724222A1D0055C11D /* Hex2DecimalConverter.h in Headers */,
@@ -1401,6 +1515,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				755A0DA726C140A6005A43BD /* openssl_config.patch in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -1477,11 +1592,14 @@
 				CE63506F241FA339000AAB20 /* EthereumCreateAddressError.swift in Sources */,
 				CE46360023E9A987004A9932 /* Bignum.m in Sources */,
 				CE77108823D7291C004D1F7C /* EthereumTransaction.swift in Sources */,
+				7539860226CAC0590004C651 /* ed25519.c in Sources */,
 				CE14C6A323A288DD0078AFD8 /* DataHashExtensions.swift in Sources */,
 				CE0F615823E1E0CB00633FF0 /* BitcoinPrivateKeyAddress.swift in Sources */,
 				CE14C69923A247B40078AFD8 /* StringExtensions.swift in Sources */,
 				CE77109323DB23DD004D1F7C /* BitcoinCashTransaction.swift in Sources */,
 				CE14C69D23A25D780078AFD8 /* keccak-tiny.c in Sources */,
+				753985E726CAB2B40004C651 /* blake2b.c in Sources */,
+				7539861226CBC67F0004C651 /* EdDSA.m in Sources */,
 				CE77106B23D215E6004D1F7C /* MnemonicErrors.swift in Sources */,
 				CE63506B241F8997000AAB20 /* BitcoinCreateAddressError.swift in Sources */,
 				CE14C6C423A9419F0078AFD8 /* BitcoinTransaction.swift in Sources */,
@@ -1521,6 +1639,7 @@
 				CE77106623D1FE11004D1F7C /* BitcoinPublicKeyAddress.swift in Sources */,
 				CE14C6A523A28A320078AFD8 /* StringHashExtensions.swift in Sources */,
 				CE14C6B923A921510078AFD8 /* EthereumAddress.swift in Sources */,
+				7539860E26CAC70E0004C651 /* CardanoKeyGenerator.swift in Sources */,
 				CE14C6C823A9423D0078AFD8 /* BitcoinTransactionInput.swift in Sources */,
 				CE4874B223BA04F000AC273C /* NumericTypesExtensions.swift in Sources */,
 				CE635072241FD106000AAB20 /* BitcoinAddressHashType.swift in Sources */,
@@ -1542,6 +1661,7 @@
 				CE9AD726236AE6160043DAAA /* LumiCoreTests.swift in Sources */,
 				CE0F616123E4425300633FF0 /* EosTransactionsTests.swift in Sources */,
 				CE14C6B123A7AFA90078AFD8 /* AddressesTests.swift in Sources */,
+				7539861426CBCA110004C651 /* EdDSATests.swift in Sources */,
 				CEFEEBAB23994138005AD6D1 /* Base58Tests.swift in Sources */,
 				CEFEEBAF239EA7F9005AD6D1 /* KeyGeneratorTests.swift in Sources */,
 				CEE2EBBE24055B590099206A /* EthereumTransactionData.swift in Sources */,

@@ -38,7 +38,7 @@ public extension String {
 
 
 extension String: DataConvertibleProtocol {
-    var data: Data {
+    public var data: Data {
         guard let result = data(using: .ascii) else { return Data() }
         return result
     }
