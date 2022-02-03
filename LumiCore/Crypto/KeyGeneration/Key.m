@@ -118,6 +118,12 @@ unsigned char slip0132private_p2wpkh[] = {0x04, 0xB2, 0x43, 0x0C};
 unsigned char slip0132public_doge_p2pkh_p2sh[] = {0x02, 0xFA, 0xCA, 0xFD};
 unsigned char slip0132private_doge_p2pkh_p2sh[] = {0x02, 0xFA, 0xC3, 0x98};
 
+unsigned char slip0132public_litecoin_p2pkh_p2sh[] = {0x01, 0x9d, 0xa4, 0x62};
+unsigned char slip0132private_litecoin_p2pkh_p2sh[] = {0x01, 0x9D, 0x9C, 0xFE};
+
+unsigned char slip0132public_litecoin_p2wpkh_nested_p2sh[] = {0x01, 0xb2, 0x6e, 0xf6};
+unsigned char slip0132private_litecoin_p2wpkh_nested_p2sh[] = {0x01, 0xb2, 0x67, 0x92};
+
 
 const int versionHeaderSize = 4;
 
@@ -140,6 +146,12 @@ const int versionHeaderSize = 4;
                     return slip0132public_p2wpkh;
                 case DOGE_P2PKH_P2SH:
                     return slip0132public_doge_p2pkh_p2sh;
+                case LITECOIN_P2PKH_P2SH:
+                    return slip0132public_litecoin_p2pkh_p2sh;
+                case LITECOIN_P2WPKH:
+                    return slip0132public_p2wpkh;
+                case LITECOIN_P2WPKH_NESTED_P2SH:
+                    return slip0132public_litecoin_p2wpkh_nested_p2sh;
             }
             break;
             
@@ -153,6 +165,12 @@ const int versionHeaderSize = 4;
                     return slip0132private_p2wpkh;
                 case DOGE_P2PKH_P2SH:
                     return slip0132private_doge_p2pkh_p2sh;
+                case LITECOIN_P2PKH_P2SH:
+                    return slip0132private_litecoin_p2pkh_p2sh;
+                case LITECOIN_P2WPKH:
+                    return slip0132private_p2wpkh;
+                case LITECOIN_P2WPKH_NESTED_P2SH:
+                    return slip0132private_litecoin_p2wpkh_nested_p2sh;
             }
             break;
         }
@@ -166,14 +184,18 @@ const int versionHeaderSize = 4;
     if ([data isEqualToData:[NSData dataWithBytes:slip0132private_p2pkh_p2sh length:versionHeaderSize]] ||
         [data isEqualToData:[NSData dataWithBytes:slip0132private_p2wpkh_nested_p2sh length:versionHeaderSize]] ||
         [data isEqualToData:[NSData dataWithBytes:slip0132private_p2wpkh length:versionHeaderSize]] ||
-        [data isEqualToData:[NSData dataWithBytes:slip0132private_doge_p2pkh_p2sh length:versionHeaderSize]]) {
+        [data isEqualToData:[NSData dataWithBytes:slip0132private_doge_p2pkh_p2sh length:versionHeaderSize]] ||
+        [data isEqualToData:[NSData dataWithBytes:slip0132private_litecoin_p2pkh_p2sh length:versionHeaderSize]] ||
+        [data isEqualToData:[NSData dataWithBytes:slip0132private_litecoin_p2wpkh_nested_p2sh length:versionHeaderSize]]) {
         return Private;
     }
     
     if ([data isEqualToData:[NSData dataWithBytes:slip0132public_p2pkh_p2sh length:versionHeaderSize]] ||
         [data isEqualToData:[NSData dataWithBytes:slip0132public_p2wpkh_nested_p2sh length:versionHeaderSize]] ||
         [data isEqualToData:[NSData dataWithBytes:slip0132public_p2wpkh length:versionHeaderSize]] ||
-        [data isEqualToData:[NSData dataWithBytes:slip0132public_doge_p2pkh_p2sh length:versionHeaderSize]]) {
+        [data isEqualToData:[NSData dataWithBytes:slip0132public_doge_p2pkh_p2sh length:versionHeaderSize]] ||
+        [data isEqualToData:[NSData dataWithBytes:slip0132public_litecoin_p2pkh_p2sh length:versionHeaderSize]] ||
+        [data isEqualToData:[NSData dataWithBytes:slip0132public_litecoin_p2wpkh_nested_p2sh length:versionHeaderSize]]) {
         return Public;
     }
     
@@ -201,6 +223,16 @@ const int versionHeaderSize = 4;
     if ([data isEqualToData:[NSData dataWithBytes:slip0132public_doge_p2pkh_p2sh length:versionHeaderSize]] ||
         [data isEqualToData:[NSData dataWithBytes:slip0132private_doge_p2pkh_p2sh length:versionHeaderSize]]) {
         return [[ExtendedKeyVersion alloc] init:DOGE_P2PKH_P2SH];
+    }
+    
+    if ([data isEqualToData:[NSData dataWithBytes:slip0132public_litecoin_p2pkh_p2sh length:versionHeaderSize]] ||
+        [data isEqualToData:[NSData dataWithBytes:slip0132private_litecoin_p2pkh_p2sh length:versionHeaderSize]]) {
+        return [[ExtendedKeyVersion alloc] init:LITECOIN_P2PKH_P2SH];
+    }
+    
+    if ([data isEqualToData:[NSData dataWithBytes:slip0132public_litecoin_p2pkh_p2sh length:versionHeaderSize]] ||
+        [data isEqualToData:[NSData dataWithBytes:slip0132private_litecoin_p2pkh_p2sh length:versionHeaderSize]]) {
+        return [[ExtendedKeyVersion alloc] init:LITECOIN_P2WPKH_NESTED_P2SH];
     }
     
     return 0;

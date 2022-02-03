@@ -59,7 +59,9 @@ public class BitcoinPrivateKeyAddress {
         
         let versionByte = wifDecoded[0]
         
-        guard versionByte == CoinVersionBytesConstant.bitcoin_prvkey_version || versionByte == CoinVersionBytesConstant.doge_prvkey_version else {
+        guard versionByte == CoinVersionBytesConstant.bitcoin_prvkey_version ||
+              versionByte == CoinVersionBytesConstant.doge_prvkey_version ||
+              versionByte == CoinVersionBytesConstant.litecoin_prvkey_version else {
             throw BitcoinCreateAddressError.invalidWIFAddressVersion
         }
         

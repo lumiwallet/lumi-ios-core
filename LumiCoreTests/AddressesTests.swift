@@ -79,6 +79,35 @@ class AddressesTests: XCTestCase {
         }
     }
     
+    func testWifLitecoinAddresses() {
+        //Mnemonic phrase: sure daring couple leisure want swear fluid border quality dwarf lake cat
+        let generator = KeyGenerator(seed: Data(hex: "b5fa9657ca89a2645f63adf8b81a6aa4f8e36c2247a9723d6c7375ce04ba6f651463956a3e028430538242fed87ac4ca92137fdb98c9f12609eee26088c62bc3"))
+        
+        try? generator.generate(for: "m/44'/2'/0'/0")
+        let version = CoinVersionBytesConstant.litecoin_prvkey_version
+        
+        for i in 0..<20 {
+            autoreleasepool(invoking: {
+                let extkey = generator.generateChild(for: UInt(i), hardened: false)
+                
+                let privateAddressFromKey = try! BitcoinPrivateKeyAddress(key: extkey.key, version: version)
+                let privateAddressFromData = try! BitcoinPrivateKeyAddress(privateKeyData: extkey.key.data, version: version)
+                let publicAddressFromKey = try! BitcoinPublicKeyAddress(key: extkey.key, type: .litecoin(.P2PKH))
+                let publicAddressFromData = try! BitcoinPublicKeyAddress(publicKey: extkey.key.publicKeyCompressed(.CompressedConversion), type: .litecoin(.P2PKH))
+                
+                let privateKeyFromWif = try! BitcoinPrivateKeyAddress(wif: LitecoinDerivationKeyAddressesTestData.data[i].wif)
+
+                XCTAssertFalse(privateAddressFromKey.wif != LitecoinDerivationKeyAddressesTestData.data[i].wif, "Wrong wif address Expected:  \(LitecoinDerivationKeyAddressesTestData.data[i].address) Result: \(privateAddressFromKey.wif )")
+                XCTAssertFalse(privateAddressFromData.wif != LitecoinDerivationKeyAddressesTestData.data[i].wif, "Wrong wif address Expected:  \(LitecoinDerivationKeyAddressesTestData.data[i].address) Result: \(privateAddressFromKey.wif )")
+                
+                XCTAssertFalse(privateKeyFromWif.data.hex != extkey.key.data.hex, "Wrong private key data Expected:  \(extkey.key.data.hex) Result: \(privateKeyFromWif.data.hex )")
+                
+                XCTAssertFalse(publicAddressFromKey.address(for: .litecoin(.P2PKH)) != LitecoinDerivationKeyAddressesTestData.data[i].address, "Wrong legacy public address Expected:  \(LitecoinDerivationKeyAddressesTestData.data[i].address) Result: \(publicAddressFromKey.address )")
+                XCTAssertFalse(publicAddressFromData.address(for: .litecoin(.P2PKH)) != LitecoinDerivationKeyAddressesTestData.data[i].address, "Wrong legacy public address Expected:  \(LitecoinDerivationKeyAddressesTestData.data[i].address) Result: \(publicAddressFromData.address)")
+            })
+        }
+    }
+    
     func testBitcoinAddresses() {
         for element in BitcoinAddressesTestData.data {
             do {
@@ -199,6 +228,103 @@ class AddressesTests: XCTestCase {
                 
                 let pubKeyAddress10 = try BitcoinPublicKeyAddress(publicKey: publicKey, type: .bitcoin(.P2WSH))
                 XCTAssertTrue(pubKeyAddress10.address(for: .bitcoin(.P2SH)) == nil, "Wrong address Expected: Empty Result: \( pubKeyAddress10.address(for: .bitcoin(.P2SH)))")
+                
+            } catch {
+                XCTAssertNotNil(error, "\(error)")
+            }
+        }
+    }
+    
+    func testLitecoinBIP84DerivationAddress() {
+        //m/84'/2'/0'/0
+        let generator = KeyGenerator(xpubORxprv: LitecoinSegwitDerivationTestData.extendedPrivateKeyBIP84)
+        let bip84ValidAddresses = LitecoinSegwitDerivationTestData.validAddressesBIP84
+        
+        for i in 0..<bip84ValidAddresses.count {
+            let key = generator.generateChild(for: UInt(i), hardened: false)
+            do {
+                
+                let pubKeyAddress1 = try BitcoinPublicKeyAddress(key: key.key)
+                XCTAssertTrue(pubKeyAddress1.address(for: .litecoin(.P2WPKH)) == bip84ValidAddresses[i], "Wrong address Expected: \(bip84ValidAddresses[i]) Result: \( pubKeyAddress1.address(for: .litecoin(.P2WPKH)))")
+                
+                let pubKeyAddress2 = try BitcoinPublicKeyAddress(key: key.key, type: .litecoin(.P2PKH))
+                XCTAssertTrue(pubKeyAddress2.address(for: .litecoin(.P2WPKH)) == bip84ValidAddresses[i], "Wrong address Expected: \(bip84ValidAddresses[i]) Result: \( pubKeyAddress2.address(for: .litecoin(.P2WPKH)))")
+                
+                let pubKeyAddress3 = try BitcoinPublicKeyAddress(key: key.key, type: .litecoin(.P2SH))
+                XCTAssertTrue(pubKeyAddress3.address(for: .litecoin(.P2WPKH)) == nil, "Wrong address Expected: Empty Result: \( pubKeyAddress3.address(for: .litecoin(.P2WPKH)))")
+                
+                let pubKeyAddress4 = try BitcoinPublicKeyAddress(key: key.key, type: .litecoin(.P2WPKH))
+                XCTAssertTrue(pubKeyAddress4.address == bip84ValidAddresses[i], "Wrong address Expected: \(bip84ValidAddresses[i]) Result: \( pubKeyAddress4.address)")
+                XCTAssertTrue(pubKeyAddress4.address == bip84ValidAddresses[i], "Wrong address Expected: \(bip84ValidAddresses[i]) Result: \( pubKeyAddress4.address)")
+                
+                let pubKeyAddress5 = try BitcoinPublicKeyAddress(key: key.key, type: .litecoin(.P2WSH))
+                XCTAssertTrue(pubKeyAddress5.address(for: .litecoin(.P2WPKH)) == nil, "Wrong address Expected: Empty Result: \( pubKeyAddress5.address(for: .litecoin(.P2WPKH)))")
+                
+                let pubKeyAddress6 = try BitcoinPublicKeyAddress(publicKey: key.key.publicKeyCompressed(.CompressedConversion))
+                XCTAssertTrue(pubKeyAddress6.address(for: .litecoin(.P2WPKH)) == bip84ValidAddresses[i], "Wrong address Expected: \(bip84ValidAddresses[i]) Result: \( pubKeyAddress6.address(for: .litecoin(.P2WPKH)))")
+                
+                let pubKeyAddress7 = try BitcoinPublicKeyAddress(publicKey: key.key.publicKeyCompressed(.CompressedConversion), type: .bitcoin(.P2PKH))
+                XCTAssertTrue(pubKeyAddress7.address(for: .litecoin(.P2WPKH)) == bip84ValidAddresses[i], "Wrong address Expected: \(bip84ValidAddresses[i]) Result: \( pubKeyAddress7.address(for: .litecoin(.P2WPKH)))")
+                
+                let pubKeyAddress8 = try BitcoinPublicKeyAddress(publicKey: key.key.publicKeyCompressed(.CompressedConversion), type: .bitcoin(.P2SH))
+                XCTAssertTrue(pubKeyAddress8.address(for: .litecoin(.P2WPKH)) == nil, "Wrong address Expected: Empty Result: \( pubKeyAddress8.address(for: .litecoin(.P2WPKH)))")
+                
+                let pubKeyAddress9 = try BitcoinPublicKeyAddress(publicKey: key.key.publicKeyCompressed(.CompressedConversion), type: .litecoin(.P2WPKH))
+                XCTAssertTrue(pubKeyAddress9.address == bip84ValidAddresses[i], "Wrong address Expected: \(bip84ValidAddresses[i]) Result: \( pubKeyAddress9.address)")
+                XCTAssertTrue(pubKeyAddress9.address(for: .litecoin(.P2WPKH)) == bip84ValidAddresses[i], "Wrong address Expected: \(bip84ValidAddresses[i]) Result: \( pubKeyAddress9.address(for: .litecoin(.P2WPKH)))")
+                
+                let pubKeyAddress10 = try BitcoinPublicKeyAddress(publicKey: key.key.publicKeyCompressed(.CompressedConversion), type: .bitcoin(.P2WSH))
+                XCTAssertTrue(pubKeyAddress10.address(for: .litecoin(.P2WPKH)) == nil, "Wrong address Expected: Empty Result: \( pubKeyAddress10.address(for: .litecoin(.P2WPKH)))")
+                
+            } catch {
+                XCTAssertNotNil(error, "\(error)")
+            }
+        }
+    }
+    
+    func testLitecoinBIP49DerivationAddress() {
+        //m/49'/2'/0'/0
+        let generator = KeyGenerator(xpubORxprv: LitecoinSegwitDerivationTestData.extendedPrivateKeyBIP49)
+        let bip49ValidAddresses = LitecoinSegwitDerivationTestData.validAddressesBIP49
+        
+        for i in 0..<bip49ValidAddresses.count {
+            let key = generator.generateChild(for: UInt(i), hardened: false)
+            do {
+                
+                let privateKey = key.key
+                let publicKey = key.key.publicKeyCompressed(.CompressedConversion)
+                
+                let pubKeyAddress1 = try BitcoinPublicKeyAddress(key: privateKey)
+                XCTAssertTrue(pubKeyAddress1.address(for: .litecoin(.P2SH)) == bip49ValidAddresses[i], "Wrong address Expected: \(bip49ValidAddresses[i]) Result: \( pubKeyAddress1.address(for: .litecoin(.P2SH)))")
+                
+                let pubKeyAddress2 = try BitcoinPublicKeyAddress(key: privateKey, type: .litecoin(.P2PKH))
+                XCTAssertTrue(pubKeyAddress2.address(for: .litecoin(.P2SH)) == bip49ValidAddresses[i], "Wrong address Expected: \(bip49ValidAddresses[i]) Result: \( pubKeyAddress2.address(for: .litecoin(.P2SH)))")
+                
+                let pubKeyAddress3 = try BitcoinPublicKeyAddress(key: privateKey, type: .litecoin(.P2SH))
+                XCTAssertTrue(pubKeyAddress3.address == bip49ValidAddresses[i], "Wrong address Expected: \(bip49ValidAddresses[i]) Result: \( pubKeyAddress3.address)")
+                XCTAssertTrue(pubKeyAddress3.address(for: .litecoin(.P2SH)) == bip49ValidAddresses[i], "Wrong address Expected: \(bip49ValidAddresses[i]) Result: \( pubKeyAddress3.address(for: .litecoin(.P2SH)))")
+                
+                let pubKeyAddress4 = try BitcoinPublicKeyAddress(key: privateKey, type: .litecoin(.P2WPKH))
+                XCTAssertTrue(pubKeyAddress4.address(for: .litecoin(.P2SH)) == bip49ValidAddresses[i], "Wrong address Expected: \(bip49ValidAddresses[i]) Result: \( pubKeyAddress4.address(for: .litecoin(.P2SH)))")
+                
+                let pubKeyAddress5 = try BitcoinPublicKeyAddress(key: privateKey, type: .litecoin(.P2WSH))
+                XCTAssertTrue(pubKeyAddress5.address(for: .litecoin(.P2SH)) == nil, "Wrong address Expected: Empty Result: \( pubKeyAddress5.address(for: .litecoin(.P2SH)))")
+                
+                let pubKeyAddress6 = try BitcoinPublicKeyAddress(publicKey: publicKey)
+                XCTAssertTrue(pubKeyAddress6.address(for: .litecoin(.P2SH)) == bip49ValidAddresses[i], "Wrong address Expected: \(bip49ValidAddresses[i]) Result: \( pubKeyAddress6.address(for: .litecoin(.P2SH)))")
+                
+                let pubKeyAddress7 = try BitcoinPublicKeyAddress(publicKey: publicKey, type: .litecoin(.P2PKH))
+                XCTAssertTrue(pubKeyAddress7.address(for: .litecoin(.P2SH)) == bip49ValidAddresses[i], "Wrong address Expected: \(bip49ValidAddresses[i]) Result: \( pubKeyAddress7.address(for: .litecoin(.P2SH)))")
+                
+                let pubKeyAddress8 = try BitcoinPublicKeyAddress(publicKey: publicKey, type: .litecoin(.P2SH))
+                XCTAssertTrue(pubKeyAddress8.address == bip49ValidAddresses[i], "Wrong address Expected: Empty Result: \( pubKeyAddress8.address)")
+                XCTAssertTrue(pubKeyAddress8.address(for: .litecoin(.P2SH)) == bip49ValidAddresses[i], "Wrong address Expected: \(bip49ValidAddresses[i]) Result: \( pubKeyAddress8.address(for: .litecoin(.P2SH)))")
+                
+                let pubKeyAddress9 = try BitcoinPublicKeyAddress(publicKey: publicKey, type: .bitcoin(.P2WPKH))
+                XCTAssertTrue(pubKeyAddress9.address(for: .litecoin(.P2SH)) == bip49ValidAddresses[i], "Wrong address Expected: \(bip49ValidAddresses[i]) Result: \( pubKeyAddress9.address(for: .litecoin(.P2SH)))")
+                
+                let pubKeyAddress10 = try BitcoinPublicKeyAddress(publicKey: publicKey, type: .litecoin(.P2WSH))
+                XCTAssertTrue(pubKeyAddress10.address(for: .litecoin(.P2SH)) == nil, "Wrong address Expected: Empty Result: \( pubKeyAddress10.address(for: .litecoin(.P2SH)))")
                 
             } catch {
                 XCTAssertNotNil(error, "\(error)")
@@ -513,5 +639,123 @@ struct DogeDerivationKeyAddressesTestData {
         (address: "DN37bLYkivNpy8B9JbN5ZJnaGWrrDtnjdy",
          pubdata: "0289bf2d780f3547f4c6f5b2a453001cc0a7b3ba574d51b9bd0039f5e937d40ec5",
          wif: "QP7NrzhMqPyDhG8QAYExBBU3j6wQBfBkGXQngKBznPJz5EvZ5oyd")
+    ]
+}
+
+struct LitecoinDerivationKeyAddressesTestData {
+    static let data: [(address: String, pubdata: String, wif: String)] =
+        [
+        (address: "La3Ys9gWG1CaAVfAzweRdYDcHwESvSPWPt",
+         pubdata:"03d7ecbf942361b3796538e5cd3d9128bf5374baedf7cb08b6af7c0602f8a61d16",
+         wif: "T34vi9XPUeXsXoSCteSMXPPmvcdHUTVG1AFGGwFudfmeE68US54x"),
+        (address: "Lf7ZH53EPxQaXB7GhQ4sZJhdTLJyAf46Y6",
+         pubdata: "02fe052f6e5dae9fd895be66e75b3aa3dc9cc334a5c9ddd303cc1cf0bc9b3e0e91",
+         wif: "T4V6E1aCR8LA9Y2u5U8S6XFZLSGX3qbDYL278bxyohuw23pyttg1"),
+        (address: "LhXr6upWEGEXzsQi1gfcD7RS5CuLYGxfJJ",
+         pubdata: "03821246540c75f1383789f5ff1feeea474549cc30220c8786070926aeb9669d0f",
+         wif: "T5rirE11LxtqbSmHQJaGGmUBBcM92Wnkh8FoiufUPVmvNVz6avtA"),
+        (address: "LhxqLzujAqCvodhDWo9hwnUHQmrbq9pYsD",
+         pubdata: "02f1ad05265fd7350bae1e18e098e72d08bf391d927289d041f4b04a1ae84da01a",
+         wif: "T3GLhV2W7GaNEjVmXrWuLpnvhNXgdHLRsKSbwaj1kpDjvq8Ma7xC"),
+        (address: "Lgnwqu78xS7cHYipepHRtUsCF88RtkPkCM",
+         pubdata: "03052c8a72f7629980060e8faccc9edce1f6ab4cb6a3788285644e8fe4d803e48d",
+         wif: "T8N63jcr5R3jT3bykybadj6ukUTVuvsvGU4NWWMA8ufeXcxxoRij"),
+        (address: "Lcx5AYXKZiRLQqhzQmz522VP76bW5ZaA5p",
+         pubdata: "02883cc562cef6dfedd77195e4d64a84a028f0b20ee185929d62b073b80bc8a95f",
+         wif: "TAaiCi3Tj3gkSv12V7LgxUXeT92XTRwVu22VnX3LaGBW46zEnsVD"),
+        (address: "LccigvYZtWdYsRcXYo3a2JGjCBiwJx9k37",
+         pubdata: "02f0fe5b5befedd2bc648919774de20ada9c563b8793a6bec81b5a5dd6a7f282f5",
+         wif: "T8PRHYYvbz7SojFNMqzwrFNDMdkCBMnF8xqeXNt6nyKqPb6GiCJA"),
+        (address: "LKFRLkokrStGpzdU3PNdCq2s4BkN4RF82D",
+         pubdata: "02f19efc9e8c4ab4874ffbf8800af615f7291184e13c49159b2db880e0efcf82eb",
+         wif: "T7Ao8c9qsG4Nf2WBTzMxghhDM9nwm28tCoxQm4H485sbv9p1Hw6F"),
+        (address: "LcdHGB6C26XPFSJbjpLjiuzZigGiZM3dXN",
+         pubdata: "034e412ddb80bd482438bf29d61a1bc968378e933ad1c680abfb3b18b59933471d",
+         wif: "T3AoNodtmeSbhSuN4mGyRDUTQF4pMLS7Y9tjGVc9MfjRBPbNnX6Q"),
+        (address: "LP1ofuJcZHyh2rXpwAU1cJ8w7WoZQ9Nc54",
+         pubdata: "0352555784a71fbfbb7598e42ed8621951bfd8542c3d7938868f9656b8def9c1c1",
+         wif: "T8uGJFPq5JsZ8TEuDpZWzXt5Z3FwdTJrnAAUy9CVVFqRF1Mdu5Cs"),
+        (address: "LiW78MhgHZUm47b4bdUUgQ3MpXV6Dn7YEb",
+         pubdata: "032a89f0631a5f5bad6522380822e787ab1baa7c7499ded51d72ec934db273d7a3",
+         wif: "T4EHFGTzSVbhmXAVLQz8vT7xY8Ay3wd2ndHJPrnfES7GpKqMgzUt"),
+        (address: "LZfBafjnju43Z9JnA6TomHmvvuHEtcF5wa",
+         pubdata: "03ea07007c54ada58913fe15b147d3da38a7390d16bb4c641d8ce0fe26dbcc778e",
+         wif: "T4S5HayS5ZPDerN6yp7bnduTz8nkr6nzsvcUkiZbdEHhFZ26PyBg"),
+        (address: "LWoE1T8FE3rkjg4sTUNGSXonQb9wqEsE8D",
+         pubdata: "0278089c40f117738d777eca34c006a54ab459181b2c3d1293719ce5bb8a5d3c47",
+         wif: "T9QqQJU5s9i1iGbJ586zPx6rsEiBCgxJmQYaWEjyAGTwJQGfbHrL"),
+        (address: "Lgt4UAf99QDxZWp8vmGRgUZNxsVzeqBvzf",
+         pubdata: "034bcfae6fcae525d20bffa251d12aa5fe4a7cd932902218caea36c33e170e6fee",
+         wif: "T64ukdMS1AQGX24o6WV5o7BXTQwad4yRiUfMy7qQTAJCmNENjjbi"),
+        (address: "LhAgXTYAHADktmipe7udVxr4STixiSMrmF",
+         pubdata: "0208b92d4dac8e24b6c40196c1d15ae8eb1785b1fe345061ed63f582de0767bf20",
+         wif: "TBamoabyLsnx7iMcC5AmAa3yX2huS5tWzh1QK4fd1Phr7CEst9bd"),
+        (address: "LLjKB964SyLpPBCKxcoYu4VVzVwKqCRaTi",
+         pubdata: "026556c118bed2738a4f9d7012e7177c4048626229dc81d0585b1cc1333ba0b3e5",
+         wif: "T9CzLJqypaMFCeVJKwEPGXBoPh5p55BMqntb4Wb3TGE4KB2FMAow"),
+        (address: "LXa6M81uNBqnMGEDfr4DFBrA7GKEstfeZv",
+         pubdata: "02cd4a5cc9f298f695aa4a445f2ce58cd41e48efd0264735af30bc7421d24f6b3c",
+         wif: "TACL3Hq6R4ia2C8KAtssMNbjjMyma7La5PH14CPpXYMundG33zdy"),
+        (address: "LREcxfvZWWwHwgKZcAhpYQtcfYoKghA6n1",
+         pubdata: "02ac665bd52360e04840b5dec3171d4f99cbf667b6bcf9dc9409b16521049698dc",
+         wif: "T9riYCa2USDSFMvKj4xLPLJPH4diBwe6KyhzQNj8vvQMYmrPPDDY"),
+        (address: "LRaXfPHSTjSGoDHqxdX5ZANK5fEQNHhfWN",
+         pubdata: "033e6021086b14fed36e618c4caac48acd083e986ada4661cc1a24cdbf91ccc214",
+         wif: "T8qWMH7TfdhQyoshTsj1pbiKgYtYGgLmMwr73j6vBpqcHVuDrX82"),
+        (address: "LPWJBjpH8xKpzTsiA9p67mnrqaCF8TQ4QF",
+         pubdata: "0329fa1b98399b68adf933b17145ff9c4ff6ac7ed3eb35052885b7e1c4bbc1f137",
+         wif: "T9naunov1Ka7isMofbzKsGCmMBdKRck6gGHEiUeXtYX2U651jodk")
+    ]
+}
+
+struct LitecoinSegwitDerivationTestData {
+    
+    static let extendedPrivateKeyBIP84 = "zprvAfXfmTTbmFCCPDszG6xcNhhi95JQZX6bwkiNDF8nhUFJv87pPmer9Epb1MvbfkcBdV6XtPy4fwJdbb6EeyWXKfedk1whHbiy4NnRaLNTQcP"
+    static let extendedPrivateKeyBIP49 = "Mtpv7UEVkVBZiefdW99fS3ryY5NCBHZhCqqKp4Ld1ZPLh8tgmLAFFkYfCNncQKJkG28RayQZbhzCD4Ev48zLb9YG9YM1uHPar7gdHiAj7ynYPff"
+    
+    static let validAddressesBIP84 = [
+    "ltc1qclh4u3l02hf7gdmphln636dkwreyuzmr46t0yr",
+    "ltc1qfjj87t9ntxnnh9tvvpdl60w72xp27r7ft8f3nd",
+    "ltc1qkvgmsuyc28zg73l4jt795u53jnavwhq0cv9p9p",
+    "ltc1qsxs4h9s6pumstf2xv5np2x520n6hu9ry59thu8",
+    "ltc1qd5rnfj8rrc4rephlv33nm60pdj964s7n95fsyk",
+    "ltc1q996uldyw3elpcwkastj28c83ll0lsy70gp2nk6",
+    "ltc1ql2ch43z7kejxr2ns5t2mtz5ljkh937w3884ev5",
+    "ltc1qaj4jhx9w2fqwtrtcuwd9u4e6cm47cfmm4cpfhl",
+    "ltc1qrcfu5rz29vjwzt2yy2aghej6qyp5pzgtztg4yn",
+    "ltc1qgjm2ja6a7hwdf089j0gwwragav4685gwusejzx",
+    "ltc1q5syg3kukmh5ev9566l5hwc3mqpkgkuvlzmrj2g",
+    "ltc1qejna383sqc54cgngz4e2x6xkmqa33rddy9gjzz",
+    "ltc1qq0nlz85mud28pv9ektnmsc34ss4sppndys3a2p",
+    "ltc1q2pnkvypkgufgl807k5eumxcakafjh55rcdx3rv",
+    "ltc1qflkjj925cmu4lm28875csnyqn4uq9ht26dzgyg",
+    "ltc1qkks6fffh5zz8gu9kpkfkslf0uju2k3pg6ywekf",
+    "ltc1qzkh4wyy0szl5wh2hsq29uwck3je2qpa2pnceg6",
+    "ltc1qkqw6k6xv72r3unhaneyf6atpm2k06q3lsjl8g0",
+    "ltc1qn0c7m2qj53camn83ps48szt4gyshrl7guckcht",
+    "ltc1q57t7qvh6t03j35pat7derzmunk2xe7ty4yg2lk"
+    ]
+    
+    static let validAddressesBIP49 = [
+    "MTzWoLe4Rf4J6RnTKRNyy449rCrhN3iYdx",
+    "MBiCrbUStoe8zxoGNLnZjdLaY18Uw41n6n",
+    "MGi2mV1sARNuBUnFfoCmb33tJhXASheJxE",
+    "MXBJbtihATYqSkgpHeQzNoUhgvgimMgne9",
+    "MGi7MXeUiZw8XJ7TuTJWyPuSVFp9e2DGya",
+    "MNsvMitChNX4i4ZV7T9Cs4R7Dep67yGexF",
+    "MUEgJrKFj53EWhnuqKL3XuDs5M344q6KSe",
+    "MANxDiEt8YaeXFKjVAr5F7A9VSakaABa4h",
+    "MRjbH47SvF5TsK25cno8HBD7VFRq9iNTUq",
+    "MLddQP4Qu5bwRRMTUYNaaYVLeo3GTi7h69",
+    "MAbRbwv2yr79nGPxDgSG2CF3E6bJCAUhMX",
+    "MCaC36Xeav848M5tomqc1NL2kT2bAzGaGb",
+    "MRADVaqe53A7GSCYfKogp2Jg4RJMgpqbc1",
+    "MVVLDkLGsfgSXQv4QU2m3JANPzHYotmyYH",
+    "MKdjQ3QDtZ1QfQzZuVJnEZQFkwntFbJLL2",
+    "MU621fLqcmTs4RqcwMCkzWGAw6kT2x2KHb",
+    "MH5a4S4rG7djcSq3SQN9aXrHZ5jvTsSLNG",
+    "MRHDurCUEEm2wrHFw7HSTmfCmBuCEzsuA6",
+    "MKD4kwYjcYGCmJ1iiRbAGNqW6AagP5kTQc",
+    "MS3aRNRkx9vJXwyH9cD9Du7pJssTTkDEXC"
     ]
 }

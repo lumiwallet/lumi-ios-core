@@ -26,6 +26,12 @@ public struct CoinVersionBytesConstant {
     public static let bitcoinvault_p2sh: UInt8 = 0x3c
     
     public static let bitcoinvault_prvkey_version: UInt8 = 0x80
+    
+    public static let litecoin_p2pkh: UInt8 = 0x30
+    public static let litecoin_p2sh: UInt8 = 0x32
+    
+    public static let litecoin_prvkey_version: UInt8 = 0xB0
+    
 }
 
 // - MARK: Bitcoin

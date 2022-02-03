@@ -176,6 +176,38 @@ class KeyGeneratorTests: XCTestCase {
         }
     }
     
+    func testLitecoinGenerationSLIP0132() {
+        for element in TestLitecoinExtendedKeyP2PKH_P2SH_SLIP0132Vector.elements {
+            let seed = Data(hex: element.seed)
+            let generator = KeyGenerator(seed: seed, version: .LITECOIN_P2PKH_P2SH)
+            
+            XCTAssertFalse(generator.extPrv != element.root, "Wrong extended private. Expected: \(element.exprv) Result: \(generator.extPrv)")
+            
+            do {
+                try generator.generate(for: "m/44'/2'/0'/0")
+                XCTAssertFalse(generator.extPrv != element.exprv, "Wrong extended private. Expected: \(element.exprv) Result: \(generator.extPrv)")
+                XCTAssertFalse(generator.extPub != element.expub, "Wrong extended private. Expected: \(element.expub) Result: \(generator.extPub)")
+            } catch {
+                XCTAssertNotNil(error, "\(error)")
+            }
+        }
+        
+        for element in TestLitecoinExtendedKeyP2WPKH_nested_P2SH_SLIP0132Vector.elements {
+            let seed = Data(hex: element.seed)
+            let generator = KeyGenerator(seed: seed, version: .LITECOIN_P2WPKH_NESTED_P2SH)
+            
+            XCTAssertFalse(generator.extPrv != element.root, "Wrong extended private. Expected: \(element.exprv) Result: \(generator.extPrv)")
+            
+            do {
+                try generator.generate(for: "m/49'/2'/0'/0")
+                XCTAssertFalse(generator.extPrv != element.exprv, "Wrong extended private. Expected: \(element.exprv) Result: \(generator.extPrv)")
+                XCTAssertFalse(generator.extPub != element.expub, "Wrong extended private. Expected: \(element.expub) Result: \(generator.extPub)")
+            } catch {
+                XCTAssertNotNil(error, "\(error)")
+            }
+        }
+    }
+    
     func testCardanoGenerationShelley() {
         for element in TestCardanoGenerationShelleyVector.vectorCardanoShelley.data {
             autoreleasepool(invoking: {
@@ -1546,6 +1578,97 @@ struct TestDogeExtendedKeySLIP0132Vector {
          "dgub8ur2fCAMyQrWsLF2M6JSnFWqJ9yG3997JmHvuRjomdoKxiZ6vZ8Q26bJ9FSyiHGovGJbupCNyXBhFxWzf2jAgEcJai8Bu8KKDckz2ZezJ39" )
     ]
 }
+
+struct TestLitecoinExtendedKeyP2PKH_P2SH_SLIP0132Vector {
+    static let elements: [(seed: String, root: String, exprv: String, expub: String)] = [
+        ( "1d85753fd04ea932e9b759ae7de01e6557a40be2074219272d26994ab4d91a5bca4f6e860d43324b44b5c18a8578b997f4aba1093a4c8c148e658e6c7aa19943",
+         "Ltpv71G8qDifUiNesFccT3LyuWAVa3LopdsnveeEWr6QmWWsoTWp26jJDFyEkhY5RxVdT2L66eGxL5t2B2cJJijsH1X2afML3WcftncUty5KLmc",
+         "Ltpv79doD9h9H797FAF9GNxtCF3zK6AeZDRzKYgSzm13FPbBEqYnXbzeVaUk6B5xPFZRm78HfRWqk3cuzxfzNJHQAfAtxNpd7Spk3bGs1RPT9qH",
+         "Ltub2ap8ow7gXFg4s2wyWzTGGptCkerqdTzeQ4nUfjmLBaNmqCjrrX35WBb1LYBokyVBny4Sim8zbGeE4xw4q1vY2PtbH5JW9tQgSG6HomJMw2t" ),
+        ( "ebe7bc8c6755d258a4b1ee062115700a33ddd02e064f153de7987e047638a7148c3bf9471210b4c5675b43d09e5038b04037faf56ca8cda850b4269acc4b10bb",
+         "Ltpv71G8qDifUiNesCH3L8MrxFfMJrFk5UEACTRkoKWu9gpn8KEdYtAWdtP6xYJexzGKUR3NCdurVuKm2UALNKBc42vtBfh7R8SVK2i1Qz4HgwN",
+         "Ltpv78yeSCr9g2Uvcta6YGmPyxdxoCqATwcg5yviFtTcd1kaCRGNTEgK6GpX6RPZVtzz7nqAKNwuLehYtAjkjCT2DoU436MkGiqrUqSu5eHCHBH",
+         "Ltub2a9z2zGgvB1tEmGvntFn4YUBEmXMYCBLAW2jvsDuZCYAnnTSn9ik6svnLpc79A4aHBPqzxJKvtSKsggEishX33v5TWkZMWjCQeFu8JJBmMV" ),
+        ( "b5fa9657ca89a2645f63adf8b81a6aa4f8e36c2247a9723d6c7375ce04ba6f651463956a3e028430538242fed87ac4ca92137fdb98c9f12609eee26088c62bc3",
+         "Ltpv71G8qDifUiNesY8F6U33EZ7QLJuqa14X4wxV9jde2VsBz4K62ghHZ6quipFuyk7smqu5sWB7kBWYMQ9wWFBAjApiQGZDw4BmjjMcHZUwLcG",
+         "Ltpv795QHR8nWVktjLgcqGQMu47gYTC8qYR8PGb4uEuRSH1K7moKFY9yq46KbBsdNUNwm9ddFPBfwGUaneKPnGnYY9tRcy4CuuVP8MSoeYs3kVj",
+         "Ltub2aFjtCZKkeHrMDPT5stjydwtz1tKunynTnh6aDfiNTnui8zPaTCQqfCaqZmVr1koaCAXYw5SxUssp8GiUq89UMooC7A4mQfT9FdBNEBL5mN" ),
+        ( "e3c0b8efea2a7d390f06d02aa60d6352ba5e4dd6503f2d23ffd395b989aa9ad38c071fee819699c3f652389a2f5bc4fc21887268273ef70a1755da9f7e6e1fcc",
+         "Ltpv71G8qDifUiNes5ciTteQa1Qc3UUkAtVHGVkCfZLE5KhSsZfjkn1n8sTP7iEZAJY4fGg6JsZpUQU4MUcUyr8oZ5dzxqzxvKYJtESkUtPHAUK",
+         "Ltpv79NfCEdq2UU4i1JSXMxjZiLY2wtrTiXRuvfm5x5ttKUqGA6jdXjjmMbWrk3jBZwaKPYiPexukG3UnuzGs4iUR9WNrjzwqzTLnEj5RM2gJLz",
+         "Ltub2aYzo24NGd12Kt1GmyT7eJAkUWb3Xy65zSmnkvrBpWGRrXHoxSnAmxhn788VZtZq4Xx5gnYwNaB6jRy3ggTbbaAj5GSkLViT32K8gcusuGy" ),
+        ( "6c8b44a07df1a369f00e230fcf6358478dcee8aeff865a1111063f8d449ca3923e2dd5f87ba8da4d97c70e923cd4b8bf5962d402639eb47312093da7b0a76a1e",
+         "Ltpv71G8qDifUiNetfineKc8jec1qWk9xpidnr8nEKamwQAfzK682odcye3jwCGL2tK5WiBCksrQG2zhTn7JKpLkNwjs344His3o7Y5rEWxtU8Q",
+         "Ltpv79Sqa9LtRnYFwthnNdsjhBuYfi3QFRk8pCjtb14HG44UWX59b7bGj6H9zbCVSa8baDM32cHnuUqJ4bpEsoRSZVr7QkjTNLzCF8CKoofkCDe",
+         "Ltub2adBAvmRfw5DZmQcdFN7mmjm7GjbKgJntiqvFypaCEr56tGDv2dhjhPREyWo3qdLJYTyoivnDxHUx1VW5EU4jyGVmTcikbbfTE7CvusFnzw" ),
+        ( "fc5da3c5978f9b206a33cf7c5045e4fe764124df7685a2e33795c5ac526618d917cc0e5301c6dbd9c5558e83663d00b186f19059c1987090add3df1d0338e6a0",
+         "Ltpv71G8qDifUiNesDWwE262149BP8Vwjn29vtWvetSZZtmzCbxiL8LD8nY6MVVn4eBMDFkfWpyoELU6i3oUv1Htv47HkkYxt74RcqUmM1wfd4W",
+         "Ltpv79nN5yir8RveDQW9UhJVY6GR2wrLoFPwqfL5JirW4kWmifdnzjXKCwa4b2HyWQidF4WvjMEksLpHK228aP2jNZoNhAHmESG2TYDfn3xnwB7",
+         "Ltub2axhgm9PNaTbqHCyjJnscg6dUWYXsVxbvBS6yhcnzwJNK2psKeZkDYgKqRxAAovUZHTMjVDKY4DcaGaUFSLR6L1uvYgnhyrzx6D3jwGdH8L" ),
+        ( "c7b0bff24f4a2fcd83a7267c43aad3181e91fe3e4c29a2ae2f587b76280ff75f7ec1399b885b8d5dd0c936dd876f0287edefeef64d9dcba1e3fdb47caa0d86f3",
+         "Ltpv71G8qDifUiNetRAWkiPhSSJ4NK3RD9hNzxsfEmTbS9ftLGhs232QUKVVQi8cBdvcBxHXCYqMptiWEsw1H2nfwhhxARAEfz7AjqPDjqpmAKe",
+         "Ltpv7A5gJWc4yg2Zk6WbWHosm7jgLYYobhVHUyJTFAHqURZ2ZAR49U3hwVE1cNkXoSi19VXbJvw5Ejg5BpnqsJ9D912kUK95LPS8oHc8MPedFkQ",
+         "Ltub2bG1uJ2cDpZXMyDRkuJFqhZtn7Ezfx3wZVQUv948QcLd9Xc8UP68x6LGrkkdeUnnqka2tMt7QkYeNp6dq5eYL2mtRfvsf3sNvpaW7SpSMcu" ),
+        ( "83a6b64c6e0fbb96d8c7cd8ac0a2832943e4559cb1491842f66b57377676cb41b976ad91ecba1b8260341899d40925f543bc7c0e850f78454bd8246705ac404c",
+         "Ltpv71G8qDifUiNetJKyCPfAVnRPviJEj6fYe9waz2zVNMG3nBTVkCqCx3WK51AYWZvgUMuDEBBb5YiFLdPrpGAT8mR1WCjd6XhKNwvy6LwSTif",
+         "Ltpv7AAZLbDzQzqmGy2inXwJeANrLmabVHS9mYE8jMBXoM3qhDqnxDnnkyTnocGEh9apby6qSXYLNVceB6EUt2CgE6sNAje9jfgL85dFchJ4mFN",
+         "Ltub2bLtwNeXf9NitqjZ39RgikD4nLGnZXzor4LAQKwpjXqSHb2sH8qDmaa43yBxzwADpY4rSV4TQ2QxkScwfkdPvzYwtHYECA6xELBNLKCGcHp" ),
+        ( "2117c551c6496881d17723caaa8ccb756edcd884dd6732216ee6e6ff3c6896257ba39a0a708f7e5c215609efb79da0d7ef92f0352346455405de880c40777256",
+         "Ltpv71G8qDifUiNetkBKrCXUjCoXqpCDXnMoPhWb8tTjWL52p7ZMY5gc8i3Y1ZwUc1fLpztNQYBTuCAkvTDyabEFnwsVBHMBLPxcb5TdK5neKap",
+         "Ltpv79884JCtfXZ9GBQXNPCLQnHtiY3BaTucQNLRomhg3TxHCiY1jqHpRNtfPMihS6WZj3Nvram6ciDprRaoZL8GNQ1jWtVJjS62kjziTsARynT",
+         "Ltub2aJTf5dRug66t47MczgiVN87A6jNeiUGUtSTUkTxyejso5j64kLFRyzvdm6RRHDZmt5n7TtH1wtqnKitqaNLshaasJkESCC8rytfJ5yhdX7" ),
+        ( "195e300ea383b7887483ea97c6b8cfbb0ba4b4a9a7888dd695efa751d9762f161cec7323e316e1f983b35f1d75758003d7a6ac57a7de004c5acbb3c5227ff353",
+         "Ltpv71G8qDifUiNesSSUqAsmmthvZT23wr2rsnnFkphpJqjQR8qWRSiqPPWLGdZiS2t1V13p6BkY7UrmJDx8VjKFmYXrq8P6QeQJfjKx7TKQhk6",
+         "Ltpv79yjMF253zzhfjC3mmGfAytB7Fw8RxBXW2x1wEjJkjUAAbBX8W3J2hmSyWLxwSy4zm6FcidbTzkcU1NF7VEN7cy2JB8JoR19muyTHErFs52",
+         "Ltub2bA4x2ScJ9XfHbtt2Nm3FZiPYpdKWCkBaZ43cDVbgvFkkxNbTR5j3JsiDt6FgzJ5oQCwMc5bvsL4Xnk1weGVDgJ55R7nLzfqsvorffjRFa2" )
+    ]
+}
+
+struct TestLitecoinExtendedKeyP2WPKH_nested_P2SH_SLIP0132Vector {
+    static let elements: [(seed: String, root: String, exprv: String, expub: String)] = [
+        ( "1d85753fd04ea932e9b759ae7de01e6557a40be2074219272d26994ab4d91a5bca4f6e860d43324b44b5c18a8578b997f4aba1093a4c8c148e658e6c7aa19943",
+         "Mtpv7L6Q8tPadPv8iYojHQ8c7bFzk1VFmFsHqmATJEzJ9WtkrZL3GktrqKdNmuVfRs9YrfStr7sWnkEa4KDs2R9t5FCdT13kdRSAAWg8HabKEVt",
+         "Mtpv7TfP8tXeamgeeMLFhBe8HCDMkucFfNGvUYMYMptKcmh8zubhQp3dEA9WgF7xQhqvYBit9wwV5FAz64gjb8GtqxfKhCtgUuRgk9dRhcD6GPF",
+         "Mtub2tqijfxBpvDcGE35wo8WMn3aCUJSjcqaZ4Ta2oecYxUjbGnmjj64EmFmvbKdtWxefcMWvw32jghRVeNbaZzzUnmxnsiBG9awVtGah1j9RdR" ),
+        ( "ebe7bc8c6755d258a4b1ee062115700a33ddd02e064f153de7987e047638a7148c3bf9471210b4c5675b43d09e5038b04037faf56ca8cda850b4269acc4b10bb",
+         "Mtpv7L6Q8tPadPv8iVUAAV9VALkrUpQC26Df7ZwyaiQnXhCfBR3roYL5Fx3EykGExtvEt4AAx7WQxZgJukmu61bcrGcV41PY13FyakmeoayDL69",
+         "Mtpv7U3MXyLphAiah3qfRm31Lwgdz3cs1u9D4YjU7nmggnyQX9Uwbec2ga67BaMkn4KbqCQiB2oreUenWVEvbj9Fu4RoTTaagFFWF2Dr3ViVsjY",
+         "Mtub2uDh8kmMwKFYJvYVgNXPRXWrRcK469hs94qVnmXycym17Wg1vZeThBCNRxWgNGuu6Ex3h7iVLJ2JqwLEXtLEtwbt6kQTnqVSjoT8fAPrL2j" ),
+        ( "b5fa9657ca89a2645f63adf8b81a6aa4f8e36c2247a9723d6c7375ce04ba6f651463956a3e028430538242fed87ac4ca92137fdb98c9f12609eee26088c62bc3",
+         "Mtpv7L6Q8tPadPv8iqKMvppfSeCuWH4HWd41z4Uhw8XXQWF53A8KHLrrBAW3k2DVyemoBV1tcymgCqs6EgmWDwbBXQWKGcFeWy1G1TRFg5p3W1X",
+         "Mtpv7UEVkVBZiefdW99fS3ryY5NCBHZhCqqKp4Ld1ZPLh8tgmLAFFkYfCNncQKJkG28RayQZbhzCD4Ev48zLb9YG9YM1uHPar7gdHiAj7ynYPff",
+         "Mtub2uQqMGc6xoCb81rVgfMMcfCQcrFtH6PytaSegY9ddKgHMhMKafb6CytsefY8wHeE1b7s2UKyzvyULgai5e8wMJH34WmwrNxCs7q1Yj83SsA" ),
+        ( "e3c0b8efea2a7d390f06d02aa60d6352ba5e4dd6503f2d23ffd395b989aa9ad38c071fee819699c3f652389a2f5bc4fc21887268273ef70a1755da9f7e6e1fcc",
+         "Mtpv7L6Q8tPadPv8iNoqJFS2n6W7DSdC7WUnBcGRSxE7TL5KvfUy1SBLkw7X8vC9ADBz4unu4MANw4pcEmE3hYYpMKKbqBhPWEMo9xWPsTDXQL5",
+         "Mtpv7TpA3xKghhX7o75Lr6XtFvWRmeb9S94kKC2WbvaarxfNF2TVfwfTPTj9ipQFGW5TL1WLuxzvfdBQ1KPoRqbXY2kW33YCczjbeu48W9K3Uzv",
+         "Mtub2tzVejkDwr45QynB6i2GLWLeDDHLWPdQPi8YGuLso9SxqPeZzrhtQ4qQyARd4CNG6snWQquMaC8513ADwEEijH6zh3fQmn2AJ96PKSPGoeE" ),
+        ( "6c8b44a07df1a369f00e230fcf6358478dcee8aeff865a1111063f8d449ca3923e2dd5f87ba8da4d97c70e923cd4b8bf5962d402639eb47312093da7b0a76a1e",
+         "Mtpv7L6Q8tPadPv8jxuuUgPkwjhX1UtbuSi8hxf11iUfKQYZ3QuMHToBbhhsxQDv2nxzvMJ1WMSxihMFM4is3WkmBBRTuPkiJmsHPG9Vd4UABkQ",
+         "Mtpv7VPwjvh142hWPQ3BbR2gVSuTviwDhWeQitfQJ2nD4SEGABV2z6XGHJUpXU9HU2N8wHqiaERQ7aeeqi7CTb5ahqZxXm88SZEDA4HMed4NKSP",
+         "Mtub2vaHLi7YJBEU1Gk1r2X4a2jgNHdQmmD4oQmRy1YVzd1rkYg7K1ZhHub5msU5j7QFxvBNdixcsytD1pf1mkvAjeJCUTC79jDQH5FFZtFvPiY" ),
+        ( "fc5da3c5978f9b206a33cf7c5045e4fe764124df7685a2e33795c5ac526618d917cc0e5301c6dbd9c5558e83663d00b186f19059c1987090add3df1d0338e6a0",
+         "Mtpv7L6Q8tPadPv8iWi44NseD9EgZ6ePgQ1er139SHLSwu9sFhmwanVmkrCENhTN4YqGctsUGJaMgzpebLR3dhhuiHntd6FPU1sutZYQjgNrX9P",
+         "Mtpv7Tm8Fg7KepEWDER9RWZoEmCChBVVYrZAe6wnHC88BLY6cjaGUB16gYZx1pSvvRGszsZJ8EFWiPeMTKfsJYY3GLrhTsPzFub5dz5HKonyP54",
+         "Mtub2twTrTXrtxmTq77yg84BKM2R8kBgd77pid3oxAtR7XKhD6mLo63Xh9gDGAoUTijsRc9cX8jdX5c3YkLnRv6fKopSf8Dz6tRE391FH5BHwv2" ),
+        ( "c7b0bff24f4a2fcd83a7267c43aad3181e91fe3e4c29a2ae2f587b76280ff75f7ec1399b885b8d5dd0c936dd876f0287edefeef64d9dcba1e3fdb47caa0d86f3",
+         "Mtpv7L6Q8tPadPv8jiMdb5BKeXPZYHBs9mgsv5Pt2AMUpA3mPNX6GhBy6P9dRv6CBYaXbbQKx2RvHZ548AYZzjCgjwPZ2krfFtvf1ZSs8TwSxJv",
+         "Mtpv7VAaM7q9VMNLvcQyUTicBDJbyivrnypR5U1hBujFYHzZmkWn6Q9ZXSDGwKAGvuf9L9dBGvimziGapo8ycDAriGrHybD7bnkCNfzLQ9owpSz",
+         "Mtub2vLuwuFgjVuJYV7oj5CzFo8pRHd3sEP59z7irtVYUUnAN7hrRKBzY3KYBit7QJrZ9X3Jm1hQALSEMKpDmR5sBeNgBLB2zuTNqKzPecCQMrh" ),
+        ( "83a6b64c6e0fbb96d8c7cd8ac0a2832943e4559cb1491842f66b57377676cb41b976ad91ecba1b8260341899d40925f543bc7c0e850f78454bd8246705ac404c",
+         "Mtpv7L6Q8tPadPv8jbX62kSnhsWu6gSgfif3ZGTomRtNkMdvqHGizrzma7AT6D88WUabt121yen9YD4oDv1RXxaTw16cNYS3gSWoefzcUqz4JhQ",
+         "Mtpv7U4f3qrcBCgAsGKuaXqPqMPhZ5zfJMnMEG27S1uxHNNRs398cxeEWD7o4egEQih1RuCUPA5qP8qdi58kKfcsq2F87MEyxczHkfJbUVo1Tpj",
+         "Mtub2uEzedH9RMD8V92jq9KmuwDuzegrNcM1Jn896zgFDZA2TQLCwsgfWpE4K4XeFsRhN7YfEdtckFq6NmmdsPCRajb9v9u4LSDmM1gUpzWWrco" ),
+        ( "2117c551c6496881d17723caaa8ccb756edcd884dd6732216ee6e6ff3c6896257ba39a0a708f7e5c215609efb79da0d7ef92f0352346455405de880c40777256",
+         "Mtpv7L6Q8tPadPv8k3NSgZK6wHu31nLfUQMJJp2ovHMctLSusDNanjrAkmhg2mu4bvKGEe1BA1n2MrXJojqYJHeGbBZ63d3bvJn6roXGhZueCGw",
+         "Mtpv7UgLUFNjBCPajD6xza9ztcMqZunbefmB2719sBxxEAFghCNmmqeq56zGkityVU9PhVmjquk9nT6tRjLSuom5FFaXd1hQADSSzqDmg2UC1Fn",
+         "Mtub2urg52oGRLvYM5ooFBeNyCC41UUnivKq6d7BYAjFAM3HHZZr6khG5i6Y17gSBgULy11y5mwEsPBRW3cDSC5HZUu2UhUvTeWAtZ8nCngcLtX" ),
+        ( "195e300ea383b7887483ea97c6b8cfbb0ba4b4a9a7888dd695efa751d9762f161cec7323e316e1f983b35f1d75758003d7a6ac57a7de004c5acbb3c5227ff353",
+         "Mtpv7L6Q8tPadPv8ijdbfXfPyyoRjRAVtU2MnuJUYDbhgr7HUEejg6tQ1TAUHqXJRwXvteAcqfM6a9DKBWZhDRjGZnDThU5WzZDnwTPbW1Jf6a3",
+         "Mtpv7UeUfXchr2D399yCMegAvXb2opUZxBF5L4f7Hv1qF88JPzFCL6vh5Ez8VyT2s332Z5kbuQwXVbuQU3mzKKcK9iWDedHBzu6kwJg3TGJuYtf",
+         "Mtub2uppGK3F6Ajzm2g2cGAZ17RFFPAm2RojQam8xtn8BJutzMSGf1y85r6PkLNZm8JmANoQdMR6QHrz4o4AnnsXoHTZXLA3ePhXUCYiVva12Ac" )
+    ]
+}
+
 
 struct TestCardanoGenerationShelleyVector {
     static let vectorCardanoShelley: (mnemonic: String,
