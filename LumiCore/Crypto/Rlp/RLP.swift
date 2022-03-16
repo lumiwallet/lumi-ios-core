@@ -8,7 +8,7 @@
 import Foundation
 
 
-struct RLP {
+public struct RLP {
 
     public static func encode<T>(_ input: T) throws -> Data {
         switch input {
