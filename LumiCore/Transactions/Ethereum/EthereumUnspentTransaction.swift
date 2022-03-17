@@ -9,7 +9,7 @@ import Foundation
 
 /// Ethereum unspent transaction that contains a dataset for building an EthereumTransaction instance
 public class EthereumUnspentTransaction {
-    let chainId: UInt8
+    let chainId: UInt
     let nonce: Int
     
     let amount: Data
@@ -32,7 +32,7 @@ public class EthereumUnspentTransaction {
     /// - Parameter gasPrice: Current gas price data
     /// - Parameter gasLimit: Gas limit data for transaction
     /// - Parameter data: Additional data
-    public init(chainId: UInt8, nonce: Int, amount: Data, address: String, gasPrice: Data, gasLimit: Data, data: Data) {
+    public init(chainId: UInt, nonce: Int, amount: Data, address: String, gasPrice: Data, gasLimit: Data, data: Data) {
         self.chainId = chainId
         self.nonce = nonce
         
@@ -43,7 +43,7 @@ public class EthereumUnspentTransaction {
         self.address = Data(hex: address)
         self.data = data
         
-        v = Data([UInt8(chainId)])
+        v = chainId.bigEndian.data.dropedPrefixZeros
         r = Data(count: 1)
         s = Data(count: 1)
     }
@@ -56,7 +56,7 @@ public class EthereumUnspentTransaction {
     /// - Parameter gasPrice: Current gas price in decimal string representation
     /// - Parameter gasLimit: Gas limit for transaction in decimal string representation
     /// - Parameter data: Additional data
-    convenience public init(chainId: UInt8, nonce: Int, amount: String.DecimalString, address: String, gasPrice: String.DecimalString, gasLimit: String.DecimalString, data: String.HexString) {
+    convenience public init(chainId: UInt, nonce: Int, amount: String.DecimalString, address: String, gasPrice: String.DecimalString, gasLimit: String.DecimalString, data: String.HexString) {
         self.init(chainId: chainId,
                   nonce: nonce,
                   amount: Data(hex: Hex2DecimalConverter.convertToHexString(fromDecimalString: amount)).dropedPrefixZeros,

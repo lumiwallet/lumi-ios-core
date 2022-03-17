@@ -12,9 +12,9 @@ import LumiCore.Utils
 /// An object for displaying and working with Ethereum transaction
 public class EthereumTransaction {
     
-    static public let defaultParitetValue: UInt8 = 27
+    static public let defaultParitetValue: UInt = 27
     
-    let chainIdUInt8: UInt8
+    let chainIdUInt: UInt
     let chainId: Data
     let nonce: Data
     
@@ -39,7 +39,7 @@ public class EthereumTransaction {
     }
     
     public init(unspentTx: EthereumUnspentTransaction) {
-        chainIdUInt8 = UInt8(unspentTx.chainId)
+        chainIdUInt = unspentTx.chainId
         chainId = unspentTx.chainId.bigEndian.data
         nonce = unspentTx.nonce.bigEndian.data
         
@@ -81,14 +81,14 @@ public class EthereumTransaction {
             throw EthereumCreateTransactionError.wrongSignature
         }
 
-        var index: UInt8 = 0
-        if chainIdUInt8 > 0 {
-            index = (chainIdUInt8 * 2) + 8
+        var index: UInt = 0
+        if chainIdUInt > 0 {
+            index = (chainIdUInt * 2) + 8
         }
         
-        index += UInt8(recid) + EthereumTransaction.defaultParitetValue
+        index += UInt(recid) + EthereumTransaction.defaultParitetValue
         
-        v = index.data
+        v = index.bigEndian.data.dropedPrefixZeros
         r = signature.subdata(in: 0..<32)
         s = signature.subdata(in: 32..<64)
     }

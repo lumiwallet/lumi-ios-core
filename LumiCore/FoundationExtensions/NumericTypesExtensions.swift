@@ -17,6 +17,7 @@ extension Int8: DataConvertibleProtocol {}
 extension Int16: DataConvertibleProtocol {}
 extension Int32: DataConvertibleProtocol {}
 extension Int64: DataConvertibleProtocol {}
+extension UInt: DataConvertibleProtocol {}
 extension UInt8: DataConvertibleProtocol {}
 extension UInt16: DataConvertibleProtocol {}
 extension UInt32: DataConvertibleProtocol {}

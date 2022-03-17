@@ -14,7 +14,7 @@ class EthereumTransactionsTests: XCTestCase {
     func testCreateEthereumTransaction() {
 
         for testItem in EthereumTransactionTestData.testData {
-            let unspentTransaction = EthereumUnspentTransaction(chainId: UInt8(testItem.chainId), nonce: testItem.nonce, amount: testItem.amount, address: testItem.address, gasPrice: testItem.gasPrice, gasLimit: testItem.gasLimit, data: testItem.data ?? "0x00")
+            let unspentTransaction = EthereumUnspentTransaction(chainId: UInt(testItem.chainId), nonce: testItem.nonce, amount: testItem.amount, address: testItem.address, gasPrice: testItem.gasPrice, gasLimit: testItem.gasLimit, data: testItem.data ?? "0x00")
             
             let transaction = EthereumTransaction(unspentTx: unspentTransaction)
             
