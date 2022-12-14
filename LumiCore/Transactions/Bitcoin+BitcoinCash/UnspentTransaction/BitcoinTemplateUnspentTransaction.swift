@@ -46,7 +46,7 @@ public class BitcoinTemplateUnspentTransaction<T: BitcoinTemplateTransaction> {
     /// - Parameter utxo: Unspent outputs
     /// - Parameter isSendAll: This flag indicates that the maximum available quantity will be sent
     /// - Parameter settings: Transaction build settings
-    public init(amount: UInt64, addresss: String, changeAddress: String, utxo: [BitcoinUnspentOutput], isSendAll: Bool, settings: BitcoinTransactionSettings) {
+    public init(amount: UInt64, addresss: String, changeAddress: String, dust: UInt64 = 1000, utxo: [BitcoinUnspentOutput], isSendAll: Bool, settings: BitcoinTransactionSettings) {
         self.amount = amount
         self.address = addresss
         self.changeAddress = changeAddress
@@ -54,7 +54,7 @@ public class BitcoinTemplateUnspentTransaction<T: BitcoinTemplateTransaction> {
         self.isSendAll = isSendAll
         self.settings = settings
         
-        feeCalculator = BtcBchFeeCalculator(amount: amount, utxo: utxo, isSendAll: isSendAll, settings: settings)
+        feeCalculator = BtcBchFeeCalculator(amount: amount, utxo: utxo, isSendAll: isSendAll, dust: dust, settings: settings)
     }
     
     /// Transaction creation

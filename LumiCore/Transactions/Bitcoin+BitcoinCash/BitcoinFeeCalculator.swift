@@ -21,6 +21,7 @@ public class BtcBchFeeCalculator {
     let utxo: [BitcoinUnspentOutput]
     let isSendAll: Bool
     let isWitness: Bool
+    let minDust: UInt64
     
     public var usedInputs: [BitcoinUnspentOutput] = []
     public var usedInputsCount: Int {
@@ -33,11 +34,12 @@ public class BtcBchFeeCalculator {
     /// - Parameter amount: Amount for spent in Satoshis
     /// - Parameter utxo: Available unspent outputs
     /// - Parameter isSendAll: This flag indicates that the maximum available quantity will be sent
-    public init(amount: UInt64, utxo: [BitcoinUnspentOutput], isSendAll: Bool) {
+    public init(amount: UInt64, utxo: [BitcoinUnspentOutput], isSendAll: Bool, dust: UInt64 = 1000) {
         self.amount = amount
         self.availableAmount = utxo.map({ $0.value }).reduce(0, +)
         self.utxo = utxo
         self.isSendAll = isSendAll
+        self.minDust = dust
         
         self.allowedScriptTypes = [BitcoinScript.ScriptType.P2PKH]
         self.isWitness = false
@@ -48,11 +50,12 @@ public class BtcBchFeeCalculator {
     /// - Parameter utxo: Available unspent outputs
     /// - Parameter isSendAll: This flag indicates that the maximum available quantity will be sent
     /// - Parameter settings: Transaction build settings
-    public init(amount: UInt64, utxo: [BitcoinUnspentOutput], isSendAll: Bool, settings: BitcoinTransactionSettings = .bitcoinDefaults) {
+    public init(amount: UInt64, utxo: [BitcoinUnspentOutput], isSendAll: Bool, dust: UInt64 = 1000, settings: BitcoinTransactionSettings = .bitcoinDefaults) {
         self.amount = amount
         self.availableAmount = utxo.map({ $0.value }).reduce(0, +)
         self.utxo = utxo
         self.isSendAll = isSendAll
+        self.minDust = dust
         
         self.allowedScriptTypes = settings.allowedScriptTypes
         self.isWitness = settings.isWitness
@@ -66,7 +69,7 @@ public class BtcBchFeeCalculator {
         
         if targetAmount == 0 { throw BtcBchCalcuateFeeError.spendingAmountIsZero }
         
-        let dust: UInt64 = isSendAll ? 0 : 1000
+        let dust: UInt64 = isSendAll ? 0 : minDust
         
         var expectedSize = findTransactionSize(with: targetAmount + dust)
         
