@@ -100,7 +100,7 @@ public enum PublicKeyAddressHashType: CaseIterable {
             return AddressHRP(prefix: "bitcoincash", separator: ":")
         case .bitcoinvault(.P2WPKH), .bitcoinvault(.P2WSH):
             return AddressHRP(prefix: "royale", separator: "1")
-        case .litecoin(.P2WPKH), .litecoin(.P2SH):
+        case .litecoin(.P2WPKH), .litecoin(.P2WSH):
             return AddressHRP(prefix: "ltc", separator: "1")
         default:
             return AddressHRP(prefix: "", separator: "")
